@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>A1 Kitchen | Payment</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="order.html">Order</a>
+      <a href="payment.html" class="active"> Payment </a>
+    </nav>
+
+    <main>
+      <section>
+        <h1>Payment</h1>
+
+        <p>Your order has been recorded.</p>
+
+        <div class="card">
+          <h2>Order Number</h2>
+
+          <p>
+            <strong id="payment-order-number"> Loading... </strong>
+          </p>
+
+          <h2>Total</h2>
+
+          <p>
+            NLe
+            <strong id="payment-total"> 0 </strong>
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Select Payment Method</h2>
+
+        <form id="payment-form">
+          <label for="payment-method"> Payment Method * </label>
+
+          <select id="payment-method" required>
+            <option value="">Select payment method</option>
+
+            <option value="Orange Money">Orange Money</option>
+
+            <option value="Afrimoney">Afrimoney</option>
+          </select>
+
+          <div id="payment-instructions" class="card">
+            <p>Select a payment method to see the instructions.</p>
+          </div>
+
+          <button type="submit" class="button">
+            Continue to Payment Proof
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. All rights reserved.</p>
+
+      <p>Food • Catering • Events</p>
+    </footer>
+
+    <script src="payment.js"></script>
+  </body>
+</html>

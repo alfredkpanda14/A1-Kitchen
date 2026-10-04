@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>A1 Kitchen | Confirm Delivery</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <main>
+      <section>
+        <h1>Confirm Your Delivery</h1>
+
+        <p>
+          If you have received your order, enter the order number and confirm.
+        </p>
+
+        <form id="delivery-confirmation-form">
+          <label for="order-number"> Order Number </label>
+
+          <input type="text" id="order-number" required />
+
+          <label for="customer-token"> Customer Confirmation Code </label>
+
+          <input type="text" id="customer-token" required />
+
+          <button type="submit" class="button">I Received My Order</button>
+        </form>
+
+        <p id="confirmation-result" class="success-message"></p>
+      </section>
+
+      <section>
+        <h2>Report a Problem</h2>
+
+        <form id="problem-form">
+          <label for="problem-order"> Order Number </label>
+
+          <input type="text" id="problem-order" required />
+
+          <label for="problem-token"> Customer Confirmation Code </label>
+
+          <input type="text" id="problem-token" required />
+
+          <label for="problem-details"> Describe the Problem </label>
+
+          <textarea id="problem-details" rows="5" required></textarea>
+
+          <button type="submit" class="button">Report Problem</button>
+        </form>
+
+        <p id="problem-result" class="success-message"></p>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="supabase-config.js"></script>
+
+    <script src="delivery-confirmation.js"></script>
+  </body>
+</html>

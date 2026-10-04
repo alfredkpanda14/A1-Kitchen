@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>A1 Kitchen | Head Chef Dashboard</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <main>
+      <section>
+        <h1>Head Chef Dashboard</h1>
+
+        <p>A1 Kitchen operational dashboard.</p>
+
+        <button class="button" id="refresh-orders">Refresh Orders</button>
+      </section>
+
+      <section>
+        <h2>Orders</h2>
+
+        <div id="chef-orders">Loading...</div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="supabase-config.js"></script>
+
+    <script src="chef-dashboard.js"></script>
+  </body>
+</html>
