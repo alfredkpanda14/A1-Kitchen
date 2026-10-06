@@ -554,3 +554,29 @@ button.button {
   font-weight: bold;
   color: #0b3d91;
 }
+/* Respect the hidden attribute (fixes always-visible "Try again" button) */
+[hidden] {
+  display: none !important;
+}
+
+/* Skip link: invisible until a keyboard user presses Tab */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: #0b3d91;
+  color: #ffffff;
+  padding: 10px 16px;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  left: 8px;
+  top: 8px;
+}
+
+/* Never let media overflow small phone screens */
+video,
+audio {
+  max-width: 100%;
+}

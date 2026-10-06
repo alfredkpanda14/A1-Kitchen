@@ -9,20 +9,31 @@
       content="A1 Kitchen provides delicious meals, food orders and professional catering services for birthdays, weddings, naming ceremonies and other special events."
     />
 
-    <title>A1 Kitchen | Food & Catering Services</title>
+    <title>A1 Kitchen | Food &amp; Catering Services</title>
 
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍽️%3C/text%3E%3C/svg%3E"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body id="top">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Navigation -->
-    <nav>
-      <a href="index.html" class="active">Home</a>
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="active" aria-current="page">Home</a>
       <a href="menu.html">Menu</a>
+      <a href="catering.html">Catering</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="gallery.html">Gallery</a>
       <a href="birthday.html">Birthday Message</a>
     </nav>
 
-    <main>
+    <main id="main-content">
       <!-- Hero Section -->
       <section>
         <h1>Welcome to A1 Kitchen</h1>
@@ -67,7 +78,7 @@
           </div>
 
           <div class="card">
-            <h3>Meetings & Events</h3>
+            <h3>Meetings &amp; Events</h3>
             <p>
               Food orders and catering arrangements for meetings and events.
             </p>
@@ -81,7 +92,9 @@
 
         <img
           src="images/a1-kitchen-photo.png"
-          alt="A1 Kitchen food and catering service"
+          alt="A plate of freshly prepared A1 Kitchen food"
+          loading="lazy"
+          decoding="async"
         />
 
         <p>
@@ -96,7 +109,12 @@
       <section>
         <h2>Watch A1 Kitchen at Work</h2>
 
-        <video src="videos/a1-kitchen-video.mp4" controls>
+        <video
+          src="videos/a1-kitchen-video.mp4"
+          controls
+          preload="none"
+          playsinline
+        >
           Your browser does not support this video.
         </video>
       </section>
@@ -119,7 +137,7 @@
           to Chef A1.
         </p>
 
-        <a href="birthday.html" class="button"> Birthday Message </a>
+        <a href="birthday.html" class="button">Birthday Message</a>
       </section>
 
       <!-- Back to Top -->
