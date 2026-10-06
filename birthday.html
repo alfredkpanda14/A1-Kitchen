@@ -15,13 +15,22 @@
   </head>
 
   <body id="top">
-    <nav>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <nav aria-label="Main navigation">
       <a href="index.html">Home</a>
       <a href="menu.html">Menu</a>
-      <a href="birthday.html" class="active"> Birthday Message </a>
+      <a href="catering.html">Catering</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="birthday.html" class="active" aria-current="page">
+        Birthday Message
+      </a>
     </nav>
 
-    <main>
+    <main id="main-content">
       <section>
         <h1>Happy Birthday, Chef A1!</h1>
 
@@ -45,13 +54,20 @@
         <img
           src="images/chef-al-birthday.jpeg"
           alt="Chef A1 celebrating his birthday"
+          loading="lazy"
+          decoding="async"
         />
       </section>
 
       <section>
         <h2>Chef A1 Himself</h2>
 
-        <video src="videos/chef-a1-birthday.mp4" controls>
+        <video
+          src="videos/chef-a1-birthday.mp4"
+          controls
+          preload="none"
+          playsinline
+        >
           Your browser does not support this video.
         </video>
       </section>
@@ -65,9 +81,9 @@
       </section>
 
       <section>
-        <a href="index.html" class="button"> ← Back to A1 Kitchen Home </a>
+        <a href="index.html" class="button">← Back to A1 Kitchen Home</a>
 
-        <a href="#top" class="button"> ↑ Back to Top </a>
+        <a href="#top" class="button">↑ Back to Top</a>
       </section>
     </main>
 
