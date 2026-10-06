@@ -538,3 +538,19 @@ button.button {
   padding: 0;
   border: 0;
 }
+/* Menu pictures */
+.menu-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  background: #eef2f7;
+}
+
+.menu-notice {
+  font-weight: bold;
+  color: #0b3d91;
+}

@@ -1,61 +1,77 @@
-const orderButtons = document.querySelectorAll(".order-button");
 const cartItemsContainer = document.getElementById("cart-items");
 const cartTotal = document.getElementById("cart-total");
 const emptyCart = document.getElementById("empty-cart");
+const cartNotice = document.getElementById("cart-notice");
 
-let cart = JSON.parse(localStorage.getItem("a1KitchenCart")) || [];
+const MAX_PER_ITEM = 20;
+
+let cart = [];
+
+try {
+  cart = JSON.parse(localStorage.getItem("a1KitchenCart")) || [];
+} catch (error) {
+  cart = [];
+}
 
 function saveCart() {
   localStorage.setItem("a1KitchenCart", JSON.stringify(cart));
 }
 
 function renderCart() {
-  cartItemsContainer.innerHTML = "";
+  cartItemsContainer.textContent = "";
 
   let total = 0;
 
-  if (cart.length === 0) {
-    emptyCart.style.display = "block";
-  } else {
-    emptyCart.style.display = "none";
-  }
+  emptyCart.style.display = cart.length === 0 ? "block" : "none";
 
   cart.forEach((item, index) => {
-    const itemTotal = item.price * item.quantity;
-
+    const itemTotal = Number(item.price) * Number(item.quantity);
     total += itemTotal;
 
     const row = document.createElement("div");
-
     row.className = "cart-item";
 
-    row.innerHTML = `
-      <div>
-        <strong>${item.name}</strong>
-        <p>
-          NLe ${item.price} × ${item.quantity}
-          = NLe ${itemTotal}
-        </p>
-      </div>
+    const info = document.createElement("div");
+    const name = document.createElement("strong");
+    name.textContent = item.name;
+    const line = document.createElement("p");
+    line.textContent =
+      "NLe " + item.price + " × " + item.quantity + " = NLe " + itemTotal;
+    info.appendChild(name);
+    info.appendChild(line);
 
-      <div class="cart-controls">
-        <button onclick="changeQuantity(${index}, -1)">−</button>
+    const controls = document.createElement("div");
+    controls.className = "cart-controls";
 
-        <span>${item.quantity}</span>
+    const minus = document.createElement("button");
+    minus.type = "button";
+    minus.textContent = "−";
+    minus.setAttribute("aria-label", "Decrease quantity of " + item.name);
+    minus.dataset.action = "decrease";
+    minus.dataset.index = index;
 
-        <button onclick="changeQuantity(${index}, 1)">+</button>
+    const quantity = document.createElement("span");
+    quantity.textContent = item.quantity;
 
-        <button onclick="removeItem(${index})">
-          Remove
-        </button>
-      </div>
-    `;
+    const plus = document.createElement("button");
+    plus.type = "button";
+    plus.textContent = "+";
+    plus.setAttribute("aria-label", "Increase quantity of " + item.name);
+    plus.dataset.action = "increase";
+    plus.dataset.index = index;
 
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "Remove";
+    remove.dataset.action = "remove";
+    remove.dataset.index = index;
+
+    controls.append(minus, quantity, plus, remove);
+    row.append(info, controls);
     cartItemsContainer.appendChild(row);
   });
 
   cartTotal.textContent = total;
-
   saveCart();
 }
 
@@ -63,40 +79,52 @@ function addToCart(name, price) {
   const existingItem = cart.find((item) => item.name === name);
 
   if (existingItem) {
+    if (existingItem.quantity >= MAX_PER_ITEM) {
+      cartNotice.textContent =
+        "Maximum " +
+        MAX_PER_ITEM +
+        " of one item. For large orders, see Catering.";
+      return;
+    }
     existingItem.quantity += 1;
   } else {
-    cart.push({
-      name: name,
-      price: Number(price),
-      quantity: 1,
-    });
+    cart.push({ name: name, price: Number(price), quantity: 1 });
   }
 
+  cartNotice.textContent = name + " has been added to your order.";
   renderCart();
-
-  alert(name + " has been added to your order.");
 }
 
-function changeQuantity(index, amount) {
-  cart[index].quantity += amount;
+document.addEventListener("click", (event) => {
+  const orderButton = event.target.closest(".order-button");
 
-  if (cart[index].quantity <= 0) {
+  if (orderButton) {
+    addToCart(orderButton.dataset.name, orderButton.dataset.price);
+  }
+});
+
+cartItemsContainer.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-action]");
+
+  if (!button) {
+    return;
+  }
+
+  const index = Number(button.dataset.index);
+  const action = button.dataset.action;
+
+  if (action === "increase" && cart[index].quantity < MAX_PER_ITEM) {
+    cart[index].quantity += 1;
+  } else if (action === "decrease") {
+    cart[index].quantity -= 1;
+    if (cart[index].quantity <= 0) {
+      cart.splice(index, 1);
+    }
+  } else if (action === "remove") {
     cart.splice(index, 1);
   }
 
   renderCart();
-}
-
-function removeItem(index) {
-  cart.splice(index, 1);
-
-  renderCart();
-}
-
-orderButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    addToCart(button.dataset.name, button.dataset.price);
-  });
 });
 
 renderCart();
