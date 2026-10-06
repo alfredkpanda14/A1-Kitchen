@@ -2,16 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <meta
+      name="description"
+      content="Memories from previous A1 Kitchen events and Family Outings."
+    />
     <title>A1 Kitchen | Event Archive</title>
-
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <main>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <nav aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="catering.html">Catering</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="birthday.html">Birthday Message</a>
+    </nav>
+
+    <main id="main-content">
       <section>
         <h1>A1 Kitchen Event Archive</h1>
 
@@ -19,14 +33,32 @@
       </section>
 
       <section>
-        <div id="event-list" class="card-container">Loading events...</div>
+        <h2>Previous Events</h2>
+
+        <div
+          id="event-list"
+          class="card-container"
+          role="status"
+          aria-live="polite"
+        >
+          Loading events...
+        </div>
+      </section>
+
+      <section>
+        <a href="family-outing.html" class="button"
+          >Family Outing Registration</a
+        >
       </section>
     </main>
 
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. All rights reserved.</p>
+      <p>Food • Catering • Events</p>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script src="supabase-config.js"></script>
-
     <script src="event-archive.js"></script>
   </body>
 </html>

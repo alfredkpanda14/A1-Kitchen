@@ -2,65 +2,122 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <meta
+      name="description"
+      content="Confirm your A1 Kitchen delivery or report a problem with your order."
+    />
+    <meta name="robots" content="noindex" />
     <title>A1 Kitchen | Confirm Delivery</title>
-
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <main>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <nav aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="catering.html">Catering</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="birthday.html">Birthday Message</a>
+    </nav>
+
+    <main id="main-content">
       <section>
         <h1>Confirm Your Delivery</h1>
 
         <p>
-          If you have received your order, enter the order number and confirm.
+          If you have received your order, enter the order number and your
+          confirmation code, then confirm.
         </p>
 
         <form id="delivery-confirmation-form">
-          <label for="order-number"> Order Number </label>
+          <label for="order-number">Order Number</label>
+          <input
+            type="text"
+            id="order-number"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            required
+          />
 
-          <input type="text" id="order-number" required />
-
-          <label for="customer-token"> Customer Confirmation Code </label>
-
-          <input type="text" id="customer-token" required />
+          <label for="customer-token">Customer Confirmation Code</label>
+          <input
+            type="text"
+            id="customer-token"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            required
+          />
 
           <button type="submit" class="button">I Received My Order</button>
         </form>
 
-        <p id="confirmation-result" class="success-message"></p>
+        <p
+          id="confirmation-result"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
       </section>
 
       <section>
         <h2>Report a Problem</h2>
 
         <form id="problem-form">
-          <label for="problem-order"> Order Number </label>
+          <label for="problem-order">Order Number</label>
+          <input
+            type="text"
+            id="problem-order"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            required
+          />
 
-          <input type="text" id="problem-order" required />
+          <label for="problem-token">Customer Confirmation Code</label>
+          <input
+            type="text"
+            id="problem-token"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            required
+          />
 
-          <label for="problem-token"> Customer Confirmation Code </label>
-
-          <input type="text" id="problem-token" required />
-
-          <label for="problem-details"> Describe the Problem </label>
-
-          <textarea id="problem-details" rows="5" required></textarea>
+          <label for="problem-details">Describe the Problem</label>
+          <textarea
+            id="problem-details"
+            rows="5"
+            maxlength="1000"
+            required
+          ></textarea>
 
           <button type="submit" class="button">Report Problem</button>
         </form>
 
-        <p id="problem-result" class="success-message"></p>
+        <p
+          id="problem-result"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
       </section>
     </main>
 
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. All rights reserved.</p>
+      <p>Food • Catering • Events</p>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script src="supabase-config.js"></script>
-
     <script src="delivery-confirmation.js"></script>
   </body>
 </html>

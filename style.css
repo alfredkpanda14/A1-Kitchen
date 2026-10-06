@@ -580,3 +580,8 @@ video,
 audio {
   max-width: 100%;
 }
+/* Order flow step labels */
+.step-label {
+  font-weight: bold;
+  color: #0b3d91;
+}

@@ -2,29 +2,33 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <meta name="description" content="Submit A1 Kitchen payment screenshot." />
-
+    <meta
+      name="description"
+      content="Submit your A1 Kitchen payment screenshot."
+    />
+    <meta name="robots" content="noindex" />
     <title>A1 Kitchen | Payment Proof</title>
-
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <nav>
-      <a href="index.html"> Home </a>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-      <a href="menu.html"> Menu </a>
-
-      <a href="order.html"> Order </a>
-
-      <a href="payment-proof.html" class="active"> Payment Proof </a>
+    <nav aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="catering.html">Catering</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="birthday.html">Birthday Message</a>
     </nav>
 
-    <main>
+    <main id="main-content">
       <section>
+        <p class="step-label">Step 3 of 3: Payment screenshot</p>
         <h1>Submit Payment Screenshot</h1>
 
         <p>Upload a clear screenshot showing your payment.</p>
@@ -32,14 +36,12 @@
         <div class="card">
           <p>
             <strong>Order Number:</strong>
-
-            <span id="proof-order-number"> Loading... </span>
+            <span id="proof-order-number">Loading...</span>
           </p>
 
           <p>
             <strong>Payment Method:</strong>
-
-            <span id="proof-payment-method"> Loading... </span>
+            <span id="proof-payment-method">Loading...</span>
           </p>
         </div>
       </section>
@@ -48,7 +50,7 @@
         <h2>Payment Screenshot</h2>
 
         <form id="proof-form">
-          <label for="payment-screenshot"> Payment Screenshot * </label>
+          <label for="payment-screenshot">Payment Screenshot *</label>
 
           <input
             type="file"
@@ -59,25 +61,27 @@
 
           <p>Screenshot only. No Transaction ID is required.</p>
 
-          <p>Maximum recommended file size: 6 MB.</p>
+          <p>Accepted: JPG, PNG or WebP image, up to 6 MB.</p>
 
           <button type="submit" class="button">Submit Payment Proof</button>
         </form>
 
-        <div id="proof-result" class="success-message"></div>
+        <div
+          id="proof-result"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></div>
       </section>
     </main>
 
     <footer>
       <p>&copy; 2026 A1 Kitchen. All rights reserved.</p>
-
       <p>Food • Catering • Events</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script src="supabase-config.js"></script>
-
     <script src="payment-proof.js"></script>
   </body>
 </html>

@@ -2,18 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <meta name="description" content="Place a food order with A1 Kitchen." />
-
+    <meta name="robots" content="noindex" />
     <title>A1 Kitchen | Order Food</title>
-
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <nav>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <nav aria-label="Main navigation">
       <a href="index.html">Home</a>
       <a href="menu.html">Menu</a>
       <a href="catering.html">Catering</a>
@@ -21,11 +20,12 @@
       <a href="contact.html">Contact</a>
       <a href="faq.html">FAQ</a>
       <a href="gallery.html">Gallery</a>
-      <a href="order.html" class="active">Order</a>
+      <a href="birthday.html">Birthday Message</a>
     </nav>
 
-    <main>
+    <main id="main-content">
       <section>
+        <p class="step-label">Step 1 of 3: Your details</p>
         <h1>Order from A1 Kitchen</h1>
 
         <p>
@@ -51,76 +51,95 @@
         <h2>Customer Information</h2>
 
         <form id="order-form">
-          <label for="customer-name"> Full Name * </label>
+          <label for="customer-name">Full Name *</label>
+          <input
+            type="text"
+            id="customer-name"
+            name="customer-name"
+            autocomplete="name"
+            maxlength="100"
+            required
+          />
 
-          <input type="text" id="customer-name" name="customer-name" required />
+          <label for="phone">Phone Number *</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            autocomplete="tel"
+            inputmode="tel"
+            maxlength="20"
+            required
+          />
 
-          <label for="phone"> Phone Number * </label>
+          <label for="whatsapp">WhatsApp Number</label>
+          <input
+            type="tel"
+            id="whatsapp"
+            name="whatsapp"
+            autocomplete="tel"
+            inputmode="tel"
+            maxlength="20"
+          />
 
-          <input type="tel" id="phone" name="phone" required />
-
-          <label for="whatsapp"> WhatsApp Number </label>
-
-          <input type="tel" id="whatsapp" name="whatsapp" />
-
-          <label for="delivery-method"> Delivery or Pickup * </label>
-
+          <label for="delivery-method">Delivery or Pickup *</label>
           <select id="delivery-method" name="delivery-method" required>
             <option value="">Select an option</option>
-
             <option value="delivery">Delivery</option>
-
             <option value="pickup">Pickup</option>
           </select>
 
           <div id="delivery-location-container">
             <label for="delivery-location">
-              Delivery Location / Address *
+              Delivery Location / Address (required for delivery)
             </label>
 
             <textarea
               id="delivery-location"
               name="delivery-location"
               rows="4"
+              maxlength="500"
               placeholder="Enter your area, street, landmark, house/building name and useful directions."
             ></textarea>
           </div>
 
-          <label for="delivery-notes"> Additional Delivery Instructions </label>
-
+          <label for="delivery-notes">Additional Delivery Instructions</label>
           <textarea
             id="delivery-notes"
             name="delivery-notes"
             rows="3"
+            maxlength="500"
             placeholder="Example: Call me when you arrive at the gate."
           ></textarea>
 
-          <label for="order-notes"> Order Notes </label>
-
+          <label for="order-notes">Order Notes</label>
           <textarea
             id="order-notes"
             name="order-notes"
             rows="3"
+            maxlength="500"
             placeholder="Any special request about the food?"
           ></textarea>
 
           <button type="submit" class="button">Continue to Payment</button>
         </form>
 
-        <p id="order-message" class="success-message"></p>
+        <p
+          id="order-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
       </section>
     </main>
 
     <footer>
       <p>&copy; 2026 A1 Kitchen. All rights reserved.</p>
-
       <p>Food • Catering • Events</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script src="supabase-config.js"></script>
-
     <script src="order.js"></script>
   </body>
 </html>

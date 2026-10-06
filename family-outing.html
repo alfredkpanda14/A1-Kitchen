@@ -2,31 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <meta
       name="description"
       content="A1 Kitchen annual Family Outing registration."
     />
-
     <title>A1 Kitchen | Family Outing</title>
-
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <nav>
-      <a href="index.html"> Home </a>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-      <a href="menu.html"> Menu </a>
-
-      <a href="gallery.html"> Gallery </a>
-
-      <a href="family-outing.html" class="active"> Family Outing </a>
+    <nav aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="catering.html">Catering</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="birthday.html">Birthday Message</a>
     </nav>
 
-    <main>
+    <main id="main-content">
       <section>
         <h1>A1 Kitchen Family Outing</h1>
 
@@ -37,26 +36,40 @@
         <h2>Register for the Family Outing</h2>
 
         <form id="outing-form">
-          <label for="outing-name"> Full Name * </label>
+          <label for="outing-name">Full Name *</label>
+          <input
+            type="text"
+            id="outing-name"
+            autocomplete="name"
+            maxlength="100"
+            required
+          />
 
-          <input type="text" id="outing-name" required />
+          <label for="outing-phone">Phone Number *</label>
+          <input
+            type="tel"
+            id="outing-phone"
+            autocomplete="tel"
+            inputmode="tel"
+            maxlength="20"
+            required
+          />
 
-          <label for="outing-phone"> Phone Number * </label>
-
-          <input type="tel" id="outing-phone" required />
-
-          <label for="outing-guests"> Number of Guests * </label>
-
+          <label for="outing-guests">Number of Guests *</label>
           <input type="number" id="outing-guests" min="1" value="1" required />
 
-          <label for="outing-notes"> Additional Information </label>
-
-          <textarea id="outing-notes" rows="4"></textarea>
+          <label for="outing-notes">Additional Information</label>
+          <textarea id="outing-notes" rows="4" maxlength="500"></textarea>
 
           <button type="submit" class="button">Register</button>
         </form>
 
-        <p id="outing-result" class="success-message"></p>
+        <p
+          id="outing-result"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
       </section>
 
       <section>
@@ -68,12 +81,11 @@
 
     <footer>
       <p>&copy; 2026 A1 Kitchen. All rights reserved.</p>
+      <p>Food • Catering • Events</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script src="supabase-config.js"></script>
-
     <script src="family-outing.js"></script>
   </body>
 </html>

@@ -2,40 +2,47 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <meta
+      name="description"
+      content="Choose how to pay for your A1 Kitchen order."
+    />
+    <meta name="robots" content="noindex" />
     <title>A1 Kitchen | Payment</title>
-
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <nav>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <nav aria-label="Main navigation">
       <a href="index.html">Home</a>
       <a href="menu.html">Menu</a>
-      <a href="order.html">Order</a>
-      <a href="payment.html" class="active"> Payment </a>
+      <a href="catering.html">Catering</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="birthday.html">Birthday Message</a>
     </nav>
 
-    <main>
+    <main id="main-content">
       <section>
+        <p class="step-label">Step 2 of 3: Payment</p>
         <h1>Payment</h1>
 
         <p>Your order has been recorded.</p>
 
         <div class="card">
           <h2>Order Number</h2>
-
           <p>
-            <strong id="payment-order-number"> Loading... </strong>
+            <strong id="payment-order-number">Loading...</strong>
           </p>
 
           <h2>Total</h2>
-
           <p>
             NLe
-            <strong id="payment-total"> 0 </strong>
+            <strong id="payment-total">0</strong>
           </p>
         </div>
       </section>
@@ -44,17 +51,15 @@
         <h2>Select Payment Method</h2>
 
         <form id="payment-form">
-          <label for="payment-method"> Payment Method * </label>
+          <label for="payment-method">Payment Method *</label>
 
           <select id="payment-method" required>
             <option value="">Select payment method</option>
-
             <option value="Orange Money">Orange Money</option>
-
             <option value="Afrimoney">Afrimoney</option>
           </select>
 
-          <div id="payment-instructions" class="card">
+          <div id="payment-instructions" class="card" aria-live="polite">
             <p>Select a payment method to see the instructions.</p>
           </div>
 
@@ -67,9 +72,9 @@
 
     <footer>
       <p>&copy; 2026 A1 Kitchen. All rights reserved.</p>
-
       <p>Food • Catering • Events</p>
     </footer>
+
     <script src="site-info.js"></script>
     <script src="payment.js"></script>
   </body>
