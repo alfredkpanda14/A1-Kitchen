@@ -6,8 +6,8 @@
   Only PUBLIC information goes here (never PINs, passwords or secret keys).
 */
 const SITE_INFO = {
-  phone: "+23273611261",
-  whatsapp: "+23273611261",
+  phone: "",
+  whatsapp: "",
   email: "your-email@example.com",
   address: "Your business address here",
   hours: "e.g., Mon-Sat 8am - 8pm",

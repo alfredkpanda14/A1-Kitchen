@@ -6,32 +6,37 @@
 
     <meta
       name="description"
-      content="A1 Kitchen provides delicious meals, food orders and professional catering services for birthdays, weddings, naming ceremonies and other special events."
+      content="A1 Kitchen provides delicious meals, food orders and professional catering for dinners, birthdays, weddings, naming ceremonies, office meetings, workshops, pool parties, funeral ceremonies and other events."
     />
 
     <title>A1 Kitchen | Food &amp; Catering Services</title>
 
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍽️%3C/text%3E%3C/svg%3E"
-    />
+    <link rel="icon" type="image/svg+xml" href="images/logo-mark.svg" />
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body id="top">
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- Navigation -->
-    <nav aria-label="Main navigation">
-      <a href="index.html" class="active" aria-current="page">Home</a>
-      <a href="menu.html">Menu</a>
-      <a href="catering.html">Catering</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="faq.html">FAQ</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="birthday.html">Birthday Message</a>
-    </nav>
+    <header class="site-header">
+      <a class="brand" href="index.html"
+        ><img
+          src="images/logo.svg"
+          alt="A1 Kitchen home page"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Main navigation">
+        <a href="index.html" class="active" aria-current="page">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="catering.html">Catering</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="faq.html">FAQ</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="birthday.html">Birthday Message</a>
+      </nav>
+    </header>
 
     <main id="main-content">
       <!-- Hero Section -->
@@ -40,8 +45,9 @@
 
         <p class="welcome-message">
           A1 Kitchen prepares delicious meals and provides professional catering
-          services for birthdays, weddings, naming ceremonies, meetings, family
-          gatherings, and other special events.
+          services for dinners, birthdays, weddings, naming ceremonies, office
+          meetings, workshops, pool parties, funeral ceremonies and other
+          events.
         </p>
 
         <p>
@@ -59,31 +65,50 @@
 
         <div class="card-container">
           <div class="card">
-            <h3>Birthday Catering</h3>
-            <p>
-              Delicious meals and catering support for birthday celebrations.
-            </p>
+            <h3>Dinner</h3>
+            <p>Meals and catering for dinners and gatherings.</p>
           </div>
 
           <div class="card">
-            <h3>Wedding Catering</h3>
-            <p>Food services for weddings and other major celebrations.</p>
+            <h3>Workshop</h3>
+            <p>Food arrangements for workshops, trainings and seminars.</p>
           </div>
 
           <div class="card">
-            <h3>Naming Ceremonies</h3>
-            <p>
-              Catering services for naming ceremonies and family gatherings.
-            </p>
+            <h3>Office Meeting</h3>
+            <p>Food and catering for office meetings and business events.</p>
           </div>
 
           <div class="card">
-            <h3>Meetings &amp; Events</h3>
+            <h3>Wedding Reception</h3>
+            <p>Catering for wedding receptions and wedding-related events.</p>
+          </div>
+
+          <div class="card">
+            <h3>Naming Ceremony</h3>
+            <p>Catering for naming ceremonies and family gatherings.</p>
+          </div>
+
+          <div class="card">
+            <h3>Birthday Party</h3>
+            <p>Delicious meals and catering for birthday celebrations.</p>
+          </div>
+
+          <div class="card">
+            <h3>Pool Party</h3>
+            <p>Food for pool parties and relaxed get-togethers.</p>
+          </div>
+
+          <div class="card">
+            <h3>Funeral Ceremony</h3>
             <p>
-              Food orders and catering arrangements for meetings and events.
+              Respectful catering support for funeral ceremonies and family
+              gatherings.
             </p>
           </div>
         </div>
+
+        <a href="catering.html" class="button">See All Catering Services</a>
       </section>
 
       <!-- Food -->
@@ -146,8 +171,15 @@
       </section>
     </main>
 
-    <!-- Footer -->
     <footer>
+      <img
+        class="footer-logo"
+        src="images/logo.svg"
+        alt="A1 Kitchen"
+        width="200"
+        height="53"
+        loading="lazy"
+      />
       <p>&copy; 2026 A1 Kitchen. All rights reserved.</p>
       <p>Food • Catering • Events</p>
     </footer>
