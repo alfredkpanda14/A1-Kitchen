@@ -1,5 +1,23 @@
 /* ==============================
-   A1 KITCHEN - GLOBAL STYLES
+   A1 KITCHEN - STYLES
+   ============================== */
+
+/* Brand colours: change a colour here and it changes everywhere */
+:root {
+  --navy: #122033;
+  --blue: #0b3d91;
+  --green: #148a45;
+  --brown: #7a4b2a;
+  --sky: #75a7f5;
+  --page-bg: #f5f7fa;
+  --text: #374151;
+  --line: #d9e6f7;
+  --border: #cbd5e1;
+  --tint: #eef5ff;
+}
+
+/* ==============================
+   GLOBAL
    ============================== */
 
 * {
@@ -13,10 +31,60 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: #f5f7fa;
-  color: #122033;
+  background-color: var(--page-bg);
+  color: var(--navy);
   font-family: Arial, sans-serif;
   line-height: 1.6;
+}
+
+/* Respect the hidden attribute */
+[hidden] {
+  display: none !important;
+}
+
+/* ==============================
+   ACCESSIBILITY
+   ============================== */
+
+/* Skip link: invisible until a keyboard user presses Tab */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--blue);
+  color: #ffffff;
+  padding: 10px 16px;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  left: 8px;
+  top: 8px;
+}
+
+/* Clear outline when tabbing with a keyboard */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+nav a:focus-visible {
+  outline-color: #ffffff;
+}
+
+/* For people who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    transition: none !important;
+  }
 }
 
 /* ==============================
@@ -24,7 +92,7 @@ body {
    ============================== */
 
 nav {
-  background-color: #122033;
+  background-color: var(--navy);
   padding: 14px 20px;
   display: flex;
   justify-content: center;
@@ -38,7 +106,7 @@ nav a {
   background-color: transparent;
   color: white;
   padding: 10px 16px;
-  border: 1px solid #75a7f5;
+  border: 1px solid var(--sky);
   border-radius: 6px;
   text-decoration: none;
   font-weight: bold;
@@ -48,8 +116,8 @@ nav a {
 
 nav a:hover,
 nav a.active {
-  background-color: #148a45;
-  border-color: #148a45;
+  background-color: var(--green);
+  border-color: var(--green);
 }
 
 /* ==============================
@@ -67,7 +135,7 @@ section {
 }
 
 h1 {
-  background: linear-gradient(135deg, #0b3d91, #148a45);
+  background: linear-gradient(135deg, var(--blue), var(--green));
   color: white;
   padding: 30px;
   border-radius: 12px;
@@ -78,33 +146,29 @@ h1 {
 }
 
 h2 {
-  color: #7a4b2a;
+  color: var(--brown);
   margin-top: 40px;
   margin-bottom: 15px;
   font-size: 28px;
-  border-bottom: 2px solid #d9e6f7;
+  border-bottom: 2px solid var(--line);
   padding-bottom: 8px;
 }
 
 h3 {
-  color: #0b3d91;
+  color: var(--blue);
 }
 
 p {
-  color: #374151;
+  color: var(--text);
   line-height: 1.7;
 }
-
-/* ==============================
-   WELCOME MESSAGE
-   ============================== */
 
 .welcome-message {
   max-width: 850px;
   margin: 25px auto;
   padding: 22px;
   background-color: white;
-  border-left: 6px solid #0b3d91;
+  border-left: 6px solid var(--blue);
   border-radius: 0 12px 12px 0;
   box-shadow: 0 4px 12px rgba(18, 32, 51, 0.12);
   font-size: 18px;
@@ -116,7 +180,7 @@ p {
 
 .button {
   display: inline-block;
-  background-color: #0b3d91;
+  background-color: var(--blue);
   color: white;
   padding: 12px 20px;
   margin: 8px 5px 8px 0;
@@ -127,11 +191,17 @@ p {
 }
 
 .button:hover {
-  background-color: #148a45;
+  background-color: var(--green);
+}
+
+button.button {
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
 }
 
 /* ==============================
-   IMAGES
+   IMAGES, VIDEO AND AUDIO
    ============================== */
 
 img {
@@ -144,10 +214,6 @@ img {
   box-shadow: 0 6px 18px rgba(18, 32, 51, 0.25);
 }
 
-/* ==============================
-   VIDEO
-   ============================== */
-
 video {
   display: block;
   width: 100%;
@@ -157,10 +223,6 @@ video {
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(18, 32, 51, 0.25);
 }
-
-/* ==============================
-   AUDIO
-   ============================== */
 
 audio {
   display: block;
@@ -178,18 +240,18 @@ ul {
   max-width: 700px;
   margin: 20px auto;
   padding: 20px 20px 20px 40px;
-  border-left: 5px solid #148a45;
+  border-left: 5px solid var(--green);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(18, 32, 51, 0.08);
 }
 
 li {
   margin: 10px 0;
-  color: #374151;
+  color: var(--text);
 }
 
 /* ==============================
-   TABLE
+   TABLES
    ============================== */
 
 .table-container {
@@ -205,7 +267,7 @@ table {
 }
 
 th {
-  background-color: #0b3d91;
+  background-color: var(--blue);
   color: white;
   padding: 14px;
   text-align: left;
@@ -213,11 +275,11 @@ th {
 
 td {
   padding: 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border);
 }
 
 tr:nth-child(even) {
-  background-color: #eef5ff;
+  background-color: var(--tint);
 }
 
 /* ==============================
@@ -247,6 +309,153 @@ tr:nth-child(even) {
 }
 
 /* ==============================
+   MENU
+   ============================== */
+
+.menu-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  background: #eef2f7;
+}
+
+.order-button,
+.cart-controls button {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.order-button {
+  display: block;
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px 14px;
+  background-color: var(--green);
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.order-button:hover {
+  background-color: var(--blue);
+}
+
+/* ==============================
+   CART
+   ============================== */
+
+#cart {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(18, 32, 51, 0.12);
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.cart-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cart-controls button {
+  padding: 7px 10px;
+  background-color: var(--blue);
+  color: white;
+  border-radius: 5px;
+}
+
+.cart-controls button:hover {
+  background-color: var(--green);
+}
+
+/* ==============================
+   FORMS
+   ============================== */
+
+form {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 25px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(18, 32, 51, 0.12);
+}
+
+label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 7px;
+  font-weight: bold;
+  color: var(--navy);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--blue);
+}
+
+textarea {
+  resize: vertical;
+}
+
+#order-summary {
+  background-color: var(--page-bg);
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+/* ==============================
+   MESSAGES AND LABELS
+   ============================== */
+
+/* Order, payment and form result messages (keeps line breaks) */
+.success-message {
+  margin-top: 15px;
+  padding: 14px 16px;
+  background-color: var(--tint);
+  border-left: 5px solid var(--blue);
+  border-radius: 8px;
+  white-space: pre-line;
+}
+
+.success-message:empty {
+  display: none;
+}
+
+.menu-notice,
+.step-label {
+  font-weight: bold;
+  color: var(--blue);
+}
+
+/* ==============================
    BIRTHDAY MESSAGE
    ============================== */
 
@@ -254,8 +463,8 @@ tr:nth-child(even) {
   max-width: 850px;
   margin: 20px auto;
   padding: 24px;
-  background: linear-gradient(135deg, #ffffff, #eef5ff);
-  border-left: 6px solid #7a4b2a;
+  background: linear-gradient(135deg, #ffffff, var(--tint));
+  border-left: 6px solid var(--brown);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(18, 32, 51, 0.12);
   font-family: Georgia, serif;
@@ -268,7 +477,7 @@ tr:nth-child(even) {
    ============================== */
 
 footer {
-  background-color: #122033;
+  background-color: var(--navy);
   color: white;
   text-align: center;
   padding: 30px 20px;
@@ -281,7 +490,7 @@ footer p {
 }
 
 /* ==============================
-   MOBILE RESPONSIVENESS
+   MOBILE
    ============================== */
 
 @media (max-width: 600px) {
@@ -317,271 +526,11 @@ footer p {
     font-size: 14px;
   }
 
+  form {
+    padding: 18px;
+  }
+
   .card-container {
     grid-template-columns: 1fr;
   }
-}
-/* =========================
-   PHASE 4 - ORDERING
-========================= */
-
-.order-button,
-.cart-controls button {
-  border: none;
-  cursor: pointer;
-  font: inherit;
-}
-
-.order-button {
-  display: block;
-  width: 100%;
-  margin-top: 15px;
-  padding: 10px 14px;
-
-  background-color: #148a45;
-  color: white;
-
-  border-radius: 6px;
-
-  font-weight: bold;
-}
-
-.order-button:hover {
-  background-color: #0b3d91;
-}
-
-#cart {
-  background-color: white;
-
-  padding: 20px;
-
-  border-radius: 12px;
-
-  box-shadow: 0 4px 12px rgba(18, 32, 51, 0.12);
-}
-
-.cart-item {
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-
-  gap: 15px;
-
-  padding: 15px 0;
-
-  border-bottom: 1px solid #d9e6f7;
-}
-
-.cart-controls {
-  display: flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-  flex-wrap: wrap;
-}
-
-.cart-controls button {
-  padding: 7px 10px;
-
-  background-color: #0b3d91;
-
-  color: white;
-
-  border-radius: 5px;
-}
-
-.cart-controls button:hover {
-  background-color: #148a45;
-}
-/* =========================
-   PHASE 5 - ORDER FORM
-========================= */
-
-form {
-  max-width: 800px;
-
-  margin: 0 auto;
-
-  background-color: white;
-
-  padding: 25px;
-
-  border-radius: 12px;
-
-  box-shadow: 0 4px 12px rgba(18, 32, 51, 0.12);
-}
-
-label {
-  display: block;
-
-  margin-top: 18px;
-
-  margin-bottom: 7px;
-
-  font-weight: bold;
-
-  color: #122033;
-}
-
-input,
-textarea {
-  width: 100%;
-
-  box-sizing: border-box;
-
-  padding: 12px;
-
-  border: 1px solid #cbd5e1;
-
-  border-radius: 6px;
-
-  font: inherit;
-}
-
-input:focus,
-textarea:focus {
-  outline: 2px solid #75a7f5;
-
-  border-color: #0b3d91;
-}
-
-#order-summary {
-  background-color: #f5f7fa;
-
-  padding: 15px;
-
-  border-radius: 8px;
-
-  margin: 15px 0;
-}
-/* =========================
-   PHASE 6 - PAYMENT
-========================= */
-
-.payment-box {
-  margin-top: 20px;
-
-  padding: 20px;
-
-  background-color: white;
-
-  border-left: 5px solid #148a45;
-
-  border-radius: 8px;
-
-  box-shadow: 0 4px 12px rgba(18, 32, 51, 0.12);
-}
-
-.notice {
-  margin-top: 20px;
-
-  padding: 15px;
-
-  background-color: #eef5ff;
-
-  border-left: 5px solid #0b3d91;
-
-  border-radius: 8px;
-}
-/* =========================
-   ORDER FORM
-   ========================= */
-
-form {
-  max-width: 700px;
-  margin: 20px auto;
-  padding: 25px;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(18, 32, 51, 0.12);
-}
-
-label {
-  display: block;
-  margin-top: 16px;
-  margin-bottom: 7px;
-  font-weight: bold;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 7px;
-  font: inherit;
-}
-
-textarea {
-  resize: vertical;
-}
-
-button.button {
-  border: none;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-.hidden-field {
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-}
-/* Menu pictures */
-.menu-item img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  background: #eef2f7;
-}
-
-.menu-notice {
-  font-weight: bold;
-  color: #0b3d91;
-}
-/* Respect the hidden attribute (fixes always-visible "Try again" button) */
-[hidden] {
-  display: none !important;
-}
-
-/* Skip link: invisible until a keyboard user presses Tab */
-.skip-link {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  background: #0b3d91;
-  color: #ffffff;
-  padding: 10px 16px;
-  z-index: 1000;
-}
-
-.skip-link:focus {
-  left: 8px;
-  top: 8px;
-}
-
-/* Never let media overflow small phone screens */
-video,
-audio {
-  max-width: 100%;
-}
-/* Order flow step labels */
-.step-label {
-  font-weight: bold;
-  color: #0b3d91;
 }
