@@ -3,12 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <meta
+      name="description"
+      content="Contact A1 Kitchen for food orders, catering and events."
+    />
     <title>Contact A1 Kitchen</title>
-
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body>
     <nav>
       <a href="index.html">Home</a>
@@ -16,12 +17,14 @@
       <a href="catering.html">Catering</a>
       <a href="about.html">About</a>
       <a href="contact.html" class="active">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="birthday.html">Birthday Message</a>
     </nav>
 
     <main>
       <section>
         <h1>Contact A1 Kitchen</h1>
-
         <p>
           Have a question, want to place an order, or need catering services for
           an event? Contact A1 Kitchen.
@@ -30,31 +33,38 @@
 
       <section>
         <h2>Get in Touch</h2>
-
         <div class="card-container">
           <div class="card">
             <h3>Phone</h3>
-            <p>Phone :<a href="tel:+23273611261">+23273611261</a></p>
+            <p data-info="phone" data-type="phone">
+              Phone number will be added soon.
+            </p>
           </div>
 
           <div class="card">
             <h3>WhatsApp</h3>
-            <p>
-              WhatsApp: <a href="https://wa.me/23273611261">+23273611261</a>
+            <p data-info="whatsapp" data-type="whatsapp">
+              WhatsApp number will be added soon.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Email</h3>
+            <p data-info="email" data-type="email">
+              Email address will be added soon.
             </p>
           </div>
 
           <div class="card">
             <h3>Location</h3>
-            <p>Business location will be added here.</p>
+            <p data-info="address">Business location will be added soon.</p>
           </div>
         </div>
       </section>
 
       <section>
         <h2>Business Hours</h2>
-
-        <p>Business hours will be added here.</p>
+        <p data-info="hours">Business hours will be added soon.</p>
       </section>
     </main>
 
@@ -62,5 +72,7 @@
       <p>&copy; 2026 A1 Kitchen. All rights reserved.</p>
       <p>Food • Catering • Events</p>
     </footer>
+
+    <script src="site-info.js"></script>
   </body>
 </html>
