@@ -5,6 +5,11 @@ const menuRetry = document.getElementById("menu-retry");
 const PLACEHOLDER_IMAGE = "images/menu/placeholder.svg";
 const MENU_CACHE_KEY = "a1KitchenMenuCache";
 
+const MENU_URL =
+  SUPABASE_URL +
+  "/rest/v1/menu_items?select=id,name,description,price,image_path" +
+  "&available=eq.true&order=name.asc";
+
 function renderMenu(items) {
   menuContainer.textContent = "";
 
@@ -14,7 +19,7 @@ function renderMenu(items) {
     return;
   }
 
-  items.forEach((item) => {
+  items.forEach((item, index) => {
     const card = document.createElement("div");
     card.className = "card menu-item";
 
@@ -23,8 +28,19 @@ function renderMenu(items) {
     picture.alt = item.name;
     picture.width = 400;
     picture.height = 300;
-    picture.loading = "lazy";
     picture.decoding = "async";
+
+    // The first pictures load straight away; the rest wait until needed
+    if (index < 2) {
+      picture.loading = "eager";
+    } else {
+      picture.loading = "lazy";
+    }
+
+    if (index === 0) {
+      picture.setAttribute("fetchpriority", "high");
+    }
+
     picture.onerror = () => {
       picture.onerror = null;
       picture.src = PLACEHOLDER_IMAGE;
@@ -63,13 +79,24 @@ async function loadMenu() {
   menuStatus.textContent = "Loading menu...";
   menuRetry.hidden = true;
 
-  const { data, error } = await supabaseClient
-    .from("menu_items")
-    .select("id, name, description, price, image_path")
-    .eq("available", true)
-    .order("name");
+  try {
+    const response = await fetch(MENU_URL, {
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Accept: "application/json",
+      },
+    });
 
-  if (error) {
+    if (!response.ok) {
+      throw new Error("Menu request failed with status " + response.status);
+    }
+
+    const data = await response.json();
+
+    localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(data));
+    menuStatus.textContent = "";
+    renderMenu(data);
+  } catch (error) {
     console.error("Menu load error:", error);
 
     const saved = loadSavedMenu();
@@ -85,12 +112,7 @@ async function loadMenu() {
     }
 
     menuRetry.hidden = false;
-    return;
   }
-
-  localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(data));
-  menuStatus.textContent = "";
-  renderMenu(data);
 }
 
 menuRetry.addEventListener("click", loadMenu);
