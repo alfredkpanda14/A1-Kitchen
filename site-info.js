@@ -11,6 +11,11 @@ const SITE_INFO = {
   email: "your-email@example.com",
   address: "Your business address here",
   hours: "e.g., Mon-Sat 8am - 8pm",
+  deliveryAreas: "",
+  deliveryFee: "",
+  deliveryTime: "",
+  pickupInfo: "",
+  paymentCheckTime: "",
 
   orangeMoneyNumber: "07XXXXXXX",
   orangeMoneyName: "A1 Kitchen",

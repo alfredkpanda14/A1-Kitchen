@@ -630,3 +630,15 @@ footer p {
 #menu-status {
   min-height: 1.7em;
 }
+/* Footer links */
+.footer-links {
+  font-size: 15px;
+}
+
+.footer-links a {
+  color: var(--sky);
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
