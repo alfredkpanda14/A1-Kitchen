@@ -1,8 +1,8 @@
 /images/*
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=604800
 
 /audio/*
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=604800
 
 /videos/*
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=604800
