@@ -95,6 +95,17 @@ function addToCart(name, price) {
   renderCart();
 }
 
+/* Called by menu.js after the live menu loads */
+function applyMenuToCart(menuItems) {
+  const result = syncCartWithMenu(cart, menuItems);
+  cart = result.cart;
+  renderCart();
+
+  if (result.messages.length > 0) {
+    cartNotice.textContent = result.messages.join(" ");
+  }
+}
+
 document.addEventListener("click", (event) => {
   const orderButton = event.target.closest(".order-button");
 

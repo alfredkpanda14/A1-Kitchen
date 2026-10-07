@@ -1,23 +1,20 @@
 const menuContainer = document.getElementById("menu-items");
 const menuStatus = document.getElementById("menu-status");
 const menuRetry = document.getElementById("menu-retry");
+const menuFilters = document.getElementById("menu-filters");
+const menuSearch = document.getElementById("menu-search");
 
 const PLACEHOLDER_IMAGE = "images/menu/placeholder.svg";
-const MENU_CACHE_KEY = "a1KitchenMenuCache";
 
-const MENU_URL =
-  SUPABASE_URL +
-  "/rest/v1/menu_items?select=id,name,description,price,image_path" +
-  "&available=eq.true&order=name.asc";
+let allItems = [];
+let activeCategory = "All";
+
+function categoryOf(item) {
+  return item.category || "Other";
+}
 
 function renderMenu(items) {
   menuContainer.textContent = "";
-
-  if (!items || items.length === 0) {
-    menuStatus.textContent =
-      "The menu is being updated. Please check back soon.";
-    return;
-  }
 
   items.forEach((item, index) => {
     const card = document.createElement("div");
@@ -29,13 +26,7 @@ function renderMenu(items) {
     picture.width = 400;
     picture.height = 300;
     picture.decoding = "async";
-
-    // The first pictures load straight away; the rest wait until needed
-    if (index < 2) {
-      picture.loading = "eager";
-    } else {
-      picture.loading = "lazy";
-    }
+    picture.loading = index < 2 ? "eager" : "lazy";
 
     if (index === 0) {
       picture.setAttribute("fetchpriority", "high");
@@ -67,12 +58,82 @@ function renderMenu(items) {
   });
 }
 
-function loadSavedMenu() {
-  try {
-    return JSON.parse(localStorage.getItem(MENU_CACHE_KEY));
-  } catch (error) {
-    return null;
+function applyFilters() {
+  const query = menuSearch.value.trim().toLowerCase();
+
+  const filtered = allItems.filter((item) => {
+    const inCategory =
+      activeCategory === "All" || categoryOf(item) === activeCategory;
+
+    const matchesSearch =
+      query === "" ||
+      item.name.toLowerCase().includes(query) ||
+      (item.description || "").toLowerCase().includes(query);
+
+    return inCategory && matchesSearch;
+  });
+
+  renderMenu(filtered);
+
+  if (allItems.length === 0) {
+    menuStatus.textContent =
+      "The menu is being updated. Please check back soon.";
+  } else if (filtered.length === 0) {
+    menuStatus.textContent = "No foods match your search.";
+  } else {
+    menuStatus.textContent =
+      "Showing " +
+      filtered.length +
+      (filtered.length === 1 ? " food." : " foods.");
   }
+}
+
+function buildFilters() {
+  menuFilters.textContent = "";
+
+  const categories = [];
+  allItems.forEach((item) => {
+    const name = categoryOf(item);
+    if (!categories.includes(name)) {
+      categories.push(name);
+    }
+  });
+
+  if (categories.length < 2) {
+    menuFilters.hidden = true;
+    activeCategory = "All";
+    return;
+  }
+
+  if (activeCategory !== "All" && !categories.includes(activeCategory)) {
+    activeCategory = "All";
+  }
+
+  menuFilters.hidden = false;
+
+  ["All"].concat(categories).forEach((name) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "filter-button";
+    button.textContent = name;
+    button.setAttribute("aria-pressed", String(name === activeCategory));
+
+    button.addEventListener("click", () => {
+      activeCategory = name;
+      menuFilters.querySelectorAll(".filter-button").forEach((other) => {
+        other.setAttribute("aria-pressed", String(other === button));
+      });
+      applyFilters();
+    });
+
+    menuFilters.appendChild(button);
+  });
+}
+
+function setMenu(items) {
+  allItems = items || [];
+  buildFilters();
+  applyFilters();
 }
 
 async function loadMenu() {
@@ -80,29 +141,16 @@ async function loadMenu() {
   menuRetry.hidden = true;
 
   try {
-    const response = await fetch(MENU_URL, {
-      headers: {
-        apikey: SUPABASE_PUBLISHABLE_KEY,
-        Accept: "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Menu request failed with status " + response.status);
-    }
-
-    const data = await response.json();
-
-    localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(data));
-    menuStatus.textContent = "";
-    renderMenu(data);
+    const data = await fetchAvailableMenu();
+    setMenu(data);
+    applyMenuToCart(data);
   } catch (error) {
     console.error("Menu load error:", error);
 
     const saved = loadSavedMenu();
 
     if (saved && saved.length > 0) {
-      renderMenu(saved);
+      setMenu(saved);
       menuStatus.textContent =
         "Showing your saved menu. Prices may be out of date. Check your internet connection.";
     } else {
@@ -115,6 +163,7 @@ async function loadMenu() {
   }
 }
 
+menuSearch.addEventListener("input", applyFilters);
 menuRetry.addEventListener("click", loadMenu);
 
 loadMenu();

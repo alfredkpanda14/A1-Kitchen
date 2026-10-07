@@ -43,6 +43,22 @@
 
       <section>
         <h2>Our Menu</h2>
+        <div class="menu-tools">
+          <label for="menu-search">Search the menu</label>
+          <input
+            type="search"
+            id="menu-search"
+            placeholder="Example: rice, chicken, fish"
+            autocomplete="off"
+          />
+          <div
+            id="menu-filters"
+            class="menu-filters"
+            role="group"
+            aria-label="Filter by category"
+            hidden
+          ></div>
+        </div>
         <p id="menu-status" role="status">Loading menu...</p>
         <button id="menu-retry" class="button" type="button" hidden>
           Try again
@@ -92,6 +108,7 @@
     </footer>
 
     <script src="supabase-config.js"></script>
+    <script src="menu-api.js"></script>
     <script src="script.js"></script>
     <script src="menu.js"></script>
   </body>

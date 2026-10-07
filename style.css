@@ -642,3 +642,31 @@ footer p {
 .footer-links a:hover {
   color: #ffffff;
 }
+/* Menu search and category filters */
+.menu-tools {
+  max-width: 700px;
+  margin: 15px 0;
+}
+
+.menu-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.filter-button {
+  border: 1px solid var(--blue);
+  background: #ffffff;
+  color: var(--blue);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.filter-button[aria-pressed="true"] {
+  background: var(--blue);
+  color: #ffffff;
+}
