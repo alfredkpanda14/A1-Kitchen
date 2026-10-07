@@ -41,13 +41,16 @@
         <p class="step-label">Step 2 of 3: Payment</p>
         <h1>Payment</h1>
 
-        <p>Your order has been recorded.</p>
+        <p>Your order has been recorded. Please keep your order number safe.</p>
 
         <div class="card">
           <h2>Order Number</h2>
-          <p>
-            <strong id="payment-order-number">Loading...</strong>
-          </p>
+          <p class="order-number" id="payment-order-number">Loading...</p>
+
+          <button type="button" id="copy-order-number" class="button">
+            Copy order number
+          </button>
+          <p id="copy-message" class="menu-notice" role="status"></p>
 
           <h2>Total</h2>
           <p>
@@ -55,9 +58,19 @@
             <strong id="payment-total">0</strong>
           </p>
         </div>
+
+        <p id="no-order" hidden>
+          We could not find a current order on this device.
+          <a href="menu.html">Go to the menu</a> to place an order.
+        </p>
       </section>
 
-      <section>
+      <section id="order-summary-section">
+        <h2>Your Order</h2>
+        <div class="card" id="payment-summary"></div>
+      </section>
+
+      <section id="payment-method-section">
         <h2>Select Payment Method</h2>
 
         <form id="payment-form">
@@ -77,6 +90,17 @@
             Continue to Payment Proof
           </button>
         </form>
+      </section>
+
+      <section>
+        <h2>Need Help?</h2>
+        <p>Contact A1 Kitchen and tell us your order number.</p>
+        <p data-info="phone" data-type="phone">
+          Phone number will be added soon.
+        </p>
+        <p data-info="whatsapp" data-type="whatsapp">
+          WhatsApp number will be added soon.
+        </p>
       </section>
     </main>
 

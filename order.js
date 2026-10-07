@@ -8,6 +8,8 @@ const deliveryLocationContainer = document.getElementById(
 );
 const deliveryLocation = document.getElementById("delivery-location");
 const submitButton = orderForm.querySelector('button[type="submit"]');
+const whatsappSection = document.getElementById("whatsapp-order");
+const whatsappLink = document.getElementById("whatsapp-order-link");
 
 const MAX_PER_ITEM = 20;
 
@@ -40,6 +42,85 @@ function setMessage(text) {
   orderMessage.textContent = text;
 }
 
+function cartTotal() {
+  return cart.reduce(
+    (sum, item) => sum + Number(item.price) * Number(item.quantity),
+    0,
+  );
+}
+
+/* ---------- WhatsApp fallback ---------- */
+
+function whatsappNumber() {
+  if (typeof SITE_INFO === "undefined" || !SITE_INFO.whatsapp) {
+    return "";
+  }
+
+  return SITE_INFO.whatsapp.replace(/\D/g, "");
+}
+
+function buildWhatsAppMessage() {
+  const lines = ["Hello A1 Kitchen, I would like to order:"];
+
+  cart.forEach((item) => {
+    lines.push(
+      "- " +
+        item.quantity +
+        " × " +
+        item.name +
+        " (NLe " +
+        item.price +
+        " each)",
+    );
+  });
+
+  lines.push("Total: NLe " + cartTotal());
+
+  const nameValue = document.getElementById("customer-name").value.trim();
+  const phoneValue = document.getElementById("phone").value.trim();
+  const methodValue = deliveryMethod.value;
+  const locationValue = deliveryLocation.value.trim();
+  const notesValue = document.getElementById("order-notes").value.trim();
+
+  if (nameValue) {
+    lines.push("Name: " + nameValue);
+  }
+
+  if (phoneValue) {
+    lines.push("Phone: " + phoneValue);
+  }
+
+  if (methodValue === "delivery") {
+    lines.push("Delivery" + (locationValue ? " to: " + locationValue : ""));
+  } else if (methodValue === "pickup") {
+    lines.push("Pickup");
+  }
+
+  if (notesValue) {
+    lines.push("Notes: " + notesValue);
+  }
+
+  return lines.join("\n");
+}
+
+function updateWhatsAppLink() {
+  const number = whatsappNumber();
+
+  if (!number || cart.length === 0) {
+    whatsappSection.hidden = true;
+    return;
+  }
+
+  whatsappSection.hidden = false;
+  whatsappLink.href =
+    "https://wa.me/" +
+    number +
+    "?text=" +
+    encodeURIComponent(buildWhatsAppMessage());
+}
+
+/* ---------- Order summary ---------- */
+
 function displayOrder() {
   orderSummary.textContent = "";
 
@@ -49,14 +130,12 @@ function displayOrder() {
       "Your order is empty. Please return to the menu and add food first.";
     orderSummary.appendChild(empty);
     orderTotal.textContent = "0";
+    updateWhatsAppLink();
     return;
   }
 
-  let total = 0;
-
   cart.forEach((item) => {
     const itemTotal = Number(item.price) * Number(item.quantity);
-    total += itemTotal;
 
     const row = document.createElement("div");
     row.className = "cart-item";
@@ -73,7 +152,8 @@ function displayOrder() {
     orderSummary.appendChild(row);
   });
 
-  orderTotal.textContent = total;
+  orderTotal.textContent = cartTotal();
+  updateWhatsAppLink();
 }
 
 /* Check the live menu so the customer sees today's prices */
@@ -98,6 +178,8 @@ async function refreshPrices() {
     // The server always calculates the final total, so we can carry on
   }
 }
+
+/* ---------- Form ---------- */
 
 function updateDeliveryFields() {
   const isDelivery = deliveryMethod.value === "delivery";
@@ -153,6 +235,8 @@ function friendlyOrderError(error) {
 }
 
 deliveryMethod.addEventListener("change", updateDeliveryFields);
+orderForm.addEventListener("input", updateWhatsAppLink);
+orderForm.addEventListener("change", updateWhatsAppLink);
 
 orderForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -241,6 +325,18 @@ orderForm.addEventListener("submit", async (event) => {
   localStorage.setItem("a1KitchenCurrentOrder", JSON.stringify(data));
   localStorage.setItem("a1KitchenOrderNumber", data.order_number);
   localStorage.setItem("a1KitchenCustomerToken", data.customer_token);
+  localStorage.setItem(
+    "a1KitchenOrderSummary",
+    JSON.stringify({
+      items: cart.map((item) => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      method: method,
+      location: location,
+    }),
+  );
   localStorage.removeItem("a1KitchenCart");
 
   window.location.href = "payment.html";

@@ -670,3 +670,10 @@ footer p {
   background: var(--blue);
   color: #ffffff;
 }
+/* Order confirmation */
+.order-number {
+  font-size: 26px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--navy);
+}
