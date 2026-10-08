@@ -53,7 +53,7 @@ proofForm.addEventListener("submit", async (event) => {
   submitButton.disabled = true;
   proofResult.textContent = "Uploading your payment screenshot...";
 
-  const filePath = `${orderNumber}/${crypto.randomUUID()}.${extension}`;
+  const filePath = `${orderNumber}/${customerToken}/${crypto.randomUUID()}.${extension}`;
 
   const { error: uploadError } = await supabaseClient.storage
     .from("payment-proof")
