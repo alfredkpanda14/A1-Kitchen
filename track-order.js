@@ -30,7 +30,15 @@ function describeStatus(order) {
         "screenshot showing the completed payment, or contact A1 Kitchen.",
     };
   }
-
+  if (/needs review/i.test(payment)) {
+    return {
+      kind: "review",
+      title: "Payment under review",
+      text:
+        "A1 Kitchen needs to look at your payment a little more closely. " +
+        "We may contact you if we need anything else.",
+    };
+  }
   if (/^payment verified/i.test(payment)) {
     return {
       kind: "verified",
