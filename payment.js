@@ -199,3 +199,44 @@ paymentForm.addEventListener("submit", (event) => {
   localStorage.setItem("a1KitchenPaymentMethod", paymentMethod.value);
   window.location.href = "payment-proof.html";
 });
+/* ---------- Tracking link ---------- */
+
+const trackBox = document.getElementById("track-box");
+const copyTrackButton = document.getElementById("copy-track-link");
+const trackLink = document.getElementById("track-link");
+const trackMessage = document.getElementById("track-message");
+
+function buildTrackingUrl() {
+  const number = localStorage.getItem("a1KitchenOrderNumber");
+  const token = localStorage.getItem("a1KitchenCustomerToken");
+
+  if (!number || !token) {
+    return "";
+  }
+
+  return (
+    new URL("track-order.html", window.location.href).href +
+    "#o=" +
+    encodeURIComponent(number) +
+    "&t=" +
+    encodeURIComponent(token)
+  );
+}
+
+const trackingUrl = buildTrackingUrl();
+
+if (!trackingUrl || !orderData) {
+  trackBox.hidden = true;
+} else {
+  trackLink.href = trackingUrl;
+}
+
+copyTrackButton.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(trackingUrl);
+    trackMessage.textContent = "Tracking link copied. Keep it private.";
+  } catch (error) {
+    trackMessage.textContent =
+      "Could not copy. Use the Check order status button and bookmark that page.";
+  }
+});

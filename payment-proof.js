@@ -17,6 +17,19 @@ const extensionByType = {
 orderNumberElement.textContent = orderNumber || "Not found";
 paymentMethodElement.textContent = paymentMethod || "Not selected";
 
+function showTrackingLink() {
+  const section = document.getElementById("proof-track-section");
+  const link = document.getElementById("proof-track-link");
+
+  link.href =
+    "track-order.html#o=" +
+    encodeURIComponent(orderNumber) +
+    "&t=" +
+    encodeURIComponent(customerToken);
+
+  section.hidden = false;
+}
+
 proofForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -94,4 +107,5 @@ proofForm.addEventListener("submit", async (event) => {
     "Payment screenshot submitted successfully. " +
     "Your payment is now awaiting verification.";
   proofForm.reset();
+  showTrackingLink();
 });

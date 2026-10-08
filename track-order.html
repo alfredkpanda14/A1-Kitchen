@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Check the status of your A1 Kitchen order."
+    />
+    <meta name="robots" content="noindex" />
+    <meta name="referrer" content="no-referrer" />
+    <title>A1 Kitchen | Track Your Order</title>
+    <link rel="icon" type="image/svg+xml" href="images/logo-mark.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+      <a class="brand" href="index.html"
+        ><img
+          src="images/logo.svg"
+          alt="A1 Kitchen home page"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="catering.html">Catering</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="faq.html">FAQ</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="birthday.html">Birthday Message</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section>
+        <h1>Track Your Order</h1>
+        <p>Check the progress of your order and payment.</p>
+      </section>
+
+      <p
+        id="track-message"
+        class="success-message"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+      <section id="result-section" hidden>
+        <h2>Your Order</h2>
+        <div class="card" id="order-card"></div>
+
+        <button type="button" id="action-button" class="button" hidden></button>
+        <button type="button" id="refresh-button" class="button">
+          Check again
+        </button>
+      </section>
+
+      <section id="lookup-section" hidden>
+        <h2>Find Your Order</h2>
+        <p>
+          Use the tracking link from your payment page. Or enter your order
+          number and confirmation code below.
+        </p>
+
+        <form id="lookup-form">
+          <label for="lookup-order">Order Number</label>
+          <input
+            type="text"
+            id="lookup-order"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            required
+          />
+
+          <label for="lookup-token">Confirmation Code</label>
+          <input
+            type="text"
+            id="lookup-token"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            required
+          />
+
+          <button type="submit" class="button">Check Order</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Need Help?</h2>
+        <p>Contact A1 Kitchen and tell us your order number.</p>
+        <p data-info="phone" data-type="phone">
+          Phone number will be added soon.
+        </p>
+        <p data-info="whatsapp" data-type="whatsapp">
+          WhatsApp number will be added soon.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <img
+        class="footer-logo"
+        src="images/logo.svg"
+        alt="A1 Kitchen"
+        width="200"
+        height="53"
+        loading="lazy"
+      />
+      <p>&copy; 2026 A1 Kitchen. All rights reserved.</p>
+      <p>Food • Catering • Events</p>
+      <p class="footer-links">
+        <a href="how-it-works.html">How It Works</a> ·
+        <a href="privacy.html">Privacy Policy</a> ·
+        <a href="terms.html">Terms &amp; Conditions</a>
+      </p>
+    </footer>
+
+    <script src="site-info.js"></script>
+    <script src="supabase-config.js"></script>
+    <script src="track-order.js"></script>
+  </body>
+</html>
