@@ -7,6 +7,16 @@ const MENU_URL =
 
 const MENU_CACHE_KEY = "a1KitchenMenuCache";
 
+/* Turns a price into a number, or null when the food has no price yet */
+function toPrice(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
 async function fetchAvailableMenu() {
   const response = await fetch(MENU_URL, {
     headers: {
@@ -57,9 +67,10 @@ function syncCartWithMenu(cartItems, menuItems) {
       return;
     }
 
-    const livePrice = Number(live.price);
+    const livePrice = toPrice(live.price);
+    const oldPrice = toPrice(item.price);
 
-    if (livePrice !== Number(item.price)) {
+    if (livePrice !== null && oldPrice !== null && livePrice !== oldPrice) {
       messages.push(
         "The price of " + item.name + " is now NLe " + livePrice + ".",
       );

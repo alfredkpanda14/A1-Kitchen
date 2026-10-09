@@ -9,8 +9,12 @@ function readStored(key) {
 const orderData = readStored("a1KitchenCurrentOrder");
 const orderSummary = readStored("a1KitchenOrderSummary");
 
+const stepLabel = document.getElementById("step-label");
+const pageTitle = document.getElementById("page-title");
+const pageIntro = document.getElementById("page-intro");
 const orderNumber = document.getElementById("payment-order-number");
 const paymentTotal = document.getElementById("payment-total");
+const totalBlock = document.getElementById("total-block");
 const paymentMethod = document.getElementById("payment-method");
 const paymentInstructions = document.getElementById("payment-instructions");
 const paymentForm = document.getElementById("payment-form");
@@ -18,10 +22,11 @@ const paymentSummary = document.getElementById("payment-summary");
 const copyButton = document.getElementById("copy-order-number");
 const copyMessage = document.getElementById("copy-message");
 const noOrder = document.getElementById("no-order");
+const quoteSection = document.getElementById("quote-section");
 const summarySection = document.getElementById("order-summary-section");
 const methodSection = document.getElementById("payment-method-section");
 
-function addLine(parent, text, bold) {
+function addLineTo(parent, text, bold) {
   const paragraph = document.createElement("p");
 
   if (bold) {
@@ -44,33 +49,52 @@ function showSummary() {
   }
 
   orderSummary.items.forEach((item) => {
-    addLine(
+    const hasPrice = item.price !== null && item.price !== undefined;
+
+    addLineTo(
       paymentSummary,
-      item.quantity + " × " + item.name + " (NLe " + item.price + " each)",
+      item.quantity +
+        " × " +
+        item.name +
+        (hasPrice ? " (NLe " + item.price + " each)" : ""),
     );
   });
 
   if (orderSummary.method === "delivery") {
-    addLine(
+    addLineTo(
       paymentSummary,
       "Delivery to: " + (orderSummary.location || ""),
       true,
     );
   } else {
-    addLine(paymentSummary, "Pickup", true);
+    addLineTo(paymentSummary, "Pickup", true);
   }
 }
 
 if (!orderData) {
   orderNumber.textContent = "No current order found.";
-  paymentTotal.textContent = "0";
   noOrder.hidden = false;
   copyButton.hidden = true;
+  totalBlock.hidden = true;
   summarySection.hidden = true;
   methodSection.hidden = true;
 } else {
   orderNumber.textContent = orderData.order_number;
-  paymentTotal.textContent = orderData.total;
+
+  if (orderData.quote_required) {
+    // No price yet: the Head Chef will contact the customer first
+    stepLabel.textContent = "Your order request";
+    pageTitle.textContent = "Order Request Received";
+    pageIntro.textContent =
+      "Thank you. A1 Kitchen has received your order request. Please keep " +
+      "your order number safe.";
+    totalBlock.hidden = true;
+    quoteSection.hidden = false;
+    methodSection.hidden = true;
+  } else {
+    paymentTotal.textContent = orderData.total;
+  }
+
   showSummary();
 }
 
@@ -101,7 +125,7 @@ async function copyOrderNumber() {
 copyButton.addEventListener("click", copyOrderNumber);
 
 function showInstructions(method) {
-  paymentInstructions.innerHTML = "";
+  paymentInstructions.textContent = "";
 
   if (!method) {
     return;
@@ -170,20 +194,6 @@ function showInstructions(method) {
   );
 }
 
-function addLineTo(parent, text, bold) {
-  const paragraph = document.createElement("p");
-
-  if (bold) {
-    const strong = document.createElement("strong");
-    strong.textContent = text;
-    paragraph.appendChild(strong);
-  } else {
-    paragraph.textContent = text;
-  }
-
-  parent.appendChild(paragraph);
-}
-
 paymentMethod.addEventListener("change", () => {
   showInstructions(paymentMethod.value);
 });
@@ -199,6 +209,7 @@ paymentForm.addEventListener("submit", (event) => {
   localStorage.setItem("a1KitchenPaymentMethod", paymentMethod.value);
   window.location.href = "payment-proof.html";
 });
+
 /* ---------- Tracking link ---------- */
 
 const trackBox = document.getElementById("track-box");

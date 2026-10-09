@@ -3,12 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Choose how to pay for your A1 Kitchen order."
-    />
+    <meta name="description" content="Your A1 Kitchen order and payment." />
     <meta name="robots" content="noindex" />
-    <title>A1 Kitchen | Payment</title>
+    <title>A1 Kitchen | Your Order</title>
     <link rel="icon" type="image/svg+xml" href="images/logo-mark.svg" />
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -38,10 +35,12 @@
 
     <main id="main-content">
       <section>
-        <p class="step-label">Step 2 of 3: Payment</p>
-        <h1>Payment</h1>
+        <p class="step-label" id="step-label">Step 2 of 3: Payment</p>
+        <h1 id="page-title">Payment</h1>
 
-        <p>Your order has been recorded. Please keep your order number safe.</p>
+        <p id="page-intro">
+          Your order has been recorded. Please keep your order number safe.
+        </p>
 
         <div class="card">
           <h2>Order Number</h2>
@@ -52,17 +51,35 @@
           </button>
           <p id="copy-message" class="menu-notice" role="status"></p>
 
-          <h2>Total</h2>
-          <p>
-            NLe
-            <strong id="payment-total">0</strong>
-          </p>
+          <div id="total-block">
+            <h2>Total</h2>
+            <p>
+              NLe
+              <strong id="payment-total">0</strong>
+            </p>
+          </div>
         </div>
 
         <p id="no-order" hidden>
           We could not find a current order on this device.
           <a href="menu.html">Go to the menu</a> to place an order.
         </p>
+      </section>
+
+      <section id="quote-section" hidden>
+        <h2>What Happens Next</h2>
+        <div class="card">
+          <p>
+            A1 Kitchen will contact you on the phone number you gave us with
+            your price and any delivery fee.
+          </p>
+          <p>
+            When you agree, open your tracking link below and pay the full
+            amount. Your food is prepared only after your payment is complete
+            and confirmed.
+          </p>
+          <p>Orders that have been paid for cannot be refunded.</p>
+        </div>
       </section>
 
       <section id="order-summary-section">
@@ -86,22 +103,17 @@
             <p>Select a payment method to see the instructions.</p>
           </div>
 
+          <p class="menu-notice">
+            Please pay the full amount. Your food is prepared after your payment
+            is confirmed. Orders that have been paid for cannot be refunded.
+          </p>
+
           <button type="submit" class="button">
             Continue to Payment Proof
           </button>
         </form>
       </section>
 
-      <section>
-        <h2>Need Help?</h2>
-        <p>Contact A1 Kitchen and tell us your order number.</p>
-        <p data-info="phone" data-type="phone">
-          Phone number will be added soon.
-        </p>
-        <p data-info="whatsapp" data-type="whatsapp">
-          WhatsApp number will be added soon.
-        </p>
-      </section>
       <section id="track-box">
         <h2>Track Your Order</h2>
         <p>
@@ -116,6 +128,17 @@
           >Check order status</a
         >
         <p id="track-message" class="menu-notice" role="status"></p>
+      </section>
+
+      <section>
+        <h2>Need Help?</h2>
+        <p>Contact A1 Kitchen and tell us your order number.</p>
+        <p data-info="phone" data-type="phone">
+          Phone number will be added soon.
+        </p>
+        <p data-info="whatsapp" data-type="whatsapp">
+          WhatsApp number will be added soon.
+        </p>
       </section>
     </main>
 

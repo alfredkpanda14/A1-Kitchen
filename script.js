@@ -2,13 +2,20 @@ const cartItemsContainer = document.getElementById("cart-items");
 const cartTotal = document.getElementById("cart-total");
 const emptyCart = document.getElementById("empty-cart");
 const cartNotice = document.getElementById("cart-notice");
+const cartPriceNote = document.getElementById("cart-price-note");
 
 const MAX_PER_ITEM = 20;
 
 let cart = [];
 
 try {
-  cart = JSON.parse(localStorage.getItem("a1KitchenCart")) || [];
+  cart = (JSON.parse(localStorage.getItem("a1KitchenCart")) || []).map(
+    (item) => ({
+      name: item.name,
+      price: toPrice(item.price),
+      quantity: item.quantity,
+    }),
+  );
 } catch (error) {
   cart = [];
 }
@@ -21,12 +28,12 @@ function renderCart() {
   cartItemsContainer.textContent = "";
 
   let total = 0;
+  let hasUnpriced = false;
 
   emptyCart.style.display = cart.length === 0 ? "block" : "none";
 
   cart.forEach((item, index) => {
-    const itemTotal = Number(item.price) * Number(item.quantity);
-    total += itemTotal;
+    const price = toPrice(item.price);
 
     const row = document.createElement("div");
     row.className = "cart-item";
@@ -35,8 +42,17 @@ function renderCart() {
     const name = document.createElement("strong");
     name.textContent = item.name;
     const line = document.createElement("p");
-    line.textContent =
-      "NLe " + item.price + " × " + item.quantity + " = NLe " + itemTotal;
+
+    if (price === null) {
+      hasUnpriced = true;
+      line.textContent = "Quantity: " + item.quantity;
+    } else {
+      const itemTotal = price * Number(item.quantity);
+      total += itemTotal;
+      line.textContent =
+        "NLe " + price + " × " + item.quantity + " = NLe " + itemTotal;
+    }
+
     info.appendChild(name);
     info.appendChild(line);
 
@@ -71,7 +87,14 @@ function renderCart() {
     cartItemsContainer.appendChild(row);
   });
 
+  // The total line is hidden while any food has no price
+  cartTotal.parentElement.hidden = hasUnpriced;
   cartTotal.textContent = total;
+
+  if (cartPriceNote) {
+    cartPriceNote.hidden = !hasUnpriced;
+  }
+
   saveCart();
 }
 
@@ -88,7 +111,7 @@ function addToCart(name, price) {
     }
     existingItem.quantity += 1;
   } else {
-    cart.push({ name: name, price: Number(price), quantity: 1 });
+    cart.push({ name: name, price: toPrice(price), quantity: 1 });
   }
 
   cartNotice.textContent = name + " has been added to your order.";

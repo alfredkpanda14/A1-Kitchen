@@ -16,19 +16,32 @@ const MAX_PER_ITEM = 20;
 let cart = [];
 let isSubmitting = false;
 
+/* A short note above the button explaining what happens next */
+const quoteNote = document.createElement("p");
+quoteNote.className = "menu-notice";
+orderForm.insertBefore(quoteNote, submitButton);
+
 function loadCart() {
   try {
     const saved = JSON.parse(localStorage.getItem("a1KitchenCart")) || [];
 
-    return saved.filter(
-      (item) =>
-        item &&
-        typeof item.name === "string" &&
-        Number.isFinite(Number(item.price)) &&
-        Number.isInteger(Number(item.quantity)) &&
-        Number(item.quantity) >= 1 &&
-        Number(item.quantity) <= MAX_PER_ITEM,
-    );
+    return saved
+      .filter(
+        (item) =>
+          item &&
+          typeof item.name === "string" &&
+          (toPrice(item.price) !== null ||
+            item.price === null ||
+            item.price === undefined) &&
+          Number.isInteger(Number(item.quantity)) &&
+          Number(item.quantity) >= 1 &&
+          Number(item.quantity) <= MAX_PER_ITEM,
+      )
+      .map((item) => ({
+        name: item.name,
+        price: toPrice(item.price),
+        quantity: Number(item.quantity),
+      }));
   } catch (error) {
     return [];
   }
@@ -42,11 +55,41 @@ function setMessage(text) {
   orderMessage.textContent = text;
 }
 
+function hasUnpricedItems() {
+  return cart.some((item) => toPrice(item.price) === null);
+}
+
 function cartTotal() {
   return cart.reduce(
-    (sum, item) => sum + Number(item.price) * Number(item.quantity),
+    (sum, item) => sum + toPrice(item.price) * Number(item.quantity),
     0,
   );
+}
+
+/* ---------- Notes and button label ---------- */
+
+function updateQuoteInfo() {
+  const unpriced = hasUnpricedItems();
+  const isDelivery = deliveryMethod.value === "delivery";
+
+  if (unpriced) {
+    quoteNote.textContent =
+      "Prices are confirmed by A1 Kitchen. After you send your order, we " +
+      "will contact you with your price and any delivery fee. You pay only " +
+      "after you agree.";
+    quoteNote.hidden = false;
+    submitButton.textContent = "Send My Order";
+  } else if (isDelivery) {
+    quoteNote.textContent =
+      "A1 Kitchen will add your delivery fee, which depends on your " +
+      "location, and then you can pay.";
+    quoteNote.hidden = false;
+    submitButton.textContent = "Send My Order";
+  } else {
+    quoteNote.textContent = "";
+    quoteNote.hidden = true;
+    submitButton.textContent = "Continue to Payment";
+  }
 }
 
 /* ---------- WhatsApp fallback ---------- */
@@ -60,6 +103,7 @@ function whatsappNumber() {
 }
 
 function buildWhatsAppMessage() {
+  const priced = !hasUnpricedItems();
   const lines = ["Hello A1 Kitchen, I would like to order:"];
 
   cart.forEach((item) => {
@@ -68,13 +112,13 @@ function buildWhatsAppMessage() {
         item.quantity +
         " × " +
         item.name +
-        " (NLe " +
-        item.price +
-        " each)",
+        (priced ? " (NLe " + toPrice(item.price) + " each)" : ""),
     );
   });
 
-  lines.push("Total: NLe " + cartTotal());
+  if (priced) {
+    lines.push("Total: NLe " + cartTotal());
+  }
 
   const nameValue = document.getElementById("customer-name").value.trim();
   const phoneValue = document.getElementById("phone").value.trim();
@@ -130,12 +174,14 @@ function displayOrder() {
       "Your order is empty. Please return to the menu and add food first.";
     orderSummary.appendChild(empty);
     orderTotal.textContent = "0";
+    orderTotal.parentElement.hidden = false;
+    updateQuoteInfo();
     updateWhatsAppLink();
     return;
   }
 
   cart.forEach((item) => {
-    const itemTotal = Number(item.price) * Number(item.quantity);
+    const price = toPrice(item.price);
 
     const row = document.createElement("div");
     row.className = "cart-item";
@@ -144,15 +190,27 @@ function displayOrder() {
     const name = document.createElement("strong");
     name.textContent = item.name;
     const line = document.createElement("p");
-    line.textContent =
-      item.quantity + " × NLe " + item.price + " = NLe " + itemTotal;
+
+    if (price === null) {
+      line.textContent = "Quantity: " + item.quantity;
+    } else {
+      line.textContent =
+        item.quantity + " × NLe " + price + " = NLe " + price * item.quantity;
+    }
 
     info.append(name, line);
     row.appendChild(info);
     orderSummary.appendChild(row);
   });
 
-  orderTotal.textContent = cartTotal();
+  const unpriced = hasUnpricedItems();
+  orderTotal.parentElement.hidden = unpriced;
+
+  if (!unpriced) {
+    orderTotal.textContent = cartTotal();
+  }
+
+  updateQuoteInfo();
   updateWhatsAppLink();
 }
 
@@ -175,7 +233,7 @@ async function refreshPrices() {
     }
   } catch (error) {
     console.error("Could not refresh prices:", error);
-    // The server always calculates the final total, so we can carry on
+    // The server always works out the final price, so we can carry on
   }
 }
 
@@ -190,6 +248,8 @@ function updateDeliveryFields() {
   if (!isDelivery) {
     deliveryLocation.value = "";
   }
+
+  updateQuoteInfo();
 }
 
 function isValidPhone(value) {
@@ -331,7 +391,7 @@ orderForm.addEventListener("submit", async (event) => {
       items: cart.map((item) => ({
         name: item.name,
         quantity: item.quantity,
-        price: item.price,
+        price: toPrice(item.price),
       })),
       method: method,
       location: location,

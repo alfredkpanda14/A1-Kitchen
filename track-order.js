@@ -21,6 +21,17 @@ function setMessage(text) {
 function describeStatus(order) {
   const payment = order.payment_status || "";
 
+  if (order.quote_required || /awaiting quote/i.test(payment)) {
+    return {
+      kind: "quote",
+      title: "Waiting for your price",
+      text:
+        "A1 Kitchen will contact you with your price and any delivery fee. " +
+        "You can pay once your price is agreed. Your food is prepared only " +
+        "after your payment is complete and confirmed.",
+    };
+  }
+
   if (/rejected/i.test(payment)) {
     return {
       kind: "rejected",
@@ -30,6 +41,7 @@ function describeStatus(order) {
         "screenshot showing the completed payment, or contact A1 Kitchen.",
     };
   }
+
   if (/needs review/i.test(payment)) {
     return {
       kind: "review",
@@ -39,6 +51,7 @@ function describeStatus(order) {
         "We may contact you if we need anything else.",
     };
   }
+
   if (/^payment verified/i.test(payment)) {
     return {
       kind: "verified",
@@ -63,8 +76,10 @@ function describeStatus(order) {
     kind: "pending",
     title: "Waiting for your payment",
     text:
-      "Please pay the exact total using Orange Money or Afrimoney, then " +
-      "upload a screenshot of your payment.",
+      "Please pay the full amount using Orange Money or Afrimoney, then " +
+      "upload a screenshot of your payment. Your food is prepared after " +
+      "your payment is confirmed. Orders that have been paid for cannot " +
+      "be refunded.",
   };
 }
 
@@ -105,7 +120,17 @@ function renderOrder(order) {
   orderCard.appendChild(text);
 
   addRow("Order number:", order.order_number);
-  addRow("Total:", "NLe " + order.total);
+
+  if (status.kind !== "quote") {
+    const fee = Number(order.delivery_fee) || 0;
+
+    if (fee > 0) {
+      addRow("Food:", "NLe " + order.subtotal);
+      addRow("Delivery fee:", "NLe " + fee);
+    }
+
+    addRow("Total:", "NLe " + order.total);
+  }
 
   if (order.created_at) {
     addRow("Ordered:", formatDate(order.created_at));

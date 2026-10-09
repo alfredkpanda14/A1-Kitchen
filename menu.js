@@ -44,13 +44,15 @@ function renderMenu(items) {
     description.textContent = item.description || "";
 
     const price = document.createElement("strong");
-    price.textContent = "NLe " + Number(item.price);
+    const itemPrice = toPrice(item.price);
+    price.textContent =
+      itemPrice === null ? "Price on request" : "NLe " + itemPrice;
 
     const button = document.createElement("button");
     button.type = "button";
     button.className = "order-button";
     button.dataset.name = item.name;
-    button.dataset.price = item.price;
+    button.dataset.price = itemPrice === null ? "" : itemPrice;
     button.textContent = "Add to Order";
 
     card.append(picture, title, description, price, button);
