@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Staff Sign In</title>
+    <link rel="icon" type="image/svg+xml" href="images/logo-mark.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+      <a class="brand" href="index.html"
+        ><img
+          src="images/logo.svg"
+          alt="A1 Kitchen home page"
+          width="260"
+          height="68"
+      /></a>
+    </header>
+
+    <main id="main-content">
+      <section>
+        <h1>Staff Sign In</h1>
+        <p>For A1 Kitchen staff only.</p>
+
+        <form id="login-form">
+          <label for="login-email">Email</label>
+          <input
+            type="email"
+            id="login-email"
+            autocomplete="username"
+            required
+          />
+
+          <label for="login-password">Password</label>
+          <input
+            type="password"
+            id="login-password"
+            autocomplete="current-password"
+            required
+          />
+
+          <button type="submit" class="button">Sign in</button>
+        </form>
+
+        <p
+          id="login-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="staff-login.js"></script>
+  </body>
+</html>

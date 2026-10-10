@@ -17,8 +17,16 @@ let currentOrder = null;
 function setMessage(text) {
   trackMessage.textContent = text;
 }
-
 function describeStatus(order) {
+  if (order.order_status === "Cancelled") {
+    return {
+      kind: "cancelled",
+      title: "Order cancelled",
+      text:
+        "This order has been cancelled. Please contact A1 Kitchen if you " +
+        "have any questions.",
+    };
+  }
   const payment = order.payment_status || "";
 
   if (order.quote_required || /awaiting quote/i.test(payment)) {
@@ -82,7 +90,18 @@ function describeStatus(order) {
       "be refunded.",
   };
 }
+function friendlyProgress(status) {
+  const labels = {
+    "Paid — Not Delivered": "Payment confirmed, preparation starting soon",
+    Preparing: "Your food is being prepared",
+    "Out for Delivery": "Out for delivery",
+    "Ready for Pickup": "Ready for pickup",
+    "Delivered — Customer Confirmation Pending": "Delivered",
+    "Delivered — Customer Confirmed": "Delivered and confirmed",
+  };
 
+  return labels[status] || status;
+}
 function addRow(label, value) {
   const paragraph = document.createElement("p");
   const strong = document.createElement("strong");
@@ -148,7 +167,7 @@ function renderOrder(order) {
   }
 
   if (status.kind === "verified" && order.order_status) {
-    addRow("Order progress:", order.order_status);
+    addRow("Order progress:", friendlyProgress(order.order_status));
   }
 
   if (order.customer_confirmed_at) {
