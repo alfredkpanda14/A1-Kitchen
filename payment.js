@@ -25,6 +25,21 @@ const noOrder = document.getElementById("no-order");
 const quoteSection = document.getElementById("quote-section");
 const summarySection = document.getElementById("order-summary-section");
 const methodSection = document.getElementById("payment-method-section");
+/* Only offer payment methods that have an official number */
+[
+  ["Orange Money", "orangeMoneyNumber"],
+  ["Afrimoney", "afrimoneyNumber"],
+].forEach(([name, key]) => {
+  if (!SITE_INFO[key]) {
+    const option = Array.from(paymentMethod.options).find(
+      (item) => item.value === name,
+    );
+
+    if (option) {
+      option.remove();
+    }
+  }
+});
 
 function addLineTo(parent, text, bold) {
   const paragraph = document.createElement("p");

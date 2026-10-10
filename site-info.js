@@ -6,22 +6,44 @@
   Only PUBLIC information goes here (never PINs, passwords or secret keys).
 */
 const SITE_INFO = {
-  phone: "",
-  whatsapp: "",
-  email: "your-email@example.com",
-  address: "Your business address here",
-  hours: "e.g., Mon-Sat 8am - 8pm",
+  // Contact
+  phone: "+23279665540", // Orange: direct calls
+  whatsapp: "+23231857434", // Q Cell: WhatsApp
+  email: "14a1.kitchen@gmail.com",
+  address: "70 Bass Street, Brookfields, Freetown, Sierra Leone",
+  hours: "",
+
+  // Delivery, pickup and payment checking
   deliveryAreas: "",
   deliveryFee: "",
   deliveryTime: "",
   pickupInfo: "",
   paymentCheckTime: "",
 
-  orangeMoneyNumber: "07XXXXXXX",
-  orangeMoneyName: "A1 Kitchen",
-  afrimoneyNumber: "08XXXXXXX",
-  afrimoneyName: "A1 Kitchen",
+  // Mobile money
+  orangeMoneyNumber: "+23279665540",
+  orangeMoneyName: "",
+  afrimoneyNumber: "",
+  afrimoneyName: "",
+
+  // Social media: paste the full web address (starting with https://)
+  // For WhatsApp, the link is made from the number above. Only fill
+  // whatsappUrl if you have a special WhatsApp link to use instead.
+  whatsappUrl: "",
+  facebook: "",
+  youtube: "",
+  linkedin: "",
+  tiktok: "",
 };
+
+function safeUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" ? url.href : "";
+  } catch (error) {
+    return "";
+  }
+}
 
 function fillSiteInfo() {
   document.querySelectorAll("[data-info]").forEach((element) => {
@@ -42,7 +64,11 @@ function fillSiteInfo() {
       element.appendChild(link);
     } else if (type === "whatsapp") {
       const link = document.createElement("a");
-      link.href = "https://wa.me/" + value.replace(/\D/g, "");
+      link.href =
+        safeUrl(SITE_INFO.whatsappUrl) ||
+        "https://wa.me/" + value.replace(/\D/g, "");
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
       link.textContent = value;
       element.appendChild(link);
     } else if (type === "email") {
@@ -56,4 +82,36 @@ function fillSiteInfo() {
   });
 }
 
+function fillSocialLinks() {
+  let shown = 0;
+
+  document.querySelectorAll("[data-social]").forEach((link) => {
+    const key = link.dataset.social;
+    let url = "";
+
+    if (key === "whatsapp") {
+      url =
+        safeUrl(SITE_INFO.whatsappUrl) ||
+        (SITE_INFO.whatsapp
+          ? "https://wa.me/" + SITE_INFO.whatsapp.replace(/\D/g, "")
+          : "");
+    } else {
+      url = safeUrl(SITE_INFO[key] || "");
+    }
+
+    if (url) {
+      link.href = url;
+      link.hidden = false;
+      shown += 1;
+    }
+  });
+
+  const empty = document.getElementById("social-empty");
+
+  if (empty) {
+    empty.hidden = shown > 0;
+  }
+}
+
 fillSiteInfo();
+fillSocialLinks();

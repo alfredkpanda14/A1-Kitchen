@@ -923,9 +923,8 @@ passwordForm.addEventListener("submit", async (event) => {
   const first = document.getElementById("new-password").value;
   const second = document.getElementById("confirm-password").value;
 
-  if (first.length < 12) {
-    passwordMessage.textContent = "Please use at least 12 characters.";
-    return;
+  if (first.length < 8) {
+    passwordMessage.textContent = "Please use at least 8 characters.";
   }
 
   if (first !== second) {
