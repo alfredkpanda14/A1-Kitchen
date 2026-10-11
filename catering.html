@@ -116,10 +116,74 @@
         <h2>Request Catering Services</h2>
 
         <p>
-          Our online catering request system will be added as the website
-          develops.
+          Tell us about your event and A1 Kitchen will contact you to discuss
+          it. There is no cost to ask.
         </p>
 
+        <form id="catering-form">
+          <label for="catering-name">Full Name *</label>
+          <input
+            type="text"
+            id="catering-name"
+            autocomplete="name"
+            maxlength="100"
+            required
+          />
+
+          <label for="catering-phone">Phone Number *</label>
+          <input
+            type="tel"
+            id="catering-phone"
+            autocomplete="tel"
+            inputmode="tel"
+            maxlength="20"
+            required
+          />
+
+          <label for="catering-type">Type of Event *</label>
+          <select id="catering-type" required>
+            <option value="">Select the event</option>
+            <option>Dinner</option>
+            <option>Workshop</option>
+            <option>Office Meeting</option>
+            <option>Wedding Reception</option>
+            <option>Naming Ceremony</option>
+            <option>Birthday Party</option>
+            <option>Pool Party</option>
+            <option>Funeral Ceremony</option>
+            <option>Family Event</option>
+            <option>Other</option>
+          </select>
+
+          <label for="catering-date">Event Date (if you know it)</label>
+          <input type="date" id="catering-date" />
+
+          <label for="catering-guests">Number of Guests (if you know it)</label>
+          <input
+            type="number"
+            id="catering-guests"
+            min="1"
+            max="5000"
+            inputmode="numeric"
+          />
+
+          <label for="catering-location">Where Is the Event?</label>
+          <input type="text" id="catering-location" maxlength="300" />
+
+          <label for="catering-details">Anything Else We Should Know?</label>
+          <textarea id="catering-details" rows="4" maxlength="1500"></textarea>
+
+          <button type="submit" class="button">Send Request</button>
+        </form>
+
+        <p
+          id="catering-result"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+
+        <p>You can also contact us directly.</p>
         <a href="contact.html" class="button">Contact A1 Kitchen</a>
       </section>
     </main>
@@ -143,5 +207,8 @@
         <a href="staff-login.html">Staff Sign In</a>
       </p>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="catering.js"></script>
   </body>
 </html>

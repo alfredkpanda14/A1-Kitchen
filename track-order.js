@@ -3,12 +3,23 @@ const resultSection = document.getElementById("result-section");
 const orderCard = document.getElementById("order-card");
 const trackMessage = document.getElementById("track-message");
 const actionButton = document.getElementById("action-button");
+const confirmButton = document.getElementById("confirm-button");
 const refreshButton = document.getElementById("refresh-button");
 const lookupForm = document.getElementById("lookup-form");
+const problemSection = document.getElementById("problem-section");
+const problemForm = document.getElementById("problem-form");
+const problemMessage = document.getElementById("problem-message");
+const problemNote = document.getElementById("problem-note");
 
 const ORDER_PATTERN = /^A1-\d{8}-[A-Z0-9]{6}$/;
 const TOKEN_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+const CONFIRMABLE = [
+  "Out for Delivery",
+  "Ready for Pickup",
+  "Delivered — Customer Confirmation Pending",
+];
 
 let currentOrderNumber = "";
 let currentToken = "";
@@ -17,6 +28,7 @@ let currentOrder = null;
 function setMessage(text) {
   trackMessage.textContent = text;
 }
+
 function describeStatus(order) {
   if (order.order_status === "Cancelled") {
     return {
@@ -27,6 +39,7 @@ function describeStatus(order) {
         "have any questions.",
     };
   }
+
   const payment = order.payment_status || "";
 
   if (order.quote_required || /awaiting quote/i.test(payment)) {
@@ -90,6 +103,7 @@ function describeStatus(order) {
       "be refunded.",
   };
 }
+
 function friendlyProgress(status) {
   const labels = {
     "Paid — Not Delivered": "Payment confirmed, preparation starting soon",
@@ -103,6 +117,7 @@ function friendlyProgress(status) {
 
   return labels[status] || status;
 }
+
 function addRow(label, value) {
   const paragraph = document.createElement("p");
   const strong = document.createElement("strong");
@@ -175,6 +190,7 @@ function renderOrder(order) {
     addRow("Delivery confirmed:", formatDate(order.customer_confirmed_at));
   }
 
+  // Payment buttons
   if (status.kind === "pending" || status.kind === "rejected") {
     actionButton.hidden = false;
     actionButton.textContent =
@@ -185,27 +201,43 @@ function renderOrder(order) {
     actionButton.hidden = true;
   }
 
+  // "I have received my order"
+  const canConfirm =
+    !order.customer_confirmed_at && CONFIRMABLE.includes(order.order_status);
+
+  confirmButton.hidden = !canConfirm;
+  confirmButton.textContent =
+    order.delivery_method === "pickup"
+      ? "I have collected my order"
+      : "I have received my order";
+
+  // Problem reporting is open once the order has been paid for
+  const paid = status.kind === "verified" && order.order_status !== "Cancelled";
+
+  problemSection.hidden = !paid;
+  problemNote.textContent = order.problem_reported
+    ? "You have already reported a problem. A1 Kitchen will contact you. You can send more details below."
+    : "";
+
   lookupSection.hidden = true;
   resultSection.hidden = false;
 }
 
 function showLookup() {
   resultSection.hidden = true;
+  problemSection.hidden = true;
   lookupSection.hidden = false;
 }
 
-async function fetchOrderStatus(orderNumber, token) {
-  const response = await fetch(SUPABASE_URL + "/rest/v1/rpc/get_order_status", {
+async function callRpc(name, params) {
+  const response = await fetch(SUPABASE_URL + "/rest/v1/rpc/" + name, {
     method: "POST",
     headers: {
       apikey: SUPABASE_PUBLISHABLE_KEY,
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({
-      p_order_number: orderNumber,
-      p_customer_token: token,
-    }),
+    body: JSON.stringify(params),
   });
 
   let body = null;
@@ -222,6 +254,13 @@ async function fetchOrderStatus(orderNumber, token) {
   }
 
   return body;
+}
+
+function fetchOrderStatus(orderNumber, token) {
+  return callRpc("get_order_status", {
+    p_order_number: orderNumber,
+    p_customer_token: token,
+  });
 }
 
 async function loadOrder(orderNumber, token) {
@@ -269,6 +308,72 @@ actionButton.addEventListener("click", () => {
   localStorage.removeItem("a1KitchenOrderSummary");
 
   window.location.href = "payment.html";
+});
+
+confirmButton.addEventListener("click", async () => {
+  if (!currentOrder) {
+    return;
+  }
+
+  confirmButton.disabled = true;
+  setMessage("Saving...");
+
+  try {
+    await callRpc("confirm_delivery", {
+      p_order_number: currentOrderNumber,
+      p_customer_token: currentToken,
+    });
+
+    await loadOrder(currentOrderNumber, currentToken);
+    setMessage("Thank you! We have recorded that you received your order.");
+  } catch (error) {
+    console.error("Confirm error:", error);
+    setMessage(
+      "We could not save your confirmation. Please try again, or contact A1 Kitchen.",
+    );
+  }
+
+  confirmButton.disabled = false;
+});
+
+problemForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const details = document.getElementById("problem-details").value.trim();
+
+  if (details.length < 5) {
+    problemMessage.textContent = "Please describe the problem in a few words.";
+    return;
+  }
+
+  const submitButton = problemForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  problemMessage.textContent = "Sending...";
+
+  try {
+    await callRpc("report_problem", {
+      p_order_number: currentOrderNumber,
+      p_customer_token: currentToken,
+      p_details: details,
+    });
+
+    problemForm.reset();
+    problemMessage.textContent =
+      "Thank you. A1 Kitchen has received your report and will contact you.";
+    await loadOrder(currentOrderNumber, currentToken);
+  } catch (error) {
+    console.error("Problem report error:", error);
+
+    if ((error.message || "").includes("Too many")) {
+      problemMessage.textContent =
+        "You have sent several reports already. Please contact A1 Kitchen directly.";
+    } else {
+      problemMessage.textContent =
+        "We could not send your report. Please try again, or contact A1 Kitchen.";
+    }
+  }
+
+  submitButton.disabled = false;
 });
 
 refreshButton.addEventListener("click", () => {

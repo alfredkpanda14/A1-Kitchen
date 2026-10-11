@@ -12,6 +12,8 @@ const orderTabs = document.getElementById("order-tabs");
 const orderList = document.getElementById("order-list");
 const cateringList = document.getElementById("catering-list");
 const eventsList = document.getElementById("events-list");
+const problemsView = document.getElementById("problems-view");
+const problemsList = document.getElementById("problems-list");
 const searchInput = document.getElementById("order-search");
 const passwordForm = document.getElementById("password-form");
 const passwordMessage = document.getElementById("password-message");
@@ -854,13 +856,83 @@ async function loadEvents() {
     setMessage(friendlyError(error));
   }
 }
+/* ---------- Customer problems ---------- */
+const PROBLEM_STATUSES = ["Open", "In Review", "Resolved"];
 
+function renderProblems(rows) {
+  problemsList.textContent = "";
+
+  if (!rows || rows.length === 0) {
+    problemsList.appendChild(el("p", null, "No problems have been reported."));
+    return;
+  }
+
+  rows.forEach((row) => {
+    const card = el("div", "card order-card");
+    card.appendChild(el("h3", null, "Order " + row.order_number));
+    addDetail(card, "Reported:", formatDate(row.created_at));
+    addDetail(
+      card,
+      "Customer:",
+      row.customer_name + " — " + row.customer_phone,
+    );
+    addDetail(card, "Problem:", row.details);
+
+    if (can("problems.update")) {
+      const select = el("select");
+      select.id = "problem-" + row.id;
+
+      PROBLEM_STATUSES.forEach((status) => {
+        const option = el("option", null, status);
+        option.value = status;
+        option.selected = status === row.status;
+        select.appendChild(option);
+      });
+
+      const label = el("label", null, "Status");
+      label.htmlFor = select.id;
+
+      const save = el("button", "button", "Save status");
+      save.type = "button";
+      save.addEventListener("click", async () => {
+        save.disabled = true;
+
+        try {
+          await rpc("staff_update_problem", {
+            p_id: row.id,
+            p_status: select.value,
+          });
+          setMessage("Problem updated.");
+        } catch (error) {
+          setMessage(friendlyError(error));
+        }
+
+        save.disabled = false;
+      });
+
+      card.append(label, select, save);
+    } else {
+      addDetail(card, "Status:", row.status);
+    }
+
+    problemsList.appendChild(card);
+  });
+}
+
+async function loadProblems() {
+  try {
+    renderProblems(await rpc("staff_get_problems"));
+  } catch (error) {
+    setMessage(friendlyError(error));
+  }
+}
 /* ---------- Views ---------- */
 async function showView(name) {
   currentView = name;
   ordersView.hidden = name !== "orders";
   cateringView.hidden = name !== "catering";
   eventsView.hidden = name !== "events";
+  problemsView.hidden = name !== "problems";
 
   viewTabs.querySelectorAll(".filter-button").forEach((button) => {
     button.setAttribute("aria-pressed", String(button.dataset.view === name));
@@ -884,7 +956,11 @@ function buildViewTabs() {
     label: "Family Outing",
     allowed: can("events.view"),
   });
-
+  views.push({
+    id: "problems",
+    label: "Problems",
+    allowed: can("problems.view"),
+  });
   views
     .filter((view) => view.allowed)
     .forEach((view) => {
@@ -903,6 +979,8 @@ async function refreshCurrentView() {
   try {
     if (currentView === "orders") {
       await loadOrders();
+    } else if (currentView === "problems") {
+      await loadProblems();
     } else if (currentView === "catering") {
       await loadCatering();
     } else {

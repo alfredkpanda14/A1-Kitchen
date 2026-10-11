@@ -55,9 +55,47 @@
         <div class="card" id="order-card"></div>
 
         <button type="button" id="action-button" class="button" hidden></button>
-        <button type="button" id="refresh-button" class="button">
+        <button
+          type="button"
+          id="confirm-button"
+          class="button"
+          hidden
+        ></button>
+        <button
+          type="button"
+          id="refresh-button"
+          class="button button-secondary"
+        >
           Check again
         </button>
+      </section>
+
+      <section id="problem-section" hidden>
+        <h2>Something Wrong With Your Order?</h2>
+        <p id="problem-note" class="menu-notice"></p>
+        <p>
+          Tell us what went wrong, such as missing items or a quality problem.
+          A1 Kitchen will contact you.
+        </p>
+
+        <form id="problem-form">
+          <label for="problem-details">Describe the problem</label>
+          <textarea
+            id="problem-details"
+            rows="4"
+            maxlength="1000"
+            required
+          ></textarea>
+
+          <button type="submit" class="button">Send report</button>
+        </form>
+
+        <p
+          id="problem-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
       </section>
 
       <section id="lookup-section" hidden>
@@ -113,11 +151,14 @@
         height="53"
         loading="lazy"
       />
-
+      <p>
+        &copy; 2026 Awan Kitchen and Catering Services (A1 Kitchen). All rights
+        reserved.
+      </p>
       <p>Food • Catering • Events</p>
       <p class="footer-links">
         <a href="family-outing.html">Family Outing</a> ·
-        <a href="how-it-works.html">How It Works</a> · ·
+        <a href="how-it-works.html">How It Works</a> ·
         <a href="privacy.html">Privacy Policy</a> ·
         <a href="terms.html">Terms &amp; Conditions</a> ·
         <a href="staff-login.html">Staff Sign In</a>
