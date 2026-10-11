@@ -771,3 +771,38 @@ footer p {
 .button-danger:hover {
   background: #7a1010;
 }
+/* Menu manager */
+.menu-field {
+  margin-top: 12px;
+}
+
+.field-help {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+}
+
+.checkbox-label input {
+  width: auto;
+}
+
+.photo-box {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.menu-thumb {
+  width: 240px;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}

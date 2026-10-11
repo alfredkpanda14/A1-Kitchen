@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Menu Manager</title>
+    <link rel="icon" type="image/svg+xml" href="images/logo-mark.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+      <a class="brand" href="chef-dashboard.html"
+        ><img
+          src="images/logo.svg"
+          alt="A1 Kitchen staff dashboard"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Staff navigation">
+        <a href="chef-dashboard.html">Orders</a>
+        <a
+          href="menu-manager.html"
+          id="nav-menu"
+          class="active"
+          aria-current="page"
+          >Menu manager</a
+        >
+        <a href="master-dashboard.html" id="nav-developer" hidden>Developer</a>
+        <a href="index.html">View website</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section>
+        <h1>Menu Manager</h1>
+        <p id="welcome">Loading...</p>
+
+        <div class="dash-bar">
+          <button type="button" id="refresh-button" class="button">
+            Refresh
+          </button>
+          <button
+            type="button"
+            id="signout-button"
+            class="button button-secondary"
+          >
+            Sign out
+          </button>
+        </div>
+
+        <p
+          id="dash-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+
+      <section id="price-tools" hidden>
+        <h2>Prices</h2>
+        <p>
+          A food with no price shows "Price on request", and customers wait for
+          your price before they pay. A food with a price shows it, and
+          customers who collect their order can go straight to payment. Delivery
+          orders always wait for the delivery fee.
+        </p>
+        <p>
+          When you hide prices, they are saved safely so you can show them again
+          with one click.
+        </p>
+        <button type="button" id="show-prices" class="button">
+          Show all saved prices
+        </button>
+        <button type="button" id="hide-prices" class="button button-secondary">
+          Hide all prices
+        </button>
+      </section>
+
+      <section>
+        <h2>Foods</h2>
+        <div id="new-food-box"></div>
+        <div id="food-list"></div>
+        <datalist id="category-list"></datalist>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="menu-manager.js"></script>
+  </body>
+</html>

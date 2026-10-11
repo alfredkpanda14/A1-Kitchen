@@ -977,11 +977,8 @@ async function start() {
 
   staff = info;
 
-  if (can("staff.manage")) {
-    const devLink = el("a", "button button-secondary", "Developer dashboard");
-    devLink.href = "master-dashboard.html";
-    document.querySelector(".dash-bar").appendChild(devLink);
-  }
+  document.getElementById("nav-menu").hidden = !can("menu.manage");
+  document.getElementById("nav-developer").hidden = !can("staff.manage");
   welcome.textContent =
     "Signed in as " +
     staff.full_name +

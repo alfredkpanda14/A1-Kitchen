@@ -12,6 +12,8 @@ const SITE_INFO = {
   phone2: "", // add the Q Cell number here when it can take calls
   phone2Label: "Q Cell",
   whatsapp: "+23231857434", // Q Cell: WhatsApp
+  phone3: "", // add the Africell number here when it can take calls
+  phone3Label: "Africell",
   email: "14a1.kitchen@gmail.com",
   address: "70 Bass Street, Brookfields, Freetown, Sierra Leone",
   hours: "",
