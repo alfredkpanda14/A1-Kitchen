@@ -95,7 +95,8 @@ function friendlyProgress(status) {
     "Paid — Not Delivered": "Payment confirmed, preparation starting soon",
     Preparing: "Your food is being prepared",
     "Out for Delivery": "Out for delivery",
-    "Ready for Pickup": "Ready for pickup",
+    "Ready for Pickup":
+      "Ready for pickup. Please confirm the pickup address with A1 Kitchen before you collect your order.",
     "Delivered — Customer Confirmation Pending": "Delivered",
     "Delivered — Customer Confirmed": "Delivered and confirmed",
   };

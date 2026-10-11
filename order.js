@@ -67,16 +67,22 @@ function cartTotal() {
 }
 
 /* ---------- Notes and button label ---------- */
-
 function updateQuoteInfo() {
   const unpriced = hasUnpricedItems();
   const isDelivery = deliveryMethod.value === "delivery";
+  const isPickup = deliveryMethod.value === "pickup";
+
+  const pickupText = isPickup
+    ? " For pickup, please confirm the pickup address with A1 Kitchen " +
+      "before you collect your order."
+    : "";
 
   if (unpriced) {
     quoteNote.textContent =
       "Prices are confirmed by A1 Kitchen. After you send your order, we " +
       "will contact you with your price and any delivery fee. You pay only " +
-      "after you agree.";
+      "after you agree." +
+      pickupText;
     quoteNote.hidden = false;
     submitButton.textContent = "Send My Order";
   } else if (isDelivery) {
@@ -86,8 +92,8 @@ function updateQuoteInfo() {
     quoteNote.hidden = false;
     submitButton.textContent = "Send My Order";
   } else {
-    quoteNote.textContent = "";
-    quoteNote.hidden = true;
+    quoteNote.textContent = pickupText.trim();
+    quoteNote.hidden = pickupText === "";
     submitButton.textContent = "Continue to Payment";
   }
 }

@@ -7,7 +7,10 @@
 */
 const SITE_INFO = {
   // Contact
-  phone: "+23279665540", // Orange: direct calls
+  phone: "+23279665540", // direct calls
+  phoneLabel: "Orange",
+  phone2: "", // add the Q Cell number here when it can take calls
+  phone2Label: "Q Cell",
   whatsapp: "+23231857434", // Q Cell: WhatsApp
   email: "14a1.kitchen@gmail.com",
   address: "70 Bass Street, Brookfields, Freetown, Sierra Leone",
@@ -17,12 +20,14 @@ const SITE_INFO = {
   deliveryAreas: "",
   deliveryFee: "",
   deliveryTime: "",
+  // Leave pickupInfo empty to build it from the address above.
+  // Fill it only if you want different pickup wording.
   pickupInfo: "",
   paymentCheckTime: "",
 
   // Mobile money
   orangeMoneyNumber: "+23279665540",
-  orangeMoneyName: "",
+  orangeMoneyName: "Alpha Kpanda",
   afrimoneyNumber: "",
   afrimoneyName: "",
 
@@ -35,6 +40,15 @@ const SITE_INFO = {
   linkedin: "",
   tiktok: "",
 };
+
+// Pickup details follow the address, so you only change it in one place
+if (!SITE_INFO.pickupInfo && SITE_INFO.address) {
+  SITE_INFO.pickupInfo =
+    "Collect your order at " +
+    SITE_INFO.address +
+    ". This address may change, so please confirm the pickup address with " +
+    "A1 Kitchen before you come.";
+}
 
 function safeUrl(value) {
   try {
@@ -52,10 +66,17 @@ function fillSiteInfo() {
     const value = SITE_INFO[key];
 
     if (!value) {
-      return; // keep the "will be added soon" message
+      return; // keep the "will be added soon" message (or stay hidden)
     }
 
+    element.hidden = false;
     element.textContent = "";
+
+    const label = SITE_INFO[key + "Label"];
+
+    if (label) {
+      element.appendChild(document.createTextNode(label + ": "));
+    }
 
     if (type === "phone") {
       const link = document.createElement("a");
@@ -77,7 +98,7 @@ function fillSiteInfo() {
       link.textContent = value;
       element.appendChild(link);
     } else {
-      element.textContent = value;
+      element.appendChild(document.createTextNode(value));
     }
   });
 }

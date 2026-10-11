@@ -2,38 +2,104 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>A1 Kitchen | Master Dashboard</title>
-
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Developer Dashboard</title>
     <link rel="icon" type="image/svg+xml" href="images/logo-mark.svg" />
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <main>
-      <section>
-        <h1>A1 Kitchen Master Dashboard</h1>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-        <p>Business and system overview.</p>
+    <header class="site-header">
+      <a class="brand" href="master-dashboard.html"
+        ><img
+          src="images/logo.svg"
+          alt="A1 Kitchen developer dashboard"
+          width="260"
+          height="68"
+      /></a>
+    </header>
+
+    <main id="main-content">
+      <section>
+        <h1>Developer Dashboard</h1>
+        <p id="welcome">Loading...</p>
+
+        <div class="dash-bar">
+          <button type="button" id="refresh-button" class="button">
+            Refresh
+          </button>
+          <a href="chef-dashboard.html" class="button button-secondary"
+            >Head Chef Dashboard</a
+          >
+          <button
+            type="button"
+            id="signout-button"
+            class="button button-secondary"
+          >
+            Sign out
+          </button>
+        </div>
+
+        <p
+          id="dash-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
       </section>
 
       <section>
-        <div class="card-container" id="dashboard-summary">Loading...</div>
+        <h2>Business Overview</h2>
+        <div id="summary-box"></div>
       </section>
 
-      <section>
-        <h2>Recent Orders</h2>
+      <section id="staff-section" hidden>
+        <h2>Staff</h2>
 
-        <div id="recent-orders">Loading...</div>
+        <h3>Accounts waiting for your approval</h3>
+        <p>
+          Nobody can sign in to the dashboard until you give them access. To add
+          a new staff member: (1) in Supabase open Authentication, then Users,
+          then Add user, enter their email and a password, and tick Auto
+          Confirm; (2) come back here, press Refresh, and grant them a role
+          below.
+        </p>
+        <div id="pending-list"></div>
+
+        <h3>Staff with access</h3>
+        <div id="staff-list"></div>
+      </section>
+
+      <section id="audit-section" hidden>
+        <h2>Activity Log</h2>
+        <p>The 100 most recent actions: who did what, and when.</p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>When</th>
+                <th>Who</th>
+                <th>What</th>
+                <th>Order or person</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="audit-body"></tbody>
+          </table>
+        </div>
       </section>
     </main>
 
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script src="supabase-config.js"></script>
-
     <script src="master-dashboard.js"></script>
   </body>
 </html>
