@@ -34,7 +34,9 @@ function friendlyError(error) {
   if (/failed to fetch|networkerror/i.test(text)) {
     return "We could not reach A1 Kitchen. Please check your internet connection and try again.";
   }
-
+  if (text.includes("a lot of requests")) {
+    return "We are receiving a lot of requests right now. Please try again in a few minutes.";
+  }
   if (text.includes("Too many requests")) {
     return "You have already sent several requests today. Please contact A1 Kitchen directly.";
   }

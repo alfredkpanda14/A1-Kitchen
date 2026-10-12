@@ -284,7 +284,9 @@ function friendlyOrderError(error) {
       "connection and try again."
     );
   }
-
+  if (text.includes("Too many orders") || text.includes("a lot of requests")) {
+    return text;
+  }
   if (text.includes("Food item is unavailable")) {
     const foodName = text.split("unavailable:")[1];
     return (
