@@ -49,6 +49,32 @@
         </div>
 
         <p id="last-updated" class="menu-notice"></p>
+        <div id="alert-banner" class="alert-banner" role="alert" hidden>
+          <span id="alert-text"></span>
+          <button type="button" id="alert-show" class="button">Show me</button>
+          <button
+            type="button"
+            id="alert-dismiss"
+            class="button button-secondary"
+          >
+            Dismiss
+          </button>
+        </div>
+
+        <div class="alert-options">
+          <label class="checkbox-label">
+            <input type="checkbox" id="alert-sound" />
+            Play a sound when something new arrives
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="alert-awake" />
+            Keep this screen awake (useful on a phone)
+          </label>
+          <p class="field-help">
+            Alerts work only while this page is open. On a phone, keep the page
+            open with the screen on.
+          </p>
+        </div>
         <p
           id="dash-message"
           class="success-message"
@@ -92,6 +118,56 @@
         <h2>Problems Reported by Customers</h2>
         <div id="problems-list"></div>
       </section>
+      <section id="limits-view" hidden>
+        <h2>Allowed Numbers</h2>
+        <p>
+          If a real customer is stopped by the order, catering or registration
+          limits, allow their phone number here for a short time. It switches
+          off by itself, or you can switch it off sooner. The site-wide limit
+          cannot be bypassed.
+        </p>
+
+        <div class="card">
+          <h3>Allow a phone number</h3>
+
+          <div class="menu-field">
+            <label for="limit-phone">Phone number</label>
+            <input
+              type="tel"
+              id="limit-phone"
+              maxlength="20"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="menu-field">
+            <label for="limit-hours">For how long?</label>
+            <select id="limit-hours">
+              <option value="1">1 hour</option>
+              <option value="6">6 hours</option>
+              <option value="24" selected>24 hours</option>
+              <option value="72">3 days</option>
+            </select>
+          </div>
+
+          <div class="menu-field">
+            <label for="limit-reason">Reason (optional)</label>
+            <input
+              type="text"
+              id="limit-reason"
+              maxlength="200"
+              autocomplete="off"
+            />
+          </div>
+
+          <button type="button" id="limit-add" class="button">
+            Allow this number
+          </button>
+        </div>
+
+        <h3>Currently allowed</h3>
+        <div id="limits-list"></div>
+      </section>
       <section>
         <h2>Change Your Password</h2>
 
@@ -133,5 +209,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="chef-dashboard.js"></script>
+    <script src="dashboard-extras.js"></script>
   </body>
 </html>

@@ -806,3 +806,33 @@ footer p {
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+/* Dashboard alerts and warnings */
+.alert-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0;
+  padding: 14px 16px;
+  background: #fff3cd;
+  color: #5c4400;
+  border-left: 6px solid var(--sunshine);
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.alert-banner .button {
+  margin: 0;
+}
+
+.alert-options {
+  margin: 10px 0;
+}
+
+.duplicate-warning {
+  padding: 10px 12px;
+  background: #fde2e2;
+  color: #7a1010;
+  border-radius: 8px;
+  font-weight: bold;
+}

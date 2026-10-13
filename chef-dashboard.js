@@ -310,6 +310,25 @@ async function showScreenshot(proof, holder, button, order) {
     link.appendChild(image);
     holder.appendChild(link);
     button.textContent = "Hide screenshot";
+
+    try {
+      const duplicates = await rpc("staff_proof_duplicates", {
+        p_proof_id: proof.id,
+      });
+
+      if (duplicates && duplicates.length > 0) {
+        const warning = el(
+          "p",
+          "duplicate-warning",
+          "Warning: this exact screenshot was also sent for " +
+            duplicates.join(", ") +
+            ". Check carefully before verifying.",
+        );
+        holder.insertBefore(warning, holder.firstChild);
+      }
+    } catch (error) {
+      console.error("Duplicate check failed:", error);
+    }
   } catch (error) {
     console.error("Screenshot error:", error);
     setMessage(friendlyError(error));
@@ -373,7 +392,7 @@ function paymentBox(order) {
           order.order_number +
           " and that the full amount of " +
           money(order.total) +
-          " was received?";
+          " was received in your own Orange Money or Afrimoney account? Check your own messages or balance, not only the screenshot.";
 
         if (!window.confirm(message)) {
           return;
@@ -933,6 +952,7 @@ async function showView(name) {
   cateringView.hidden = name !== "catering";
   eventsView.hidden = name !== "events";
   problemsView.hidden = name !== "problems";
+  limitsView.hidden = name !== "limits";
 
   viewTabs.querySelectorAll(".filter-button").forEach((button) => {
     button.setAttribute("aria-pressed", String(button.dataset.view === name));
@@ -961,6 +981,11 @@ function buildViewTabs() {
     label: "Problems",
     allowed: can("problems.view"),
   });
+  views.push({
+    id: "limits",
+    label: "Allowed numbers",
+    allowed: can("limits.manage"),
+  });
   views
     .filter((view) => view.allowed)
     .forEach((view) => {
@@ -979,6 +1004,8 @@ async function refreshCurrentView() {
   try {
     if (currentView === "orders") {
       await loadOrders();
+    } else if (currentView === "limits") {
+      await loadLimits();
     } else if (currentView === "problems") {
       await loadProblems();
     } else if (currentView === "catering") {
@@ -1071,6 +1098,7 @@ async function start() {
   });
 
   buildViewTabs();
+  startAlerts();
 
   const first = viewTabs.querySelector(".filter-button");
 
