@@ -461,6 +461,7 @@ async function start() {
 
   staff = info;
   document.getElementById("nav-menu").hidden = !can("menu.manage");
+  document.getElementById("nav-events").hidden = !can("events.view");
   if (!can("staff.manage")) {
     // This page is for the Developer role only
     goTo("chef-dashboard.html");

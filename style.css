@@ -836,3 +836,14 @@ footer p {
   border-radius: 8px;
   font-weight: bold;
 }
+/* Events */
+.ticket-row {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.event-form {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}

@@ -585,7 +585,7 @@ async function start() {
     goTo("chef-dashboard.html");
     return;
   }
-
+  document.getElementById("nav-events").hidden = !can("events.view");
   document.getElementById("nav-developer").hidden = !can("staff.manage");
 
   welcome.textContent =

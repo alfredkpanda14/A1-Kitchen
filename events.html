@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Upcoming A1 Kitchen events, including the annual Family Outing. See the details and register."
+    />
+    <title>A1 Kitchen | Events</title>
+    <link rel="icon" type="image/svg+xml" href="images/logo-mark.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+      <a class="brand" href="index.html"
+        ><img
+          src="images/logo.svg"
+          alt="A1 Kitchen home page"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="catering.html">Catering</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="faq.html">FAQ</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="birthday.html">Chef A1 Personal Page</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section>
+        <h1>A1 Kitchen Events</h1>
+        <p>
+          Join us at our events. Choose your tickets and register below. After
+          you register, you get a private link to your registration, where you
+          can always see the latest price, place and time.
+        </p>
+
+        <p
+          id="events-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+
+        <div id="events-list"></div>
+      </section>
+
+      <section>
+        <h2>Already Registered?</h2>
+        <p>Open your registration to see the latest details.</p>
+        <a href="my-registration.html" class="button button-secondary"
+          >My Registration</a
+        >
+      </section>
+    </main>
+
+    <footer>
+      <img
+        class="footer-logo"
+        src="images/logo.svg"
+        alt="A1 Kitchen"
+        width="200"
+        height="53"
+        loading="lazy"
+      />
+      <p>
+        &copy; 2026 Awan Kitchen and Catering Services (A1 Kitchen). All rights
+        reserved.
+      </p>
+      <p>Food • Catering • Events</p>
+      <p class="footer-links">
+        <a href="events.html">Events</a> ·
+        <a href="how-it-works.html">How It Works</a> ·
+        <a href="privacy.html">Privacy Policy</a> ·
+        <a href="terms.html">Terms &amp; Conditions</a> ·
+        <a href="staff-login.html">Staff Sign In</a>
+      </p>
+    </footer>
+
+    <script src="supabase-config.js"></script>
+    <script src="events.js"></script>
+  </body>
+</html>

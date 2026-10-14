@@ -974,7 +974,7 @@ function buildViewTabs() {
   views.push({
     id: "events",
     label: "Family Outing",
-    allowed: can("events.view"),
+    allowed: false,
   });
   views.push({
     id: "problems",
@@ -1084,6 +1084,7 @@ async function start() {
 
   document.getElementById("nav-menu").hidden = !can("menu.manage");
   document.getElementById("nav-developer").hidden = !can("staff.manage");
+  document.getElementById("nav-events").hidden = !can("events.view");
   welcome.textContent =
     "Signed in as " +
     staff.full_name +

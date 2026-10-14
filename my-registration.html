@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <meta name="referrer" content="no-referrer" />
+    <title>A1 Kitchen | My Event Registration</title>
+    <link rel="icon" type="image/svg+xml" href="images/logo-mark.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+      <a class="brand" href="index.html"
+        ><img
+          src="images/logo.svg"
+          alt="A1 Kitchen home page"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="catering.html">Catering</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="faq.html">FAQ</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="birthday.html">Chef A1 Personal Page</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section>
+        <h1>My Event Registration</h1>
+        <p>
+          See your tickets and the latest price, place and time. Keep your
+          private link safe, because anyone with it can see your registration.
+        </p>
+
+        <p
+          id="reg-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+
+        <div id="reg-result" hidden></div>
+      </section>
+
+      <section id="reg-lookup" hidden>
+        <h2>Find Your Registration</h2>
+        <p>
+          Use the link you saved after registering. Or enter your registration
+          number and code below.
+        </p>
+
+        <form id="reg-lookup-form">
+          <label for="lookup-reg">Registration Number</label>
+          <input
+            type="text"
+            id="lookup-reg"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            required
+          />
+
+          <label for="lookup-code">Code</label>
+          <input
+            type="text"
+            id="lookup-code"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            required
+          />
+
+          <button type="submit" class="button">Find Registration</button>
+        </form>
+
+        <p>
+          Not registered yet? <a href="events.html">See upcoming events</a>.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <img
+        class="footer-logo"
+        src="images/logo.svg"
+        alt="A1 Kitchen"
+        width="200"
+        height="53"
+        loading="lazy"
+      />
+      <p>
+        &copy; 2026 Awan Kitchen and Catering Services (A1 Kitchen). All rights
+        reserved.
+      </p>
+      <p>Food • Catering • Events</p>
+      <p class="footer-links">
+        <a href="events.html">Events</a> ·
+        <a href="how-it-works.html">How It Works</a> ·
+        <a href="privacy.html">Privacy Policy</a> ·
+        <a href="terms.html">Terms &amp; Conditions</a> ·
+        <a href="staff-login.html">Staff Sign In</a>
+      </p>
+    </footer>
+
+    <script src="supabase-config.js"></script>
+    <script src="my-registration.js"></script>
+  </body>
+</html>
