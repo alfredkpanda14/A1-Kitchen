@@ -162,6 +162,8 @@ function ticketsFor(data, registration) {
       method: payment.method,
       items: registration.items,
       contact: info("phone"),
+      verifyUrl:
+        window.location.origin + "/gate.html#t=" + payment.ticket_number,
     }));
 }
 

@@ -3,21 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <meta
       name="description"
       content="A1 Kitchen provides delicious meals, food orders and professional catering for dinners, birthdays, weddings, naming ceremonies, office meetings, workshops, pool parties, funeral ceremonies and other events."
     />
-
     <title>A1 Kitchen | Food &amp; Catering Services</title>
-
     <link rel="icon" type="image/png" href="images/logo-mark.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body id="top">
     <a href="#main-content" class="skip-link">Skip to main content</a>
-
     <header class="site-header">
       <a class="brand" href="index.html"
         ><img
@@ -37,106 +32,137 @@
         <a href="birthday.html">Chef A1 Personal Page</a>
       </nav>
     </header>
-
     <main id="main-content">
-      <!-- Hero Section -->
-      <section>
-        <h1>Welcome to A1 Kitchen</h1>
-
-        <p class="welcome-message">
-          A1 Kitchen prepares delicious African and European dishes and provides
-          professional catering services for events across Sierra Leone,
-          including dinners, birthdays, weddings, naming ceremonies, office
-          meetings, workshops, pool parties and funeral ceremonies.
-        </p>
-
-        <p>
-          We cook every meal with care, quality ingredients, and a passion for
-          great taste.
-        </p>
-
-        <a href="menu.html" class="button">Explore Our Menu</a>
-        <a href="catering.html" class="button">Catering Services</a>
+      <!-- Hero -->
+      <section class="home-hero">
+        <div class="home-hero-copy">
+          <p class="home-eyebrow">Awan Kitchen &amp; Catering Services</p>
+          <h1>
+            Delicious African &amp; European Dishes,
+            <span>Cooked With Care</span>
+          </h1>
+          <p>
+            Order meals for yourself, your family or a crowd, or let us cater
+            your next event anywhere in Sierra Leone: dinners, birthdays,
+            weddings, naming ceremonies, workshops and more.
+          </p>
+          <div class="home-hero-actions">
+            <a href="menu.html" class="button button-light">Explore Our Menu</a>
+            <a href="catering.html" class="button button-ghost"
+              >Book Catering</a
+            >
+          </div>
+          <ul class="home-chips">
+            <li>Delivery or pickup</li>
+            <li>Orange Money &amp; AfriMoney</li>
+            <li>Events across Sierra Leone</li>
+          </ul>
+        </div>
+        <div class="home-hero-media">
+          <img
+            src="images/a1-kitchen-flyer.webp"
+            alt="A1 Kitchen flyer: European and African dishes. Call 079 66 55 40 or WhatsApp 031 857434."
+            width="1080"
+            height="720"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
       </section>
-      <!-- How It Works -->
-      <section>
-        <h2>How Ordering Works</h2>
 
-        <div class="card-container">
-          <div class="card">
-            <p class="step-label">1</p>
+      <!-- Trust strip -->
+      <section class="home-strip" aria-label="Why choose A1 Kitchen">
+        <div class="home-strip-item">African and European dishes</div>
+        <div class="home-strip-item">Delivery or pickup</div>
+        <div class="home-strip-item">Pay by Orange Money or AfriMoney</div>
+        <div class="home-strip-item">
+          Catering for any event in Sierra Leone
+        </div>
+      </section>
+
+      <!-- How ordering works -->
+      <section class="home-section">
+        <h2>How Ordering Works</h2>
+        <p class="home-lead">Four simple steps from hungry to happy.</p>
+        <div class="home-steps">
+          <div class="home-step">
+            <span class="home-step-number">1</span>
             <h3>Choose</h3>
             <p>Pick your food from the menu.</p>
           </div>
-
-          <div class="card">
-            <p class="step-label">2</p>
+          <div class="home-step">
+            <span class="home-step-number">2</span>
             <h3>Send your request</h3>
             <p>Enter your details and choose delivery or pickup.</p>
           </div>
-
-          <div class="card">
-            <p class="step-label">3</p>
+          <div class="home-step">
+            <span class="home-step-number">3</span>
             <h3>Agree your price</h3>
             <p>
               We contact you with your price and delivery fee. You pay only
               after you agree.
             </p>
           </div>
-
-          <div class="card">
-            <p class="step-label">4</p>
+          <div class="home-step">
+            <span class="home-step-number">4</span>
             <h3>Pay and enjoy</h3>
             <p>
-              Pay in full by Orange Money or Afrimoney. We prepare your food
+              Pay in full by Orange Money or AfriMoney. We prepare your food
               once your payment is confirmed.
             </p>
           </div>
         </div>
-
-        <a href="how-it-works.html" class="button">See the Full Guide</a>
+        <p class="home-actions">
+          <a href="how-it-works.html" class="button button-secondary"
+            >See the Full Guide</a
+          >
+        </p>
       </section>
-      <!-- Catering Services -->
-      <section>
-        <h2>Our Catering Services</h2>
 
-        <div class="card-container">
-          <div class="card">
+      <!-- Catering services -->
+      <section class="home-section">
+        <h2>Our Catering Services</h2>
+        <p class="home-lead">
+          Whatever you are celebrating, we bring the food and the care.
+        </p>
+        <div class="home-services">
+          <div class="home-service">
+            <span class="home-service-icon" aria-hidden="true">🍽️</span>
             <h3>Dinner</h3>
             <p>Meals and catering for dinners and gatherings.</p>
           </div>
-
-          <div class="card">
+          <div class="home-service">
+            <span class="home-service-icon" aria-hidden="true">🎓</span>
             <h3>Workshop</h3>
             <p>Food arrangements for workshops, trainings and seminars.</p>
           </div>
-
-          <div class="card">
+          <div class="home-service">
+            <span class="home-service-icon" aria-hidden="true">💼</span>
             <h3>Office Meeting</h3>
             <p>Food and catering for office meetings and business events.</p>
           </div>
-
-          <div class="card">
+          <div class="home-service">
+            <span class="home-service-icon" aria-hidden="true">💍</span>
             <h3>Wedding Reception</h3>
             <p>Catering for wedding receptions and wedding-related events.</p>
           </div>
-
-          <div class="card">
+          <div class="home-service">
+            <span class="home-service-icon" aria-hidden="true">👶</span>
             <h3>Naming Ceremony</h3>
             <p>Catering for naming ceremonies and family gatherings.</p>
           </div>
-
-          <div class="card">
+          <div class="home-service">
+            <span class="home-service-icon" aria-hidden="true">🎂</span>
             <h3>Birthday Party</h3>
             <p>Delicious meals and catering for birthday celebrations.</p>
           </div>
-
-          <div class="card">
+          <div class="home-service">
+            <span class="home-service-icon" aria-hidden="true">🏊</span>
             <h3>Pool Party</h3>
             <p>Food for pool parties and relaxed get-togethers.</p>
           </div>
-
-          <div class="card">
+          <div class="home-service">
+            <span class="home-service-icon" aria-hidden="true">🕊️</span>
             <h3>Funeral Ceremony</h3>
             <p>
               Respectful catering support for funeral ceremonies and family
@@ -144,80 +170,112 @@
             </p>
           </div>
         </div>
-
-        <a href="catering.html" class="button">See All Catering Services</a>
-      </section>
-
-      <!-- Food -->
-      <section>
-        <h2>Delicious Food for Every Occasion</h2>
-
-        <img
-          src="images/a1-kitchen-flyer.webp"
-          alt="A1 Kitchen flyer: European and African dishes. Call 079 66 55 40 or WhatsApp 031 857434."
-          loading="lazy"
-          decoding="async"
-        />
-
-        <p>
-          Whether you need a meal for yourself, your family, a group, or a
-          special event, A1 Kitchen is here to serve you.
+        <p class="home-actions">
+          <a href="catering.html" class="button">See All Catering Services</a>
         </p>
-
-        <a href="menu.html" class="button">View Food Menu</a>
       </section>
 
-      <!-- Video -->
-      <section>
-        <h2>Watch A1 Kitchen at Work</h2>
-
-        <video
-          src="videos/a1-kitchen-video.mp4"
-          controls
-          preload="none"
-          playsinline
-        >
-          Your browser does not support this video.
-        </video>
-      </section>
-
-      <!-- Audio -->
-      <section>
-        <h2>Listen to Our Welcome Message</h2>
-
-        <audio src="audio/a1-kitchen-welcome.mp3" controls preload="none">
-          Your browser does not support this audio.
-        </audio>
-      </section>
       <!-- Family Outing -->
-      <section>
-        <h2>Annual A1 Kitchen Family Outing</h2>
-
-        <p>
-          Join us every year on 26 December for the A1 Kitchen Family Outing.
-          Register your family and friends today.
-        </p>
-
-        <a href="events.html" class="button">Register for the Family Outing</a>
+      <section class="home-event">
+        <div class="home-event-date" aria-hidden="true">
+          <strong>26</strong>
+          <span>DEC</span>
+        </div>
+        <div>
+          <h2>Annual A1 Kitchen Family Outing</h2>
+          <p>
+            Join us every year on 26 December. Register your family and friends
+            today.
+          </p>
+          <p>
+            Pay with Orange Money or AfriMoney and get a digital ticket with a
+            QR code for quick entry at the gate.
+          </p>
+        </div>
+        <a href="events.html" class="button button-light">Register Now</a>
       </section>
+
+      <!-- Latest photos (shown only when there are photos) -->
+      <section class="home-section" id="home-work" hidden>
+        <h2>From Our Kitchen</h2>
+        <p class="home-lead">A taste of what we have been cooking.</p>
+        <div id="home-work-grid" class="home-work-grid"></div>
+        <p class="home-actions">
+          <a href="gallery.html" class="button button-secondary"
+            >Visit the Gallery</a
+          >
+        </p>
+      </section>
+
+      <!-- Customer words (shown only when there are testimonies) -->
+      <section class="home-section" id="home-words" hidden>
+        <h2>Kind Words From Our Customers</h2>
+        <div id="home-quotes-grid" class="home-quotes"></div>
+      </section>
+
+      <!-- Video and audio -->
+      <section class="home-section">
+        <h2>See and Hear A1 Kitchen</h2>
+        <div class="home-media-grid">
+          <div class="home-media-card">
+            <h3>Watch A1 Kitchen at Work</h3>
+            <video
+              src="videos/a1-kitchen-video.mp4"
+              controls
+              preload="none"
+              playsinline
+            >
+              Your browser does not support this video.
+            </video>
+          </div>
+          <div class="home-media-card">
+            <h3>Listen to Our Welcome Message</h3>
+            <audio src="audio/a1-kitchen-welcome.mp3" controls preload="none">
+              Your browser does not support this audio.
+            </audio>
+          </div>
+        </div>
+      </section>
+
       <!-- Birthday -->
-      <section>
-        <h2>A Special Birthday Message for Chef A1</h2>
-
-        <p>
-          Visit our special birthday page to read the birthday message dedicated
-          to Chef A1.
-        </p>
-
-        <a href="birthday.html" class="button">Chef A1 Personal Page</a>
+      <section class="home-note">
+        <div>
+          <h2>A Special Birthday Message for Chef A1</h2>
+          <p>
+            Visit our special page to read the birthday message dedicated to
+            Chef A1.
+          </p>
+        </div>
+        <a href="birthday.html" class="button button-secondary"
+          >Chef A1 Personal Page</a
+        >
       </section>
 
-      <!-- Back to Top -->
-      <section>
-        <a href="#top" class="button">↑ Back to Top</a>
+      <!-- Final call -->
+      <section class="home-cta">
+        <h2>Hungry? Let Us Feed You.</h2>
+        <p>Order from the menu, or talk to us about your next event.</p>
+        <div class="home-hero-actions">
+          <a href="menu.html" class="button button-light"
+            >Order From the Menu</a
+          >
+          <a
+            href="https://wa.me/23231857434"
+            class="button button-whatsapp"
+            target="_blank"
+            rel="noopener noreferrer"
+            >WhatsApp Us</a
+          >
+          <a href="tel:+23279665540" class="button button-ghost"
+            >Call 079 66 55 40</a
+          >
+        </div>
       </section>
+
+      <p class="home-top">
+        <a href="#top" class="button button-secondary">↑ Back to Top</a>
+      </p>
     </main>
-
     <footer>
       <img
         class="footer-logo"
@@ -227,15 +285,16 @@
         height="53"
         loading="lazy"
       />
-
       <p>Food • Catering • Events</p>
       <p class="footer-links">
         <a href="events.html">Events</a> ·
-        <a href="how-it-works.html">How It Works</a> · ·
+        <a href="how-it-works.html">How It Works</a> ·
         <a href="privacy.html">Privacy Policy</a> ·
         <a href="terms.html">Terms &amp; Conditions</a> ·
         <a href="staff-login.html">Staff Sign In</a>
       </p>
     </footer>
+    <script src="supabase-config.js"></script>
+    <script src="home.js"></script>
   </body>
 </html>

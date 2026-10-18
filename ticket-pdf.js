@@ -120,15 +120,17 @@ const A1TicketPdf = (function () {
           ") Tj ET",
       );
     }
-    function centered(y, str, font, size, color) {
+    function centered(y, str, font, size, color, centerX) {
       const w =
         font === "F3"
           ? clean(str).length * size * 0.6
           : approxWidth(str, size, font === "F2");
-      text(Math.max(20, (PAGE_W - w) / 2), y, str, font, size, color);
+      const middle = centerX || PAGE_W / 2;
+      text(Math.max(20, middle - w / 2), y, str, font, size, color);
     }
 
     const isBalance = ticket.kind === "balance";
+    const isFood = ticket.kind === "food";
 
     // Header band with logo
     rect(0, PAGE_H - 96, PAGE_W, 96, NAVY);
@@ -157,7 +159,11 @@ const A1TicketPdf = (function () {
     let y = PAGE_H - 138;
     centered(
       y,
-      isBalance ? "BALANCE PAYMENT TICKET" : "EVENT TICKET",
+      isBalance
+        ? "BALANCE PAYMENT TICKET"
+        : isFood
+          ? "FOOD TICKET"
+          : "EVENT TICKET",
       "F2",
       13,
       isBalance ? [0.45, 0.31, 0] : GREEN,
@@ -195,21 +201,34 @@ const A1TicketPdf = (function () {
     centered(y - 42, ticket.ticketNumber, "F3", 26, NAVY);
     y -= 84;
 
-    // Details
+    // Details (the QR code sits on the right, so the text stays narrower)
     const left = 44;
+    const textWidth = ticket.verifyUrl ? 215 : PAGE_W - left - 40;
+    const detailsTop = y;
     function line(label, value) {
       text(left, y, label, "F2", 9, BLUE);
-      wrap(value, 12, true, PAGE_W - left - 40)
-        .slice(0, 2)
-        .forEach((part, index) => {
-          text(left, y - 13 - index * 14, part, "F2", 12, NAVY);
-        });
-      y -= 34;
+      const parts = wrap(value, 12, true, textWidth).slice(0, 2);
+      parts.forEach((part, index) => {
+        text(left, y - 13 - index * 14, part, "F2", 12, NAVY);
+      });
+      y -= parts.length > 1 ? 48 : 34;
     }
     line("TICKET HOLDER", ticket.holder);
-    line("REGISTRATION NUMBER", ticket.regNumber);
+    if (!isFood) {
+      line("REGISTRATION NUMBER", ticket.regNumber);
+    }
 
-    if (isBalance) {
+    if (isFood) {
+      y -= 8;
+      text(left, y, "MEAL", "F2", 9, BLUE);
+      const mealLines = wrap(ticket.mealName, 20, true, textWidth).slice(0, 2);
+      mealLines.forEach((part, index) => {
+        text(left, y - 24 - index * 24, part, "F2", 20, NAVY);
+      });
+      y -= mealLines.length > 1 ? 88 : 64;
+      text(left, y, "SERVING", "F2", 9, BLUE);
+      text(left, y - 14, "1 meal, one time only", "F2", 12, GREEN);
+    } else if (isBalance) {
       line("BALANCE PAID WITH THIS TICKET", money(ticket.amount));
       text(left, y, "IMPORTANT", "F2", 9, BLUE);
       y -= 13;
@@ -221,7 +240,7 @@ const A1TicketPdf = (function () {
           ".",
         10.5,
         false,
-        PAGE_W - left - 40,
+        textWidth,
       ).forEach((part) => {
         text(left, y, part, "F1", 10.5, NAVY);
         y -= 13;
@@ -252,24 +271,93 @@ const A1TicketPdf = (function () {
       );
     }
 
+    // QR code for the gate scanner
+    if (ticket.verifyUrl && typeof A1Qr !== "undefined") {
+      try {
+        const qr = A1Qr.make(ticket.verifyUrl, "M");
+        const boxSize = 112;
+        const quiet = 6;
+        const boxX = PAGE_W - 34 - 14 - boxSize;
+        const boxY = detailsTop - boxSize + 6;
+        rect(boxX - 1, boxY - 1, boxSize + 2, boxSize + 2, SOFT);
+        rect(boxX, boxY, boxSize, boxSize, [1, 1, 1]);
+        const cell = (boxSize - quiet * 2) / qr.size;
+        out.push(rgbFill([0, 0, 0]));
+        for (let row = 0; row < qr.size; row += 1) {
+          let col = 0;
+          while (col < qr.size) {
+            if (qr.isDark(col, row)) {
+              let end = col;
+              while (end + 1 < qr.size && qr.isDark(end + 1, row)) {
+                end += 1;
+              }
+              const rx = boxX + quiet + col * cell;
+              const ry = boxY + boxSize - quiet - (row + 1) * cell;
+              out.push(
+                rx.toFixed(3) +
+                  " " +
+                  ry.toFixed(3) +
+                  " " +
+                  ((end - col + 1) * cell + 0.02).toFixed(3) +
+                  " " +
+                  (cell + 0.02).toFixed(3) +
+                  " re",
+              );
+              col = end + 1;
+            } else {
+              col += 1;
+            }
+          }
+        }
+        out.push("f");
+        centered(
+          boxY - 12,
+          isFood ? "SCAN AT THE SERVING AREA" : "SCAN AT THE GATE",
+          "F2",
+          8,
+          BLUE,
+          boxX + boxSize / 2,
+        );
+      } catch (error) {
+        /* the ticket still works without the QR code */
+      }
+    }
+
     // Footer
     rect(34, 66, PAGE_W - 68, 1, SOFT);
-    centered(
-      50,
-      "Approved " +
-        shortStamp(ticket.approvedAt) +
-        ". Show this ticket (printed or on your phone) at the gate.",
-      "F1",
-      8.5,
-      GREY,
-    );
-    centered(
-      38,
-      "Each ticket number can be used once. Do not share it. Never share your mobile money PIN.",
-      "F1",
-      8.5,
-      GREY,
-    );
+    if (isFood) {
+      centered(
+        50,
+        "Show this ticket (printed or on your phone) at the A1 Kitchen serving area.",
+        "F1",
+        8.5,
+        GREY,
+      );
+      centered(
+        38,
+        "Each ticket is for one meal and can be used once. Please do not share it.",
+        "F1",
+        8.5,
+        GREY,
+      );
+    } else {
+      centered(
+        50,
+        "Approved " +
+          shortStamp(ticket.approvedAt) +
+          ". Show this ticket (printed or on your phone) at the gate.",
+        "F1",
+        8.5,
+        GREY,
+      );
+      centered(
+        38,
+        "Each ticket number can be used once. Do not share it. Never share your mobile money PIN.",
+        "F1",
+        8.5,
+        GREY,
+      );
+    }
     centered(
       26,
       "A1 Kitchen  |  " + (ticket.contact || "Food - Catering - Events"),

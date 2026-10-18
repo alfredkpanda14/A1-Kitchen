@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Gate Scanner</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="chef-dashboard.html"
+        ><img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen staff dashboard"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Staff navigation">
+        <a href="chef-dashboard.html">Orders</a>
+        <a href="menu-manager.html" id="nav-menu" hidden>Menu manager</a>
+        <a href="master-dashboard.html" id="nav-developer" hidden>Developer</a>
+        <a href="events-manager.html">Events</a>
+        <a href="catering-manager.html">Catering events</a>
+        <a href="gate.html" class="active" aria-current="page">Gate scanner</a>
+        <a href="index.html">View website</a>
+      </nav>
+    </header>
+    <main id="main-content">
+      <section>
+        <h1>Gate Scanner</h1>
+        <p id="welcome">Loading...</p>
+        <div class="dash-bar">
+          <button
+            type="button"
+            id="signout-button"
+            class="button button-secondary"
+          >
+            Sign out
+          </button>
+        </div>
+        <p
+          id="gate-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+      <section>
+        <h2>Scan a Ticket</h2>
+        <p>
+          Press the button and point the camera at the QR code on the ticket
+          (printed or on a phone). You can also scan with your phone's normal
+          camera app, which opens the ticket here.
+        </p>
+        <div class="dash-bar">
+          <button type="button" id="scan-start" class="button">
+            Start camera scan
+          </button>
+          <button
+            type="button"
+            id="scan-stop"
+            class="button button-secondary"
+            hidden
+          >
+            Stop camera
+          </button>
+        </div>
+        <video
+          id="scan-video"
+          class="gate-video"
+          playsinline
+          muted
+          hidden
+        ></video>
+        <label for="ticket-input">Or type the ticket number</label>
+        <input
+          type="text"
+          id="ticket-input"
+          maxlength="20"
+          autocomplete="off"
+          autocapitalize="characters"
+          spellcheck="false"
+          placeholder="A1-2026-3F9A1C"
+        />
+        <button type="button" id="ticket-check" class="button">
+          Check ticket
+        </button>
+      </section>
+      <section id="gate-result-box"></section>
+    </main>
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="gate.js"></script>
+  </body>
+</html>

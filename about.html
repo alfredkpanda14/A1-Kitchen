@@ -3,21 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <meta
       name="description"
       content="Learn about A1 Kitchen, a registered food and catering business serving African and European dishes and events across Sierra Leone."
     />
-
     <title>About A1 Kitchen</title>
-
     <link rel="icon" type="image/png" href="images/logo-mark.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
-
     <header class="site-header">
       <a class="brand" href="index.html"
         ><img
@@ -37,17 +32,14 @@
         <a href="birthday.html">Chef A1 Personal Page</a>
       </nav>
     </header>
-
     <main id="main-content">
       <section>
         <h1>About A1 Kitchen</h1>
-
         <p>
           A1 Kitchen is a restaurant and catering business. We prepare both
           African and European dishes, and we can be hired to cater for any type
           of event across Sierra Leone.
         </p>
-
         <p>
           A1 Kitchen is registered in Sierra Leone under its legal name,
           <strong>Awan Kitchen and Catering Services</strong>. "Awan" is the
@@ -56,7 +48,6 @@
       </section>
       <section>
         <h2>Our Mission</h2>
-
         <p>
           Our goal is to provide quality meals and reliable catering services
           while creating a positive experience for our customers. Customer
@@ -64,10 +55,8 @@
           make sure every customer receives their order.
         </p>
       </section>
-
       <section>
         <h2>What We Do</h2>
-
         <div class="card-container">
           <div class="card">
             <h3>African and European Dishes</h3>
@@ -76,14 +65,12 @@
               occasions.
             </p>
           </div>
-
           <div class="card">
             <h3>Catering Across Sierra Leone</h3>
             <p>
               We provide food for any type of event, anywhere in Sierra Leone.
             </p>
           </div>
-
           <div class="card">
             <h3>Food Orders</h3>
             <p>
@@ -93,10 +80,8 @@
           </div>
         </div>
       </section>
-
       <section>
         <h2>Our Vision</h2>
-
         <p>
           A1 Kitchen is growing, and we have plans for the future. We are
           working towards growing many of our own vegetables in a garden of our
@@ -104,7 +89,6 @@
           our cooking. The aim is for the food we prepare to be as fresh as
           possible.
         </p>
-
         <figure class="vision">
           <img
             src="images/garden-vision.jpg"
@@ -118,9 +102,26 @@
             Illustration of the kind of garden A1 Kitchen is working towards.
           </figcaption>
         </figure>
+        <div id="about-media" class="gallery-grid about-media" hidden></div>
+        <p>
+          <button
+            type="button"
+            id="about-more"
+            class="button button-secondary"
+            hidden
+          >
+            Show more
+          </button>
+        </p>
       </section>
     </main>
-
+    <dialog id="photo-dialog" class="photo-dialog" aria-label="Photo viewer">
+      <img id="photo-dialog-image" alt="" />
+      <p id="photo-dialog-caption"></p>
+      <button type="button" id="photo-dialog-close" class="button">
+        Close
+      </button>
+    </dialog>
     <footer>
       <img
         class="footer-logo"
@@ -130,15 +131,16 @@
         height="53"
         loading="lazy"
       />
-
       <p>Food • Catering • Events</p>
       <p class="footer-links">
         <a href="events.html">Events</a> ·
-        <a href="how-it-works.html">How It Works</a> · ·
+        <a href="how-it-works.html">How It Works</a> ·
         <a href="privacy.html">Privacy Policy</a> ·
         <a href="terms.html">Terms &amp; Conditions</a> ·
         <a href="staff-login.html">Staff Sign In</a>
       </p>
     </footer>
+    <script src="supabase-config.js"></script>
+    <script src="about.js"></script>
   </body>
 </html>

@@ -19,6 +19,7 @@ const SECTION_LABELS = {
   work: "Our work",
   testimony: "Customer testimony",
   event: "Event",
+  about: "About page (under Our Vision)",
 };
 
 let staff = null;

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Event QR Poster</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="poster-actions">
+      <button type="button" id="print-button" class="button" hidden>
+        Print this poster
+      </button>
+      <a href="catering-manager.html" class="button button-secondary"
+        >Back to Catering events</a
+      >
+    </div>
+    <p
+      id="poster-message"
+      class="success-message"
+      role="status"
+      aria-live="polite"
+    ></p>
+    <div class="poster-sheet">
+      <div class="poster-logo-bar">
+        <img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen"
+          width="260"
+          height="68"
+        />
+      </div>
+      <div id="poster" hidden></div>
+    </div>
+    <script src="supabase-config.js"></script>
+    <script src="qr-code.js"></script>
+    <script src="catering-poster.js"></script>
+  </body>
+</html>
