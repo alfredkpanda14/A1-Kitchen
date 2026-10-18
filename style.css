@@ -980,19 +980,230 @@ footer p {
   margin-bottom: 10px;
 }
 /* ==============================
-   NEW SQUARE LOGO
+   PROFESSIONAL BUTTONS
    ============================== */
 
-.brand {
-  width: 150px;
+/* Main buttons: blue gradient, turns green and lifts on hover */
+.button,
+button.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 26px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1280d6 0%, #0a4f8f 100%);
+  background-origin: border-box;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+    0 6px 16px rgba(10, 79, 143, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.brand img {
-  width: 150px;
-  aspect-ratio: 1 / 1;
+.button:hover,
+button.button:hover {
+  background: linear-gradient(135deg, #1fa044 0%, #10782b 100%);
+  background-origin: border-box;
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 22px rgba(16, 120, 43, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
-.footer-logo {
-  width: 110px;
-  aspect-ratio: 1 / 1;
+.button:active,
+button.button:active {
+  transform: translateY(0);
+  box-shadow:
+    0 3px 8px rgba(10, 79, 143, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.18);
+}
+
+.button:focus-visible,
+button.button:focus-visible {
+  outline: 3px solid var(--sunshine);
+  outline-offset: 3px;
+}
+
+.button:disabled,
+button.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.button:disabled:hover,
+button.button:disabled:hover {
+  background: linear-gradient(135deg, #1280d6 0%, #0a4f8f 100%);
+  background-origin: border-box;
+  transform: none;
+}
+
+/* Second choice buttons: white with a blue outline */
+.button.button-secondary,
+button.button.button-secondary {
+  background: #ffffff;
+  color: var(--blue);
+  border-color: var(--blue);
+  box-shadow: 0 3px 10px rgba(12, 35, 64, 0.1);
+}
+
+.button.button-secondary:hover,
+button.button.button-secondary:hover {
+  background: linear-gradient(135deg, #1280d6 0%, #0a4f8f 100%);
+  background-origin: border-box;
+  color: #ffffff;
+  border-color: var(--blue);
+  box-shadow: 0 8px 18px rgba(10, 79, 143, 0.3);
+}
+
+.button.button-secondary:disabled:hover,
+button.button.button-secondary:disabled:hover {
+  background: #ffffff;
+  color: var(--blue);
+  box-shadow: none;
+}
+
+/* Delete and reject buttons: red */
+.button.button-danger,
+button.button.button-danger {
+  background: linear-gradient(135deg, #d03a3a 0%, #9b1c1c 100%);
+  background-origin: border-box;
+  box-shadow:
+    0 6px 16px rgba(155, 28, 28, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.button.button-danger:hover,
+button.button.button-danger:hover {
+  background: linear-gradient(135deg, #b32424 0%, #7a1010 100%);
+  background-origin: border-box;
+  box-shadow:
+    0 10px 22px rgba(122, 16, 16, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.button.button-danger:disabled:hover,
+button.button.button-danger:disabled:hover {
+  background: linear-gradient(135deg, #d03a3a 0%, #9b1c1c 100%);
+  background-origin: border-box;
+}
+
+/* "Add to order" button on the menu */
+.order-button {
+  min-height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1fa044 0%, #10782b 100%);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow:
+    0 5px 14px rgba(16, 120, 43, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.order-button:hover {
+  background: linear-gradient(135deg, #1280d6 0%, #0a4f8f 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 9px 20px rgba(10, 79, 143, 0.35);
+}
+
+.order-button:active {
+  transform: translateY(0);
+}
+
+/* Plus and minus buttons in the cart */
+.cart-controls button {
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1280d6 0%, #0a4f8f 100%);
+  font-weight: 700;
+  box-shadow: 0 3px 8px rgba(10, 79, 143, 0.25);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cart-controls button:hover {
+  background: linear-gradient(135deg, #1fa044 0%, #10782b 100%);
+  transform: translateY(-1px);
+}
+
+/* Menu filter pills */
+.filter-button {
+  padding: 10px 18px;
+  border: 2px solid var(--blue);
+  box-shadow: 0 2px 6px rgba(12, 35, 64, 0.08);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.filter-button:hover {
+  background: var(--mist);
+  transform: translateY(-1px);
+}
+
+.filter-button[aria-pressed="true"],
+.filter-button[aria-pressed="true"]:hover {
+  background: linear-gradient(135deg, #1280d6 0%, #0a4f8f 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(10, 79, 143, 0.3);
+}
+
+/* Top menu buttons */
+nav a {
+  border-radius: 12px;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+nav a:hover,
+nav a.active {
+  background: linear-gradient(135deg, #1fa044 0%, #10782b 100%);
+  border-color: #1fa044;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+nav a:hover {
+  transform: translateY(-2px);
+}
+
+/* People who prefer less movement */
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  nav a,
+  .order-button,
+  .cart-controls button,
+  .filter-button {
+    transition: none;
+  }
+
+  .button:hover,
+  button.button:hover,
+  nav a:hover,
+  .order-button:hover,
+  .cart-controls button:hover,
+  .filter-button:hover {
+    transform: none;
+  }
 }

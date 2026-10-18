@@ -133,8 +133,8 @@ const A1TicketPdf = (function () {
     // Header band with logo
     rect(0, PAGE_H - 96, PAGE_W, 96, NAVY);
     if (hasLogo) {
-      const h = 80;
-      const w = (h * ticket.logoWidth) / ticket.logoHeight;
+      const w = 190;
+      const h = (w * ticket.logoHeight) / ticket.logoWidth;
       out.push(
         "q " +
           w +
@@ -416,7 +416,7 @@ const A1TicketPdf = (function () {
         const image = new Image();
         image.onload = function () {
           try {
-            const width = 400;
+            const width = 780;
             const height = Math.round(
               (width * (image.naturalHeight || 68)) /
                 (image.naturalWidth || 260),
@@ -442,7 +442,7 @@ const A1TicketPdf = (function () {
         image.onerror = function () {
           resolve(null);
         };
-        image.src = "images/logo.webp";
+        image.src = "images/logo-wide.webp";
       } catch (error) {
         resolve(null);
       }
