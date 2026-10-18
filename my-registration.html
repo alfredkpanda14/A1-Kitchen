@@ -5,18 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <meta name="referrer" content="no-referrer" />
-    <title>A1 Kitchen | My Event Registration</title>
-    <link rel="icon" type="image/svg+xml" href="images/logo-mark.svg" />
+    <title>A1 Kitchen | My Event Dashboard</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
-
     <header class="site-header">
       <a class="brand" href="index.html"
         ><img
-          src="images/logo.svg"
+          src="images/logo.webp"
           alt="A1 Kitchen home page"
           width="260"
           height="68"
@@ -32,32 +30,29 @@
         <a href="birthday.html">Chef A1 Personal Page</a>
       </nav>
     </header>
-
     <main id="main-content">
       <section>
-        <h1>My Event Registration</h1>
+        <h1>My Event Dashboard</h1>
         <p>
-          See your tickets and the latest price, place and time. Keep your
-          private link safe, because anyone with it can see your registration.
+          All your tickets, payments and event updates are on this one page.
+          Keep your private link safe, because anyone with it can see your
+          dashboard.
         </p>
-
         <p
           id="reg-message"
           class="success-message"
           role="status"
           aria-live="polite"
         ></p>
-
         <div id="reg-result" hidden></div>
       </section>
-
       <section id="reg-lookup" hidden>
-        <h2>Find Your Registration</h2>
+        <h2>Find Your Dashboard</h2>
         <p>
           Use the link you saved after registering. Or enter your registration
-          number and code below.
+          number and code below. Lost your link? Contact A1 Kitchen with your
+          name and phone number and we will send it again.
         </p>
-
         <form id="reg-lookup-form">
           <label for="lookup-reg">Registration Number</label>
           <input
@@ -68,7 +63,6 @@
             spellcheck="false"
             required
           />
-
           <label for="lookup-code">Code</label>
           <input
             type="text"
@@ -78,20 +72,17 @@
             spellcheck="false"
             required
           />
-
-          <button type="submit" class="button">Find Registration</button>
+          <button type="submit" class="button">Open My Dashboard</button>
         </form>
-
         <p>
           Not registered yet? <a href="events.html">See upcoming events</a>.
         </p>
       </section>
     </main>
-
     <footer>
       <img
         class="footer-logo"
-        src="images/logo.svg"
+        src="images/logo.webp"
         alt="A1 Kitchen"
         width="200"
         height="53"
@@ -110,8 +101,10 @@
         <a href="staff-login.html">Staff Sign In</a>
       </p>
     </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
+    <script src="site-info.js"></script>
+    <script src="ticket-pdf.js"></script>
     <script src="my-registration.js"></script>
   </body>
 </html>

@@ -3,22 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <meta name="description" content="Photos and memories from A1 Kitchen." />
-
+    <meta
+      name="description"
+      content="Photos, videos and customer testimonies from A1 Kitchen."
+    />
     <title>A1 Kitchen | Gallery</title>
-
-    <link rel="icon" type="image/svg+xml" href="images/logo-mark.svg" />
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
-
     <header class="site-header">
       <a class="brand" href="index.html"
         ><img
-          src="images/logo.svg"
+          src="images/logo.webp"
           alt="A1 Kitchen home page"
           width="260"
           height="68"
@@ -34,29 +32,23 @@
         <a href="birthday.html">Chef A1 Personal Page</a>
       </nav>
     </header>
-
     <main id="main-content">
       <section>
         <h1>A1 Kitchen Gallery</h1>
-
-        <p>Explore photos and memories from A1 Kitchen.</p>
+        <p>Explore photos, videos and kind words from our customers.</p>
       </section>
-
       <section>
-        <h2>Photo Gallery</h2>
-
+        <h2>Featured</h2>
         <div class="card-container">
           <div class="card">
             <img
-              src="images/a1-kitchen-photo.webp"
-              alt="A plate of freshly prepared A1 Kitchen food"
+              src="images/a1-kitchen-flyer.webp"
+              alt="A1 Kitchen flyer: European and African dishes. Call 079 66 55 40 or WhatsApp 031 857434."
               loading="lazy"
               decoding="async"
             />
-
             <h3>A1 Kitchen Food</h3>
           </div>
-
           <div class="card">
             <img
               src="images/chef-al-birthday.jpeg"
@@ -66,31 +58,58 @@
               loading="lazy"
               decoding="async"
             />
-
             <h3>Chef A1 Birthday</h3>
           </div>
         </div>
       </section>
+      <section>
+        <h2>More From A1 Kitchen</h2>
+        <div id="gallery-tabs" class="gallery-filters"></div>
+        <p
+          id="gallery-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+        <div id="gallery-grid" class="gallery-grid"></div>
+        <p>
+          <button
+            type="button"
+            id="gallery-more"
+            class="button button-secondary"
+            hidden
+          >
+            Show more
+          </button>
+        </p>
+      </section>
     </main>
-
+    <dialog id="photo-dialog" class="photo-dialog" aria-label="Photo viewer">
+      <img id="photo-dialog-image" alt="" />
+      <p id="photo-dialog-caption"></p>
+      <button type="button" id="photo-dialog-close" class="button">
+        Close
+      </button>
+    </dialog>
     <footer>
       <img
         class="footer-logo"
-        src="images/logo.svg"
+        src="images/logo.webp"
         alt="A1 Kitchen"
         width="200"
         height="53"
         loading="lazy"
       />
-
       <p>Food • Catering • Events</p>
       <p class="footer-links">
         <a href="events.html">Events</a> ·
-        <a href="how-it-works.html">How It Works</a> · ·
+        <a href="how-it-works.html">How It Works</a> ·
         <a href="privacy.html">Privacy Policy</a> ·
         <a href="terms.html">Terms &amp; Conditions</a> ·
         <a href="staff-login.html">Staff Sign In</a>
       </p>
     </footer>
+    <script src="supabase-config.js"></script>
+    <script src="gallery.js"></script>
   </body>
 </html>

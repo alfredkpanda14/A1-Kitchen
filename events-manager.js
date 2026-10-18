@@ -596,6 +596,8 @@ function registrationCard(registration, info) {
   card.appendChild(list);
 
   addDetail(card, "Total:", money(registration.total_amount));
+  addDetail(card, "Paid and approved:", money(registration.amount_paid));
+  addDetail(card, "Payment:", registration.payment_status || "");
 
   if (registration.notes) {
     addDetail(card, "Notes:", registration.notes);
