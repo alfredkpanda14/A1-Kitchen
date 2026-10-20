@@ -33,23 +33,28 @@
       </nav>
     </header>
     <main id="main-content">
-      <section>
-        <h1>A1 Kitchen Gallery</h1>
-        <p>Explore photos, videos and kind words from our customers.</p>
+      <section class="page-hero">
+        <p class="home-eyebrow">Gallery</p>
+        <h1>A1 Kitchen <span>Gallery</span></h1>
+        <p class="page-lead">
+          Explore photos, videos and kind words from our customers. A taste of
+          the food and the moments we have shared.
+        </p>
       </section>
-      <section>
+
+      <section class="home-section">
         <h2>Featured</h2>
-        <div class="card-container">
-          <div class="card">
+        <div class="feature-grid">
+          <figure class="feature-card">
             <img
               src="images/a1-kitchen-flyer.webp"
               alt="A1 Kitchen flyer: European and African dishes. Call 079 66 55 40 or WhatsApp 031 857434."
               loading="lazy"
               decoding="async"
             />
-            <h3>A1 Kitchen Food</h3>
-          </div>
-          <div class="card">
+            <figcaption>A1 Kitchen Food</figcaption>
+          </figure>
+          <figure class="feature-card">
             <img
               src="images/chef-al-birthday.jpeg"
               alt="Chef A1 celebrating his birthday"
@@ -58,12 +63,16 @@
               loading="lazy"
               decoding="async"
             />
-            <h3>Chef A1 Birthday</h3>
-          </div>
+            <figcaption>Chef A1 Birthday</figcaption>
+          </figure>
         </div>
       </section>
-      <section>
+
+      <section class="home-section">
         <h2>More From A1 Kitchen</h2>
+        <p class="home-lead">
+          Choose a section to see more. Videos only load when you press play.
+        </p>
         <div id="gallery-tabs" class="gallery-filters"></div>
         <p
           id="gallery-message"
@@ -72,7 +81,7 @@
           aria-live="polite"
         ></p>
         <div id="gallery-grid" class="gallery-grid"></div>
-        <p>
+        <p class="home-actions">
           <button
             type="button"
             id="gallery-more"
@@ -82,6 +91,17 @@
             Show more
           </button>
         </p>
+      </section>
+
+      <section class="home-cta">
+        <h2>Hungry After All Those Photos?</h2>
+        <p>Order your favourites, or let us cater your next event.</p>
+        <div class="home-hero-actions">
+          <a href="menu.html" class="button button-light">View the Menu</a>
+          <a href="catering.html" class="button button-ghost"
+            >Catering Services</a
+          >
+        </div>
       </section>
     </main>
     <dialog id="photo-dialog" class="photo-dialog" aria-label="Photo viewer">

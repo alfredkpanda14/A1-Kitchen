@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Contact A1 Kitchen for food orders, catering and events."
+      content="Contact A1 Kitchen to place an order, ask a question or book catering for your event in Sierra Leone."
     />
     <title>Contact A1 Kitchen</title>
     <link rel="icon" type="image/png" href="images/logo-mark.png" />
@@ -13,7 +13,6 @@
   </head>
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
-
     <header class="site-header">
       <a class="brand" href="index.html"
         ><img
@@ -33,20 +32,27 @@
         <a href="birthday.html">Chef A1 Personal Page</a>
       </nav>
     </header>
-
     <main id="main-content">
-      <section>
-        <h1>Contact A1 Kitchen</h1>
-        <p>
+      <section class="page-hero">
+        <p class="home-eyebrow">Contact</p>
+        <h1>We Would Love to <span>Hear From You</span></h1>
+        <p class="page-lead">
           Have a question, want to place an order, or need catering services for
           an event? Contact A1 Kitchen.
         </p>
+        <div class="home-hero-actions">
+          <a href="menu.html" class="button button-light">Order Food</a>
+          <a href="catering.html" class="button button-ghost"
+            >Request Catering</a
+          >
+        </div>
       </section>
 
-      <section>
+      <section class="home-section">
         <h2>Get in Touch</h2>
-        <div class="card-container">
-          <div class="card">
+        <div class="contact-grid">
+          <div class="contact-card">
+            <span class="contact-icon" aria-hidden="true">📞</span>
             <h3>Phone</h3>
             <p data-info="phone" data-type="phone">
               Phone number will be added soon.
@@ -54,37 +60,39 @@
             <p data-info="phone2" data-type="phone" hidden></p>
             <p data-info="phone3" data-type="phone" hidden></p>
           </div>
-
-          <div class="card">
+          <div class="contact-card">
+            <span class="contact-icon" aria-hidden="true">💬</span>
             <h3>WhatsApp</h3>
             <p data-info="whatsapp" data-type="whatsapp">
               WhatsApp number will be added soon.
             </p>
           </div>
-
-          <div class="card">
+          <div class="contact-card">
+            <span class="contact-icon" aria-hidden="true">✉️</span>
             <h3>Email</h3>
             <p data-info="email" data-type="email">
               Email address will be added soon.
             </p>
           </div>
-
-          <div class="card">
+          <div class="contact-card">
+            <span class="contact-icon" aria-hidden="true">📍</span>
             <h3>Location</h3>
             <p data-info="address">Business location will be added soon.</p>
+          </div>
+          <div class="contact-card">
+            <span class="contact-icon" aria-hidden="true">🕒</span>
+            <h3>Business Hours</h3>
+            <p data-info="hours">Business hours will be added soon.</p>
           </div>
         </div>
       </section>
 
-      <section>
-        <h2>Business Hours</h2>
-        <p data-info="hours">Business hours will be added soon.</p>
-      </section>
-
-      <section>
+      <section class="home-section">
         <h2>Follow A1 Kitchen</h2>
-        <p id="social-empty">Our social media links will be added soon.</p>
-        <div>
+        <p class="home-lead" id="social-empty">
+          Our social media links will be added soon.
+        </p>
+        <div class="social-row">
           <a
             class="button"
             data-social="whatsapp"
@@ -127,8 +135,21 @@
           >
         </div>
       </section>
-    </main>
 
+      <section class="home-cta">
+        <h2>Planning an Event?</h2>
+        <p>
+          Tell us about it and A1 Kitchen will contact you. There is no cost to
+          ask.
+        </p>
+        <div class="home-hero-actions">
+          <a href="catering.html" class="button button-light"
+            >Request Catering</a
+          >
+          <a href="faq.html" class="button button-ghost">Read the FAQ</a>
+        </div>
+      </section>
+    </main>
     <footer>
       <img
         class="footer-logo"
@@ -138,20 +159,15 @@
         height="53"
         loading="lazy"
       />
-      <p>
-        &copy; 2026 Awan Kitchen and Catering Services (A1 Kitchen). All rights
-        reserved.
-      </p>
       <p>Food • Catering • Events</p>
       <p class="footer-links">
         <a href="events.html">Events</a> ·
-        <a href="how-it-works.html">How It Works</a> · ·
+        <a href="how-it-works.html">How It Works</a> ·
         <a href="privacy.html">Privacy Policy</a> ·
         <a href="terms.html">Terms &amp; Conditions</a> ·
         <a href="staff-login.html">Staff Sign In</a>
       </p>
     </footer>
-
     <script src="site-info.js"></script>
   </body>
 </html>

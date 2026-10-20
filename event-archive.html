@@ -11,10 +11,8 @@
     <link rel="icon" type="image/png" href="images/logo-mark.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
-
     <header class="site-header">
       <a class="brand" href="index.html"
         ><img
@@ -34,17 +32,17 @@
         <a href="birthday.html">Chef A1 Personal Page</a>
       </nav>
     </header>
-
     <main id="main-content">
-      <section>
-        <h1>A1 Kitchen Event Archive</h1>
-
-        <p>Explore memories from previous A1 Kitchen events.</p>
+      <section class="page-hero">
+        <p class="home-eyebrow">Memories</p>
+        <h1>A1 Kitchen <span>Event Archive</span></h1>
+        <p class="page-lead">
+          Explore memories from previous A1 Kitchen events.
+        </p>
       </section>
 
-      <section>
+      <section class="home-section">
         <h2>Previous Events</h2>
-
         <div
           id="event-list"
           class="card-container"
@@ -55,11 +53,16 @@
         </div>
       </section>
 
-      <section>
-        <a href="events.html" class="button">Family Outing Registration</a>
+      <section class="home-cta">
+        <h2>Join Our Next Event</h2>
+        <p>Register your family and friends today.</p>
+        <div class="home-hero-actions">
+          <a href="events.html" class="button button-light"
+            >Family Outing Registration</a
+          >
+        </div>
       </section>
     </main>
-
     <footer>
       <img
         class="footer-logo"
@@ -69,17 +72,15 @@
         height="53"
         loading="lazy"
       />
-
       <p>Food • Catering • Events</p>
       <p class="footer-links">
         <a href="events.html">Events</a> ·
-        <a href="how-it-works.html">How It Works</a> · ·
+        <a href="how-it-works.html">How It Works</a> ·
         <a href="privacy.html">Privacy Policy</a> ·
         <a href="terms.html">Terms &amp; Conditions</a> ·
         <a href="staff-login.html">Staff Sign In</a>
       </p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="event-archive.js"></script>

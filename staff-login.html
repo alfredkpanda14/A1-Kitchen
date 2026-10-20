@@ -8,28 +8,20 @@
     <link rel="icon" type="image/png" href="images/logo-mark.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
-
-  <body>
+  <body class="login-page">
     <a href="#main-content" class="skip-link">Skip to main content</a>
-
-    <header class="site-header">
-      <a class="brand" href="index.html"
-        ><img
-          src="images/logo-wide.webp"
-          alt="A1 Kitchen home page"
-          width="260"
-          height="68"
-      /></a>
-      <nav aria-label="Main navigation">
-        <a href="index.html">Back to the website</a>
-      </nav>
-    </header>
-
-    <main id="main-content">
-      <section>
+    <main id="main-content" class="login-main">
+      <section class="login-card">
+        <div class="login-brand">
+          <img
+            src="images/logo-wide.webp"
+            alt="A1 Kitchen"
+            width="260"
+            height="68"
+          />
+        </div>
         <h1>Staff Sign In</h1>
         <p>For A1 Kitchen staff only.</p>
-
         <form id="login-form">
           <label for="login-email">Email</label>
           <input
@@ -38,7 +30,6 @@
             autocomplete="username"
             required
           />
-
           <label for="login-password">Password</label>
           <input
             type="password"
@@ -46,23 +37,17 @@
             autocomplete="current-password"
             required
           />
-
           <button type="submit" class="button">Sign in</button>
         </form>
-
         <p
           id="login-message"
           class="success-message"
           role="status"
           aria-live="polite"
         ></p>
+        <p class="login-back"><a href="index.html">← Back to the website</a></p>
       </section>
     </main>
-
-    <footer>
-      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="staff-login.js"></script>

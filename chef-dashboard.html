@@ -8,10 +8,8 @@
     <link rel="icon" type="image/png" href="images/logo-mark.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
-
     <header class="site-header">
       <a class="brand" href="chef-dashboard.html"
         ><img
@@ -30,12 +28,11 @@
         <a href="index.html">View website</a>
       </nav>
     </header>
-
-    <main id="main-content">
-      <section>
+    <main id="main-content" class="staff">
+      <section class="dash-hero">
+        <p class="home-eyebrow">A1 Kitchen Staff</p>
         <h1>Staff Dashboard</h1>
         <p id="welcome">Loading...</p>
-
         <div class="dash-bar">
           <button type="button" id="refresh-button" class="button">
             Refresh
@@ -48,8 +45,20 @@
             Sign out
           </button>
         </div>
-
         <p id="last-updated" class="menu-notice"></p>
+      </section>
+      <section class="dash-panel">
+        <h2 id="glance-heading" hidden>At a Glance</h2>
+        <div id="glance-grid" class="glance-grid" hidden></div>
+        <h2>Your Tools</h2>
+        <p class="field-help">
+          Every tool you can use is here. The red numbers show what is waiting
+          for you.
+        </p>
+        <div id="tool-grid" class="tool-grid"></div>
+      </section>
+      <section class="dash-panel">
+        <h2>Alerts and Sections</h2>
         <div id="alert-banner" class="alert-banner" role="alert" hidden>
           <span id="alert-text"></span>
           <button type="button" id="alert-show" class="button">Show me</button>
@@ -61,7 +70,6 @@
             Dismiss
           </button>
         </div>
-
         <div class="alert-options">
           <label class="checkbox-label">
             <input type="checkbox" id="alert-sound" />
@@ -82,7 +90,6 @@
           role="status"
           aria-live="polite"
         ></p>
-
         <div
           id="view-tabs"
           class="dash-tabs"
@@ -90,13 +97,10 @@
           aria-label="Dashboard sections"
         ></div>
       </section>
-
       <section id="orders-view" hidden>
         <h2>Orders</h2>
-
         <label for="order-search">Search by order number, name or phone</label>
         <input type="search" id="order-search" autocomplete="off" />
-
         <div
           id="order-tabs"
           class="dash-tabs"
@@ -105,12 +109,10 @@
         ></div>
         <div id="order-list"></div>
       </section>
-
       <section id="catering-view" hidden>
         <h2>Catering Requests</h2>
         <div id="catering-list"></div>
       </section>
-
       <section id="events-view" hidden>
         <h2>Family Outing Registrations</h2>
         <div id="events-list"></div>
@@ -127,10 +129,8 @@
           off by itself, or you can switch it off sooner. The site-wide limit
           cannot be bypassed.
         </p>
-
         <div class="card">
           <h3>Allow a phone number</h3>
-
           <div class="menu-field">
             <label for="limit-phone">Phone number</label>
             <input
@@ -140,7 +140,6 @@
               autocomplete="off"
             />
           </div>
-
           <div class="menu-field">
             <label for="limit-hours">For how long?</label>
             <select id="limit-hours">
@@ -150,7 +149,6 @@
               <option value="72">3 days</option>
             </select>
           </div>
-
           <div class="menu-field">
             <label for="limit-reason">Reason (optional)</label>
             <input
@@ -160,18 +158,15 @@
               autocomplete="off"
             />
           </div>
-
           <button type="button" id="limit-add" class="button">
             Allow this number
           </button>
         </div>
-
         <h3>Currently allowed</h3>
         <div id="limits-list"></div>
       </section>
       <section>
         <h2>Change Your Password</h2>
-
         <form id="password-form">
           <label for="new-password">New password (at least 8 characters)</label>
           <input
@@ -181,7 +176,6 @@
             minlength="8"
             required
           />
-
           <label for="confirm-password">Type it again</label>
           <input
             type="password"
@@ -190,10 +184,8 @@
             minlength="8"
             required
           />
-
           <button type="submit" class="button">Change password</button>
         </form>
-
         <p
           id="password-message"
           class="success-message"
@@ -202,14 +194,13 @@
         ></p>
       </section>
     </main>
-
     <footer>
       <p>&copy; 2026 A1 Kitchen. Staff area.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="chef-dashboard.js"></script>
     <script src="dashboard-extras.js"></script>
+    <script src="staff-tools.js"></script>
   </body>
 </html>

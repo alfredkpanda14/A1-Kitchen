@@ -5,16 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Upcoming A1 Kitchen events, including the annual Family Outing. See the details and register."
+      content="Register for A1 Kitchen events, choose your tickets and get a digital ticket with a QR code."
     />
     <title>A1 Kitchen | Events</title>
     <link rel="icon" type="image/png" href="images/logo-mark.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
-
     <header class="site-header">
       <a class="brand" href="index.html"
         ><img
@@ -34,35 +32,40 @@
         <a href="birthday.html">Chef A1 Personal Page</a>
       </nav>
     </header>
-
     <main id="main-content">
-      <section>
-        <h1>A1 Kitchen Events</h1>
-        <p>
+      <section class="page-hero">
+        <p class="home-eyebrow">Events</p>
+        <h1>A1 Kitchen <span>Events</span></h1>
+        <p class="page-lead">
           Join us at our events. Choose your tickets and register below. After
-          you register, you get a private link to your registration, where you
-          can always see the latest price, place and time.
+          you register, you get a private dashboard where you can pay, see the
+          latest price, place and time, and download your tickets.
         </p>
+      </section>
 
+      <section class="events-wrap">
         <p
           id="events-message"
           class="success-message"
           role="status"
           aria-live="polite"
         ></p>
-
         <div id="events-list"></div>
       </section>
 
-      <section>
+      <section class="home-cta">
         <h2>Already Registered?</h2>
-        <p>Open your registration to see the latest details.</p>
-        <a href="my-registration.html" class="button button-secondary"
-          >My Registration</a
-        >
+        <p>Open your dashboard to see your tickets and the latest details.</p>
+        <div class="home-hero-actions">
+          <a href="my-registration.html" class="button button-light"
+            >My Dashboard</a
+          >
+          <a href="gallery.html" class="button button-ghost"
+            >See Photos From Past Events</a
+          >
+        </div>
       </section>
     </main>
-
     <footer>
       <img
         class="footer-logo"
@@ -72,10 +75,6 @@
         height="53"
         loading="lazy"
       />
-      <p>
-        &copy; 2026 Awan Kitchen and Catering Services (A1 Kitchen). All rights
-        reserved.
-      </p>
       <p>Food • Catering • Events</p>
       <p class="footer-links">
         <a href="events.html">Events</a> ·
@@ -85,7 +84,6 @@
         <a href="staff-login.html">Staff Sign In</a>
       </p>
     </footer>
-
     <script src="supabase-config.js"></script>
     <script src="events.js"></script>
   </body>

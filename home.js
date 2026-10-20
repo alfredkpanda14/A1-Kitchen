@@ -101,3 +101,107 @@ async function loadWords() {
 
 loadWork().catch((error) => console.error("Home photos error:", error));
 loadWords().catch((error) => console.error("Home words error:", error));
+
+/* ---------- Upcoming events (same design for every event) ---------- */
+
+function longDate(dateText) {
+  const date = new Date(dateText + "T00:00:00");
+  if (Number.isNaN(date.getTime())) {
+    return dateText || "";
+  }
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function shorten(text, max) {
+  const clean = String(text || "").trim();
+  return clean.length > max ? clean.slice(0, max - 1).trim() + "…" : clean;
+}
+
+function eventBand(event) {
+  const date = new Date(event.event_date + "T00:00:00");
+  const validDate = !Number.isNaN(date.getTime());
+  const band = el("section", "home-event");
+
+  const badge = el("div", "home-event-date");
+  badge.setAttribute("aria-hidden", "true");
+  badge.appendChild(
+    el("strong", null, validDate ? String(date.getDate()) : ""),
+  );
+  badge.appendChild(
+    el(
+      "span",
+      null,
+      validDate
+        ? date.toLocaleDateString("en-GB", { month: "short" }).toUpperCase()
+        : "",
+    ),
+  );
+
+  const body = el("div");
+  body.appendChild(el("h2", null, event.title));
+  if (event.description) {
+    body.appendChild(el("p", null, shorten(event.description, 170)));
+  }
+  const meta = [longDate(event.event_date), event.start_time, event.location]
+    .filter(Boolean)
+    .join("  |  ");
+  body.appendChild(el("p", "home-event-meta", meta));
+  const prices = (event.tickets || [])
+    .map((ticket) => Number(ticket.price))
+    .filter((price) => Number.isFinite(price));
+  if (prices.length > 0) {
+    body.appendChild(
+      el(
+        "p",
+        null,
+        "Tickets from NLe " +
+          Math.min.apply(null, prices) +
+          ". You get a digital ticket with a QR code for quick entry.",
+      ),
+    );
+  }
+
+  const link = el(
+    "a",
+    "button button-light",
+    event.registration_open ? "Register Now" : "See Details",
+  );
+  link.href = "events.html";
+  band.append(badge, body, link);
+  return band;
+}
+
+async function loadEvents() {
+  const fallback = document.querySelector(".home-event");
+  if (!fallback) {
+    return;
+  }
+  const events = await callRpc("get_public_events", {});
+  if (!Array.isArray(events)) {
+    return;
+  }
+  if (events.length === 0) {
+    fallback.remove();
+    return;
+  }
+  let last = fallback;
+  events.slice(0, 3).forEach((event) => {
+    const band = eventBand(event);
+    last.after(band);
+    last = band;
+  });
+  if (events.length > 3) {
+    const more = el("p", "home-actions");
+    const link = el("a", "button button-secondary", "See All Upcoming Events");
+    link.href = "events.html";
+    more.appendChild(link);
+    last.after(more);
+  }
+  fallback.remove();
+}
+
+loadEvents().catch((error) => console.error("Home events error:", error));
