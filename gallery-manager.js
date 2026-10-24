@@ -8,7 +8,7 @@ const itemList = document.getElementById("item-list");
 
 const BUCKET = "gallery";
 const BUCKET_URL = SUPABASE_URL + "/storage/v1/object/public/gallery/";
-const MAX_VIDEO_BYTES = 25 * 1024 * 1024;
+const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
 const MAX_IMAGE_INPUT_BYTES = 40 * 1024 * 1024;
 const VIDEO_EXTENSIONS = {
   "video/mp4": "mp4",
@@ -20,6 +20,7 @@ const SECTION_LABELS = {
   testimony: "Customer testimony",
   event: "Event",
   about: "About page (under Our Vision)",
+  guide: "How-to guide (How to Use the Website page)",
 };
 
 let staff = null;
@@ -243,7 +244,7 @@ function buildUploadCard() {
     el(
       "p",
       null,
-      "Photos are made smaller automatically before they are sent. Videos can be up to 25 MB and do not load on the website until someone presses play.",
+      "Photos are made smaller automatically before they are sent. Videos can be up to 50 MB and do not load on the website until someone presses play.",
     ),
   );
 
@@ -259,7 +260,7 @@ function buildUploadCard() {
   const caption = el("textarea");
   caption.id = "up-caption";
   caption.rows = 3;
-  caption.maxLength = 500;
+  caption.maxLength = 3000;
   const person = el("input");
   person.id = "up-person";
   person.type = "text";
@@ -267,6 +268,20 @@ function buildUploadCard() {
   person.autocomplete = "off";
   const personField = field('Customer\'s name (shown as "Shared by")', person);
   personField.hidden = true;
+  const sortInput = el("input");
+  sortInput.id = "up-sort";
+  sortInput.type = "number";
+  sortInput.min = "0";
+  sortInput.max = "999";
+  sortInput.step = "1";
+  sortInput.inputMode = "numeric";
+  sortInput.value = "1";
+  const sortField = field(
+    "Order on the page (1 shows first)",
+    sortInput,
+    "Lessons are shown in this order on the How to Use the Website page. Use 1, 2, 3...",
+  );
+  sortField.hidden = true;
 
   const files = el("input");
   files.id = "up-files";
@@ -292,6 +307,7 @@ function buildUploadCard() {
   section.addEventListener("change", () => {
     eventField.hidden = section.value !== "event";
     personField.hidden = section.value !== "testimony";
+    sortField.hidden = section.value !== "guide" && section.value !== "about";
   });
 
   const progress = el("p", "success-message");
@@ -333,6 +349,8 @@ function buildUploadCard() {
           person: section.value === "testimony" ? person.value.trim() : "",
           published: published.checked,
           coverFile: (cover.files || [])[0] || null,
+          sortOrder:
+            section.value === "guide" ? Number(sortInput.value) || 0 : 0,
         });
         done += 1;
       } catch (error) {
@@ -350,6 +368,9 @@ function buildUploadCard() {
       title.value = "";
       caption.value = "";
       person.value = "";
+      if (section.value === "guide") {
+        sortInput.value = String((Number(sortInput.value) || 0) + 1);
+      }
     } else {
       progress.textContent = done + " uploaded. Problem: " + failed.join(" | ");
     }
@@ -366,6 +387,7 @@ function buildUploadCard() {
     field("Title (optional)", title),
     field("Short description (optional)", caption),
     personField,
+    sortField,
     field(
       "Photos or video",
       files,
@@ -397,7 +419,7 @@ async function uploadOne(file, details) {
       }
       if (file.size > MAX_VIDEO_BYTES) {
         throw new Error(
-          "This video is bigger than 25 MB. Please make it shorter or smaller.",
+          "This video is bigger than 50 MB. Please make it shorter or smaller.",
         );
       }
       filePath = "videos/" + id + "." + extension;
@@ -460,6 +482,7 @@ async function uploadOne(file, details) {
       p_thumb_path: thumbPath || null,
       p_event_id: details.eventId || null,
       p_published: details.published,
+      p_sort_order: details.sortOrder || 0,
     });
   } catch (error) {
     await removeFiles(uploaded);
@@ -507,7 +530,7 @@ function itemCard(item) {
   const caption = el("textarea");
   caption.id = key + "-caption";
   caption.rows = 2;
-  caption.maxLength = 500;
+  caption.maxLength = 3000;
   caption.value = item.caption || "";
   const person = el("input");
   person.id = key + "-person";
@@ -524,6 +547,14 @@ function itemCard(item) {
     published,
     document.createTextNode(" Show on the website"),
   );
+  const sortInput = el("input");
+  sortInput.id = key + "-sort";
+  sortInput.type = "number";
+  sortInput.min = "0";
+  sortInput.max = "999";
+  sortInput.step = "1";
+  sortInput.inputMode = "numeric";
+  sortInput.value = String(item.sort_order || 0);
 
   const save = el("button", "button", "Save changes");
   save.type = "button";
@@ -539,6 +570,7 @@ function itemCard(item) {
         p_person: person.value.trim() || null,
         p_event_id: section.value === "event" ? eventPick.value || null : null,
         p_published: published.checked,
+        p_sort_order: Number(sortInput.value) || 0,
       });
       await loadItems();
       setMessage("Saved.");
@@ -579,6 +611,10 @@ function itemCard(item) {
     field("Title", title),
     field("Short description", caption),
     field("Customer's name (testimonies)", person),
+    field(
+      "Order on the page (About page and guides; 1 shows first)",
+      sortInput,
+    ),
     publishedLabel,
     save,
     remove,

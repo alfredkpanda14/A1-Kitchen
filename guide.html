@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Short videos and pictures that show you how to order food, pay, track your order and register for events on the A1 Kitchen website."
+    />
+    <title>A1 Kitchen | How to Use the Website</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html"
+        ><img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen home page"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="catering.html">Catering</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="faq.html">FAQ</a>
+        <a href="guide.html" class="active" aria-current="page"
+          >How-To Videos</a
+        >
+        <a href="gallery.html">Gallery</a>
+        <a href="birthday.html">Chef A1 Personal Page</a>
+      </nav>
+    </header>
+    <main id="main-content">
+      <section class="page-hero guide-hero">
+        <p class="home-eyebrow">How-To Guides</p>
+        <h1>How to Use <span>A1 Kitchen</span></h1>
+        <p class="page-lead">
+          New to our website? Watch short videos and look at simple pictures
+          that show you, step by step, how to order food, pay, and register for
+          our events. It is easy, and it works on any phone.
+        </p>
+        <div class="home-hero-actions">
+          <a href="#videos" class="button button-light">Watch the Videos</a>
+          <a href="how-it-works.html" class="button button-ghost"
+            >Read the Written Guide</a
+          >
+        </div>
+      </section>
+
+      <section class="home-strip" aria-label="About these guides">
+        <div class="home-strip-item">Step by step</div>
+        <div class="home-strip-item">Works on any phone</div>
+        <div class="home-strip-item">Free to watch</div>
+        <div class="home-strip-item">New guides added often</div>
+      </section>
+
+      <section class="home-section">
+        <h2>Start With What You Need</h2>
+        <p class="home-lead">Pick what you want to do and go straight there.</p>
+        <div class="guide-start">
+          <a class="guide-start-card" href="menu.html">
+            <span class="contact-icon" aria-hidden="true">🍽️</span>
+            <span>
+              <strong>Order food</strong>
+              <small>Choose your food and send your request.</small>
+            </span>
+          </a>
+          <a class="guide-start-card" href="how-it-works.html">
+            <span class="contact-icon" aria-hidden="true">💳</span>
+            <span>
+              <strong>Pay and track your order</strong>
+              <small>See how payment and tracking work.</small>
+            </span>
+          </a>
+          <a class="guide-start-card" href="events.html">
+            <span class="contact-icon" aria-hidden="true">🎟️</span>
+            <span>
+              <strong>Join an event</strong>
+              <small>Register and get your QR ticket.</small>
+            </span>
+          </a>
+          <a class="guide-start-card" href="catering.html">
+            <span class="contact-icon" aria-hidden="true">🎉</span>
+            <span>
+              <strong>Ask for catering</strong>
+              <small>Tell us about your event.</small>
+            </span>
+          </a>
+        </div>
+      </section>
+
+      <p
+        id="guide-message"
+        class="success-message"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+      <section class="home-section" id="videos">
+        <div id="guide-videos" hidden>
+          <h2>Video Lessons</h2>
+          <p class="home-lead">
+            Press the play button to watch. Videos only load when you press
+            play, so they will not use your data until you want them.
+          </p>
+          <div id="guide-videos-grid" class="lesson-grid"></div>
+        </div>
+        <div id="guide-photos" hidden>
+          <h2 class="guide-second-heading">Picture Guides</h2>
+          <p class="home-lead">Press a picture to see it bigger.</p>
+          <div id="guide-photos-grid" class="lesson-grid"></div>
+        </div>
+        <div id="guide-empty" class="guide-empty" hidden>
+          <h2>Our Guides Are Coming Soon</h2>
+          <p>
+            We are preparing short videos and pictures to help you. In the
+            meantime, you can read the written guide or ask us anything.
+          </p>
+          <p class="home-actions">
+            <a href="how-it-works.html" class="button"
+              >Read the Written Guide</a
+            >
+            <a href="contact.html" class="button button-secondary"
+              >Contact Us</a
+            >
+          </p>
+        </div>
+        <p class="home-actions">
+          <button
+            type="button"
+            id="guide-more"
+            class="button button-secondary"
+            hidden
+          >
+            Show more
+          </button>
+        </p>
+      </section>
+
+      <section class="home-cta">
+        <h2>Still Need a Hand?</h2>
+        <p>Message us on WhatsApp or call, and we will walk you through it.</p>
+        <div class="home-hero-actions">
+          <a
+            href="https://wa.me/23231857434"
+            class="button button-whatsapp"
+            target="_blank"
+            rel="noopener noreferrer"
+            >WhatsApp Us</a
+          >
+          <a href="tel:+23279665540" class="button button-light"
+            >Call 079 66 55 40</a
+          >
+          <a href="faq.html" class="button button-ghost">Read the FAQ</a>
+        </div>
+      </section>
+    </main>
+    <dialog id="photo-dialog" class="photo-dialog" aria-label="Picture viewer">
+      <img id="photo-dialog-image" alt="" />
+      <p id="photo-dialog-caption"></p>
+      <button type="button" id="photo-dialog-close" class="button">
+        Close
+      </button>
+    </dialog>
+    <footer>
+      <img
+        class="footer-logo"
+        src="images/logo-wide.webp"
+        alt="A1 Kitchen"
+        width="200"
+        height="53"
+        loading="lazy"
+      />
+      <p>Food • Catering • Events</p>
+      <p class="footer-links">
+        <a href="events.html">Events</a> ·
+        <a href="how-it-works.html">How It Works</a> ·
+        <a href="guide.html">How-To Videos</a> ·
+        <a href="privacy.html">Privacy Policy</a> ·
+        <a href="terms.html">Terms &amp; Conditions</a> ·
+        <a href="staff-login.html">Staff Sign In</a>
+      </p>
+    </footer>
+    <script src="supabase-config.js"></script>
+    <script src="guide.js"></script>
+  </body>
+</html>

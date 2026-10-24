@@ -9,7 +9,7 @@ const ticketInput = document.getElementById("ticket-input");
 const ticketCheck = document.getElementById("ticket-check");
 const resultBox = document.getElementById("gate-result-box");
 
-const TICKET_PATTERN = /(?:A1|F)-\d{4}-[A-Z0-9]{6}/;
+const TICKET_PATTERN = /(?:A1|FP|FG|F)-\d{4}-[A-Z0-9]{6}/;
 
 let staff = null;
 let stream = null;
@@ -304,6 +304,162 @@ function showFoodResult(result) {
   card.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+/* ---------- Feast Passes (free food, drink and water at A1 Kitchen events) ---------- */
+
+const PASS_LOOKS = {
+  valid: ["gate-result-valid", "VALID FEAST PASS"],
+  complete: ["gate-result-warn", "EVERYTHING ALREADY SERVED"],
+  ended: ["gate-result-bad", "REGISTRATION ENDED"],
+  void: ["gate-result-bad", "PASS CANCELLED"],
+  not_found: ["gate-result-bad", "PASS NOT FOUND"],
+};
+
+function showPassResult(result) {
+  resultBox.textContent = "";
+  const guest = result.kind === "guest";
+  const look = PASS_LOOKS[result.status] || PASS_LOOKS.not_found;
+  const card = el("div", "gate-result " + look[0]);
+  card.appendChild(
+    el(
+      "p",
+      "gate-status",
+      guest && result.status === "valid" ? "VALID GUEST PASS" : look[1],
+    ),
+  );
+  if (result.message) {
+    card.appendChild(el("p", null, result.message));
+  }
+  buzz(result.status === "valid");
+
+  if (result.status !== "not_found") {
+    line(
+      card,
+      "Pass:",
+      result.pass_number + (guest ? " (guest, free)" : " (paid)"),
+    );
+    line(card, "Holder:", result.holder);
+    line(
+      card,
+      "Event:",
+      result.event_title + " (" + longDate(result.event_date) + ")",
+    );
+    line(card, "Note:", result.note);
+    line(card, "People on this pass:", String(result.people));
+    line(card, "Entered:", result.entered + " of " + result.people);
+    line(card, "Food served:", result.food_served + " of " + result.people);
+    line(card, "Drinks served:", result.drink_served + " of " + result.people);
+    line(card, "Water served:", result.water_served + " of " + result.people);
+    if (result.wrong_day) {
+      card.appendChild(
+        el(
+          "p",
+          "duplicate-warning",
+          "This pass is for a different day: " +
+            longDate(result.event_date) +
+            ".",
+        ),
+      );
+    }
+    if (Number(result.balance) > 0) {
+      card.appendChild(
+        el(
+          "p",
+          "duplicate-warning",
+          "Balance still to pay: NLe " + Number(result.balance),
+        ),
+      );
+    }
+
+    if (result.status === "valid" || result.status === "complete") {
+      const left = {
+        entry: result.people - result.entered,
+        food: result.people - result.food_served,
+        drink: result.people - result.drink_served,
+        water: result.people - result.water_served,
+      };
+      const input = el("input");
+      input.id = "pass-count";
+      input.type = "number";
+      input.min = "1";
+      input.max = String(result.people);
+      input.step = "1";
+      input.inputMode = "numeric";
+      input.value = String(
+        Math.max(1, Math.max(left.entry, left.food, left.drink, left.water)),
+      );
+      const label = el("label", null, "How many people?");
+      label.htmlFor = input.id;
+      card.append(label, input);
+
+      const buttons = el("div", "action-row");
+      const makeButton = (text, remaining, run) => {
+        const button = el(
+          "button",
+          "button",
+          text + " (" + remaining + " left)",
+        );
+        button.type = "button";
+        button.disabled = remaining <= 0;
+        button.addEventListener("click", async () => {
+          const count = Number(input.value);
+          if (!Number.isInteger(count) || count < 1 || count > result.people) {
+            say("Please enter a number from 1 to " + result.people + ".");
+            return;
+          }
+          button.disabled = true;
+          say("Working...");
+          try {
+            await run(count);
+            await check(result.pass_number, true);
+          } catch (error) {
+            say(friendlyError(error));
+            button.disabled = false;
+          }
+        });
+        return button;
+      };
+      const serve = (items, count) =>
+        rpc("staff_serve_pass", {
+          p_number: result.pass_number,
+          p_items: items,
+          p_count: count,
+        });
+      buttons.append(
+        makeButton("Admit", left.entry, async (count) => {
+          await rpc("staff_admit_pass", {
+            p_number: result.pass_number,
+            p_count: count,
+          });
+          say(count + (count === 1 ? " person" : " people") + " admitted.");
+        }),
+        makeButton("Serve food", left.food, async (count) => {
+          await serve(["food"], count);
+          say("Food served to " + count + ".");
+        }),
+        makeButton("Serve drink", left.drink, async (count) => {
+          await serve(["drink"], count);
+          say("Drinks served to " + count + ".");
+        }),
+        makeButton("Serve water", left.water, async (count) => {
+          await serve(["water"], count);
+          say("Water served to " + count + ".");
+        }),
+        makeButton(
+          "Serve all three",
+          Math.min(left.food, left.drink, left.water),
+          async (count) => {
+            await serve(["food", "drink", "water"], count);
+            say("Food, drink and water served to " + count + ".");
+          },
+        ),
+      );
+      card.appendChild(buttons);
+    }
+  }
+  addNextButton(card);
+  resultBox.appendChild(card);
+  card.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 async function check(ticket, quiet) {
   const match = String(ticket || "")
     .toUpperCase()
@@ -319,6 +475,16 @@ async function check(ticket, quiet) {
     say("Checking...");
   }
   try {
+    if (lastTicket.startsWith("FP-") || lastTicket.startsWith("FG-")) {
+      const passResult = await rpc("staff_verify_pass", {
+        p_number: lastTicket,
+      });
+      if (!quiet) {
+        say("");
+      }
+      showPassResult(passResult);
+      return;
+    }
     if (lastTicket.startsWith("F-")) {
       const food = await rpc("staff_verify_food_ticket", {
         p_ticket: lastTicket,
@@ -443,7 +609,7 @@ async function start() {
     return;
   }
   staff = info;
-  if (!can("events.view") && !can("cevents.serve")) {
+  if (!can("events.view") && !can("cevents.serve") && !can("passes.serve")) {
     goTo("chef-dashboard.html");
     return;
   }

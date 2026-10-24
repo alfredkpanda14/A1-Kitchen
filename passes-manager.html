@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Feast Passes</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="chef-dashboard.html"
+        ><img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen staff dashboard"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Staff navigation">
+        <a href="chef-dashboard.html">Orders</a>
+        <a href="menu-manager.html" id="nav-menu" hidden>Menu manager</a>
+        <a href="master-dashboard.html" id="nav-developer" hidden>Developer</a>
+        <a href="events-manager.html" id="nav-events" hidden>Events</a>
+        <a href="passes-manager.html" class="active" aria-current="page"
+          >Feast Passes</a
+        >
+        <a href="gate.html">Gate scanner</a>
+        <a href="index.html">View website</a>
+      </nav>
+    </header>
+    <main id="main-content" class="staff">
+      <section class="dash-hero">
+        <p class="home-eyebrow">Free Food, Drink and Water</p>
+        <h1>Feast Passes</h1>
+        <p id="welcome">Loading...</p>
+        <div class="dash-bar">
+          <button type="button" id="refresh-button" class="button">
+            Refresh
+          </button>
+          <button
+            type="button"
+            id="signout-button"
+            class="button button-secondary"
+          >
+            Sign out
+          </button>
+        </div>
+        <p
+          id="dash-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+
+      <section class="dash-panel">
+        <h2>Choose the Event</h2>
+        <p class="field-help">
+          Everyone who pays gets one Feast Pass. Guests invited by Chef A1 get a
+          gold Guest Feast Pass. Print them here and give them out at the event.
+        </p>
+        <label for="event-select">Event</label>
+        <select id="event-select"></select>
+      </section>
+
+      <section class="dash-panel">
+        <h2>How Many Paid and How Many Came Free</h2>
+        <div id="report-box"></div>
+      </section>
+
+      <section id="guest-box"></section>
+
+      <section class="dash-panel">
+        <h2>All Passes</h2>
+        <div class="dash-bar">
+          <button type="button" id="print-selected" class="button" disabled>
+            Print selected passes (0)
+          </button>
+          <button
+            type="button"
+            id="print-unprinted"
+            class="button button-secondary"
+            disabled
+          >
+            Print all passes not printed yet (0)
+          </button>
+        </div>
+        <div class="pass-filters">
+          <div>
+            <label for="filter-type">Show</label>
+            <select id="filter-type">
+              <option value="">Paid and guests</option>
+              <option value="paid">Paid only</option>
+              <option value="guest">Guests only</option>
+            </select>
+          </div>
+          <div>
+            <label for="filter-search">Search</label>
+            <input
+              type="search"
+              id="filter-search"
+              placeholder="Name, phone or pass number"
+              autocomplete="off"
+            />
+          </div>
+          <label class="checkbox-label" for="filter-unprinted">
+            <input type="checkbox" id="filter-unprinted" />
+            Only passes not printed yet
+          </label>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Pick</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>People</th>
+                <th>Phone</th>
+                <th>Details</th>
+                <th>Pass number</th>
+                <th>Entered</th>
+                <th>Food</th>
+                <th>Drink</th>
+                <th>Water</th>
+                <th>Printed</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="pass-body"></tbody>
+          </table>
+        </div>
+        <p id="pass-empty" class="menu-notice" hidden>
+          No passes to show yet. A pass appears here when a payment is approved,
+          or when you create guest passes.
+        </p>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="qr-code.js"></script>
+    <script src="pass-pdf.js"></script>
+    <script src="passes-manager.js"></script>
+  </body>
+</html>

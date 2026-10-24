@@ -3518,3 +3518,356 @@ body.login-page {
     padding: 20px 18px;
   }
 }
+/* ==============================
+   HOW-TO GUIDES PAGE AND HOME BAND
+   ============================== */
+
+.guide-hero {
+  background:
+    radial-gradient(
+      circle at 12% 18%,
+      rgba(242, 169, 0, 0.35),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 90% 85%,
+      rgba(31, 160, 68, 0.45),
+      transparent 44%
+    ),
+    linear-gradient(135deg, #0c2340 0%, #0a3a6b 58%, #0b5a4a 100%);
+}
+
+.guide-start {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin-top: 30px;
+}
+
+.guide-start-card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(12, 35, 64, 0.08);
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.guide-start-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--blue);
+  box-shadow: 0 14px 26px rgba(12, 35, 64, 0.16);
+}
+
+.guide-start-card .contact-icon {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.guide-start-card strong {
+  display: block;
+  color: var(--navy);
+}
+
+.guide-start-card small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 30px;
+}
+
+.lesson-card {
+  position: relative;
+  padding: 14px;
+}
+
+.lesson-card .gallery-thumb {
+  aspect-ratio: 16 / 9;
+}
+
+.lesson-card h3 {
+  margin: 10px 0 4px;
+  color: var(--navy);
+}
+
+.lesson-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.lesson-number {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1280d6, #0a4f8f);
+  box-shadow: 0 6px 14px rgba(10, 79, 143, 0.4);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.guide-second-heading {
+  margin-top: 70px;
+}
+
+.guide-empty {
+  max-width: 640px;
+  margin: 30px auto;
+  padding: 32px 26px;
+  border: 2px dashed #b9c8d8;
+  border-radius: 22px;
+  background: #ffffff;
+  text-align: center;
+}
+
+/* ---------- Band on the home page ---------- */
+.home-guide {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 30px;
+  align-items: center;
+  margin: 76px 0;
+  padding: 36px 38px;
+  border: 1px solid #f0dca0;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #fff7e0 0%, #eaf3fb 100%);
+  box-shadow: 0 16px 34px rgba(12, 35, 64, 0.14);
+}
+
+.home-guide .home-eyebrow {
+  border-color: rgba(10, 98, 176, 0.35);
+  background: rgba(10, 98, 176, 0.08);
+  color: var(--blue);
+}
+
+.home-guide h2 {
+  margin: 0 0 10px;
+  padding: 0;
+  border-bottom: 0;
+  background: none;
+  font-size: clamp(26px, 4vw, 34px);
+}
+
+.home-guide p {
+  color: var(--muted);
+}
+
+.home-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.home-guide-grid:empty {
+  display: none;
+}
+
+.home-guide:has(.home-guide-grid:empty) {
+  grid-template-columns: 1fr;
+}
+
+.home-guide-tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  background: var(--navy);
+  box-shadow: 0 8px 18px rgba(12, 35, 64, 0.22);
+}
+
+.home-guide-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.home-guide-tile:hover img {
+  transform: scale(1.06);
+}
+
+.home-guide-title {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 26px 10px 8px;
+  background: linear-gradient(0deg, rgba(12, 35, 64, 0.92), transparent);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.home-guide-tile .play-badge {
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  line-height: 44px;
+}
+
+@media (max-width: 860px) {
+  .home-guide {
+    grid-template-columns: 1fr;
+    padding: 28px 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-start-card,
+  .home-guide-tile img {
+    transition: none;
+  }
+
+  .guide-start-card:hover,
+  .home-guide-tile:hover img {
+    transform: none;
+  }
+}
+/* ==============================
+   ABOUT PAGE UPLOADS AND SPAM TRAP
+   ============================== */
+
+.about-media {
+  display: block;
+  margin-top: 34px;
+}
+
+.vision-block {
+  max-width: 760px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+
+.vision-block .vision {
+  max-width: 720px;
+  margin: 0 auto 18px;
+}
+
+.vision-video {
+  display: block;
+  width: 100%;
+  max-height: 520px;
+  margin: 0 auto 18px;
+  border-radius: 20px;
+  background: #000000;
+  box-shadow: 0 14px 34px rgba(12, 35, 64, 0.25);
+}
+
+.vision-block h3 {
+  margin: 6px 0 12px;
+  color: var(--navy);
+  font-size: clamp(22px, 3.5vw, 30px);
+}
+
+.vision-block p {
+  max-width: 680px;
+  margin: 0 auto 14px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* Hidden field that only robots fill in */
+.hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+/* ==============================
+   FEAST PASSES AND "INCLUDED" LABELS
+   ============================== */
+
+.pass-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  align-items: end;
+  margin: 16px 0;
+}
+
+.row-void {
+  opacity: 0.55;
+}
+
+.pass-name {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.pass-number-cell {
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pass-warning {
+  display: block;
+  margin-top: 4px;
+  color: #b32424;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.staff td .button {
+  min-height: 36px;
+  margin-top: 0;
+  margin-right: 6px;
+  padding: 6px 14px;
+}
+
+.included-box {
+  margin: 16px 0;
+  padding: 14px 16px;
+  border: 1px solid #cfe9d6;
+  border-radius: 14px;
+  background: #f2faf4;
+}
+
+.included-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.included-chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1fa044, #10782b);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}

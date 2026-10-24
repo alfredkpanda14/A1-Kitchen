@@ -218,9 +218,25 @@ function registerView(eventCode, event) {
     message.setAttribute("aria-live", "polite");
     const submit = el("button", "button", "Register");
     submit.type = "button";
+    const formStart = Date.now();
+    const honeypot = el("input", "hp-field");
+    honeypot.type = "text";
+    honeypot.name = "website";
+    honeypot.tabIndex = -1;
+    honeypot.autocomplete = "off";
+    honeypot.setAttribute("aria-hidden", "true");
+    form.appendChild(honeypot);
     let busy = false;
     submit.addEventListener("click", async () => {
       if (busy) {
+        return;
+      }
+      if (honeypot.value) {
+        return;
+      }
+      if (Date.now() - formStart < 2000) {
+        message.textContent =
+          "Please take a moment to check your details, then press the button again.";
         return;
       }
       if (name.value.trim().length < 2) {

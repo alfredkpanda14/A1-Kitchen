@@ -41,6 +41,14 @@
       needs: ["cevents.approve", "cevents.manage"],
     },
     {
+      id: "passes",
+      href: "passes-manager.html",
+      icon: "🎫",
+      title: "Feast Passes",
+      text: "Paid and guest passes for free food, drink and water. Print and track them.",
+      needs: ["passes.manage"],
+    },
+    {
       id: "gate",
       href: "gate.html",
       icon: "📱",
@@ -212,6 +220,14 @@
           p_status: "Pending",
         });
         setCount("events", Number(result.pending_count), "to check");
+      } catch (error) {
+        /* ignore */
+      }
+    }
+    if (can("passes.manage")) {
+      try {
+        const count = await rpc("staff_unprinted_pass_count");
+        setCount("passes", Number(count), "to print");
       } catch (error) {
         /* ignore */
       }

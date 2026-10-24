@@ -178,7 +178,14 @@ function registrationForm(event) {
       "How many tickets of each kind? (up to 20 in one registration)",
     ),
   );
-
+  const formStart = Date.now();
+  const honeypot = el("input", "hp-field");
+  honeypot.type = "text";
+  honeypot.name = "website";
+  honeypot.tabIndex = -1;
+  honeypot.autocomplete = "off";
+  honeypot.setAttribute("aria-hidden", "true");
+  wrapper.appendChild(honeypot);
   const quantityInputs = [];
   const totalLine = el("p", "menu-notice", "Total: " + money(0));
 
@@ -238,6 +245,14 @@ function registrationForm(event) {
 
   submit.addEventListener("click", async () => {
     if (busy) {
+      return;
+    }
+    if (honeypot.value) {
+      return;
+    }
+    if (Date.now() - formStart < 2000) {
+      message.textContent =
+        "Please take a moment to check your details, then press the button again.";
       return;
     }
     let name = "";
@@ -329,7 +344,14 @@ function eventCard(event) {
     });
     card.appendChild(list);
   }
-
+  const included = el("div", "included-box");
+  included.appendChild(el("strong", null, "Included with every ticket:"));
+  const chips = el("div", "included-chips");
+  ["Free food", "Free drinks", "Free water"].forEach((text) =>
+    chips.appendChild(el("span", "included-chip", text)),
+  );
+  included.appendChild(chips);
+  card.appendChild(included);
   if (event.tickets && event.tickets.length > 0) {
     card.appendChild(el("h4", null, "Tickets"));
     const list = el("ul");

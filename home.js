@@ -160,7 +160,7 @@ function eventBand(event) {
         null,
         "Tickets from NLe " +
           Math.min.apply(null, prices) +
-          ". You get a digital ticket with a QR code for quick entry.",
+          ". Free food, drinks and water are included. You get a digital ticket with a QR code for quick entry.",
       ),
     );
   }
@@ -205,3 +205,50 @@ async function loadEvents() {
 }
 
 loadEvents().catch((error) => console.error("Home events error:", error));
+
+/* ---------- How-to guides on the home page ---------- */
+
+async function loadGuide() {
+  const grid = document.getElementById("home-guide-grid");
+  if (!grid) {
+    return;
+  }
+  const result = await callRpc("get_public_gallery", {
+    p_section: "guide",
+    p_limit: 3,
+    p_offset: 0,
+  });
+  const items = (result && result.items) || [];
+  items.forEach((item) => {
+    const tile = el("a", "home-guide-tile");
+    tile.href = "guide.html";
+    tile.setAttribute(
+      "aria-label",
+      "Open the guide: " + (item.title || "How to use A1 Kitchen"),
+    );
+    const path =
+      item.thumb_path || (item.kind === "photo" ? item.file_path : "");
+    if (path) {
+      const image = el("img");
+      image.src = BUCKET_URL + path;
+      image.alt = "";
+      image.loading = "lazy";
+      image.decoding = "async";
+      tile.appendChild(image);
+    } else {
+      tile.appendChild(el("span", "gallery-noposter", "Guide"));
+    }
+    if (item.kind === "video") {
+      tile.appendChild(el("span", "play-badge", "▶"));
+    }
+    if (Number(item.sort_order) > 0) {
+      tile.appendChild(el("span", "lesson-number", String(item.sort_order)));
+    }
+    if (item.title) {
+      tile.appendChild(el("span", "home-guide-title", item.title));
+    }
+    grid.appendChild(tile);
+  });
+}
+
+loadGuide().catch((error) => console.error("Home guide error:", error));
