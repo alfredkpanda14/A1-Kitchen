@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Gate Tickets and Online Discount</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="chef-dashboard.html"
+        ><img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen staff dashboard"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Staff navigation">
+        <a href="chef-dashboard.html">Orders</a>
+        <a href="menu-manager.html" id="nav-menu" hidden>Menu manager</a>
+        <a href="master-dashboard.html" id="nav-developer" hidden>Developer</a>
+        <a href="events-manager.html" id="nav-events" hidden>Events</a>
+        <a href="gate-tickets.html" class="active" aria-current="page"
+          >Gate tickets</a
+        >
+        <a href="gate.html">Gate scanner</a>
+        <a href="index.html">View website</a>
+      </nav>
+    </header>
+    <main id="main-content" class="staff">
+      <section class="dash-hero">
+        <p class="home-eyebrow">Entrance</p>
+        <h1>Gate Tickets and Online Discount</h1>
+        <p id="welcome">Loading...</p>
+        <div class="dash-bar">
+          <button type="button" id="refresh-button" class="button">
+            Refresh
+          </button>
+          <button
+            type="button"
+            id="signout-button"
+            class="button button-secondary"
+          >
+            Sign out
+          </button>
+        </div>
+        <p
+          id="dash-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+
+      <section class="dash-panel">
+        <h2>Choose the Event</h2>
+        <label for="event-select">Event</label>
+        <select id="event-select"></select>
+      </section>
+
+      <section id="discount-box"></section>
+      <section id="sell-box"></section>
+
+      <section class="dash-panel">
+        <h2>Paid Online and Paid at the Gate</h2>
+        <div id="report-box"></div>
+      </section>
+
+      <section class="dash-panel">
+        <h2>Gate Tickets Sold</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Ticket number</th>
+                <th>Buyer</th>
+                <th>Category</th>
+                <th>People</th>
+                <th>Cash paid</th>
+                <th>Entered</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ticket-body"></tbody>
+          </table>
+        </div>
+        <p id="ticket-empty" class="menu-notice" hidden>
+          No gate tickets have been created for this event yet.
+        </p>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="site-info.js"></script>
+    <script src="qr-code.js"></script>
+    <script src="ticket-pdf.js"></script>
+    <script src="gate-tickets.js"></script>
+  </body>
+</html>

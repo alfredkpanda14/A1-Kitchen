@@ -9,7 +9,7 @@ const ticketInput = document.getElementById("ticket-input");
 const ticketCheck = document.getElementById("ticket-check");
 const resultBox = document.getElementById("gate-result-box");
 
-const TICKET_PATTERN = /(?:A1|FP|FG|F)-\d{4}-[A-Z0-9]{6}/;
+const TICKET_PATTERN = /(?:A1|FP|FG|GT|CT|F)-\d{4}-[A-Z0-9]{6}/;
 
 let staff = null;
 let stream = null;
@@ -304,14 +304,14 @@ function showFoodResult(result) {
   card.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-/* ---------- Feast Passes (free food, drink and water at A1 Kitchen events) ---------- */
+/* ---------- Feast Coupons (free food, drink and water at A1 Kitchen events) ---------- */
 
 const PASS_LOOKS = {
-  valid: ["gate-result-valid", "VALID FEAST PASS"],
+  valid: ["gate-result-valid", "VALID FEAST COUPON"],
   complete: ["gate-result-warn", "EVERYTHING ALREADY SERVED"],
   ended: ["gate-result-bad", "REGISTRATION ENDED"],
-  void: ["gate-result-bad", "PASS CANCELLED"],
-  not_found: ["gate-result-bad", "PASS NOT FOUND"],
+  void: ["gate-result-bad", "COUPON CANCELLED"],
+  not_found: ["gate-result-bad", "COUPON NOT FOUND"],
 };
 
 function showPassResult(result) {
@@ -323,7 +323,7 @@ function showPassResult(result) {
     el(
       "p",
       "gate-status",
-      guest && result.status === "valid" ? "VALID GUEST PASS" : look[1],
+      guest && result.status === "valid" ? "VALID GUEST COUPON" : look[1],
     ),
   );
   if (result.message) {
@@ -334,7 +334,7 @@ function showPassResult(result) {
   if (result.status !== "not_found") {
     line(
       card,
-      "Pass:",
+      "Coupon:",
       result.pass_number + (guest ? " (guest, free)" : " (paid)"),
     );
     line(card, "Holder:", result.holder);
@@ -344,7 +344,7 @@ function showPassResult(result) {
       result.event_title + " (" + longDate(result.event_date) + ")",
     );
     line(card, "Note:", result.note);
-    line(card, "People on this pass:", String(result.people));
+    line(card, "People on this coupon:", String(result.people));
     line(card, "Entered:", result.entered + " of " + result.people);
     line(card, "Food served:", result.food_served + " of " + result.people);
     line(card, "Drinks served:", result.drink_served + " of " + result.people);
@@ -354,7 +354,7 @@ function showPassResult(result) {
         el(
           "p",
           "duplicate-warning",
-          "This pass is for a different day: " +
+          "This coupon is for a different day: " +
             longDate(result.event_date) +
             ".",
         ),
@@ -460,6 +460,176 @@ function showPassResult(result) {
   resultBox.appendChild(card);
   card.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+/* ---------- Gate tickets (sold at the gate for cash) ---------- */
+
+const GATE_LOOKS = {
+  valid: ["gate-result-valid", "VALID GATE TICKET"],
+  used: ["gate-result-bad", "ALREADY ENTERED"],
+  void: ["gate-result-bad", "TICKET CANCELLED"],
+  not_found: ["gate-result-bad", "TICKET NOT FOUND"],
+};
+
+function showGateTicketResult(result) {
+  resultBox.textContent = "";
+  const look = GATE_LOOKS[result.status] || GATE_LOOKS.not_found;
+  const card = el("div", "gate-result " + look[0]);
+  card.appendChild(el("p", "gate-status", look[1]));
+  if (result.message) {
+    card.appendChild(el("p", null, result.message));
+  }
+  buzz(result.status === "valid");
+
+  if (result.status !== "not_found") {
+    line(card, "Ticket:", result.ticket_number);
+    line(card, "Buyer:", result.buyer);
+    line(
+      card,
+      "Event:",
+      result.event_title + " (" + longDate(result.event_date) + ")",
+    );
+    line(card, "Category:", result.ticket_name);
+    line(card, "Admits:", result.people + " people");
+    line(card, "Already entered:", String(result.admitted));
+    line(card, "Still to enter:", String(result.remaining));
+    if (result.wrong_day) {
+      card.appendChild(
+        el(
+          "p",
+          "duplicate-warning",
+          "This ticket is for a different day: " +
+            longDate(result.event_date) +
+            ".",
+        ),
+      );
+    }
+    if (result.status === "valid" && result.remaining > 0) {
+      const input = el("input");
+      input.id = "gate-ticket-count";
+      input.type = "number";
+      input.min = "1";
+      input.max = String(result.remaining);
+      input.step = "1";
+      input.inputMode = "numeric";
+      input.value = String(result.remaining);
+      const label = el("label", null, "How many people are entering now?");
+      label.htmlFor = input.id;
+      const admit = el("button", "button", "Admit");
+      admit.type = "button";
+      admit.addEventListener("click", async () => {
+        const count = Number(input.value);
+        if (!Number.isInteger(count) || count < 1 || count > result.remaining) {
+          say("Please enter a number from 1 to " + result.remaining + ".");
+          return;
+        }
+        admit.disabled = true;
+        say("Working...");
+        try {
+          await rpc("staff_admit_gate_ticket", {
+            p_number: result.ticket_number,
+            p_count: count,
+          });
+          say(count + (count === 1 ? " person" : " people") + " admitted.");
+          await check(result.ticket_number, true);
+        } catch (error) {
+          say(friendlyError(error));
+          admit.disabled = false;
+        }
+      });
+      card.append(label, input, admit);
+    }
+  }
+  addNextButton(card);
+  resultBox.appendChild(card);
+  card.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+/* ---------- Competitor tickets (eating and cooking competitions) ---------- */
+
+const COMPETITOR_LOOKS = {
+  valid: ["gate-result-valid", "VALID COMPETITOR"],
+  not_approved: ["gate-result-bad", "NOT APPROVED: DO NOT ADMIT"],
+  not_found: ["gate-result-bad", "TICKET NOT FOUND"],
+};
+
+function showCompetitorResult(result) {
+  resultBox.textContent = "";
+  const look = COMPETITOR_LOOKS[result.status] || COMPETITOR_LOOKS.not_found;
+  const card = el("div", "gate-result " + look[0]);
+  card.appendChild(el("p", "gate-status", look[1]));
+  if (result.message) {
+    card.appendChild(el("p", null, result.message));
+  }
+  buzz(result.status === "valid");
+
+  if (result.status !== "not_found") {
+    if (result.photo) {
+      const photo = el("img", "proof-image");
+      photo.src = result.photo;
+      photo.alt = "Photo of " + result.full_name;
+      card.appendChild(photo);
+      card.appendChild(
+        el(
+          "p",
+          "field-help",
+          "Check that this photo matches the person in front of you.",
+        ),
+      );
+    }
+    line(card, "Name:", result.full_name);
+    line(card, "Phone:", result.phone);
+    line(card, "Ticket:", result.ticket_number);
+    line(
+      card,
+      "Competition:",
+      result.title + " (" + longDate(result.event_date) + ")",
+    );
+    if (result.wrong_day) {
+      card.appendChild(
+        el(
+          "p",
+          "duplicate-warning",
+          "This ticket is for a different day: " +
+            longDate(result.event_date) +
+            ".",
+        ),
+      );
+    }
+    if (result.checked_in_at) {
+      card.appendChild(
+        el(
+          "p",
+          "duplicate-warning",
+          "Already checked in at " +
+            new Date(result.checked_in_at).toLocaleString("en-GB", {
+              dateStyle: "medium",
+              timeStyle: "short",
+            }) +
+            ".",
+        ),
+      );
+    } else if (result.status === "valid") {
+      const arrive = el("button", "button", "Mark as arrived");
+      arrive.type = "button";
+      arrive.addEventListener("click", async () => {
+        arrive.disabled = true;
+        say("Working...");
+        try {
+          await rpc("staff_checkin_competitor", {
+            p_number: result.ticket_number,
+          });
+          say(result.full_name + " is marked as arrived.");
+          await check(result.ticket_number, true);
+        } catch (error) {
+          say(friendlyError(error));
+          arrive.disabled = false;
+        }
+      });
+      card.appendChild(arrive);
+    }
+  }
+  addNextButton(card);
+  resultBox.appendChild(card);
+  card.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 async function check(ticket, quiet) {
   const match = String(ticket || "")
     .toUpperCase()
@@ -475,6 +645,27 @@ async function check(ticket, quiet) {
     say("Checking...");
   }
   try {
+    if (lastTicket.startsWith("CT-")) {
+      const competitor = await rpc("staff_verify_competitor", {
+        p_number: lastTicket,
+      });
+      if (!quiet) {
+        say("");
+      }
+      showCompetitorResult(competitor);
+      return;
+    }
+    if (lastTicket.startsWith("GT-")) {
+      const gateResult = await rpc("staff_verify_gate_ticket", {
+        p_number: lastTicket,
+      });
+      if (!quiet) {
+        say("");
+      }
+      showGateTicketResult(gateResult);
+      return;
+    }
+
     if (lastTicket.startsWith("FP-") || lastTicket.startsWith("FG-")) {
       const passResult = await rpc("staff_verify_pass", {
         p_number: lastTicket,

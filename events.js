@@ -356,8 +356,17 @@ function eventCard(event) {
     card.appendChild(el("h4", null, "Tickets"));
     const list = el("ul");
     event.tickets.forEach((ticket) => {
+      const gatePrice = Number(ticket.gate_price);
+      const save =
+        gatePrice > Number(ticket.price)
+          ? " (gate price " +
+            money(gatePrice) +
+            ", you save " +
+            Math.round((1 - Number(ticket.price) / gatePrice) * 100) +
+            "% by paying online)"
+          : "";
       list.appendChild(
-        el("li", null, ticket.name + ": " + money(ticket.price)),
+        el("li", null, ticket.name + ": " + money(ticket.price) + save),
       );
     });
     card.appendChild(list);

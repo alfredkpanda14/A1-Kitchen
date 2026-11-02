@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>A1 Kitchen | Feast Passes</title>
+    <title>A1 Kitchen | Feast Coupons</title>
     <link rel="icon" type="image/png" href="images/logo-mark.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -24,7 +24,7 @@
         <a href="master-dashboard.html" id="nav-developer" hidden>Developer</a>
         <a href="events-manager.html" id="nav-events" hidden>Events</a>
         <a href="passes-manager.html" class="active" aria-current="page"
-          >Feast Passes</a
+          >Feast Coupons</a
         >
         <a href="gate.html">Gate scanner</a>
         <a href="index.html">View website</a>
@@ -33,7 +33,7 @@
     <main id="main-content" class="staff">
       <section class="dash-hero">
         <p class="home-eyebrow">Free Food, Drink and Water</p>
-        <h1>Feast Passes</h1>
+        <h1>Feast Coupons</h1>
         <p id="welcome">Loading...</p>
         <div class="dash-bar">
           <button type="button" id="refresh-button" class="button">
@@ -58,8 +58,10 @@
       <section class="dash-panel">
         <h2>Choose the Event</h2>
         <p class="field-help">
-          Everyone who pays gets one Feast Pass. Guests invited by Chef A1 get a
-          gold Guest Feast Pass. Print them here and give them out at the event.
+          Everyone who pays gets one A1 Feast Coupon for free food, drink and
+          water. Guests invited by Chef A1 get a gold A1 Guest Coupon. Print
+          them here and give them out at the event. The ticket people pay for is
+          their pass at the gate.
         </p>
         <label for="event-select">Event</label>
         <select id="event-select"></select>
@@ -73,10 +75,10 @@
       <section id="guest-box"></section>
 
       <section class="dash-panel">
-        <h2>All Passes</h2>
+        <h2>All Coupons</h2>
         <div class="dash-bar">
           <button type="button" id="print-selected" class="button" disabled>
-            Print selected passes (0)
+            Print selected coupons (0)
           </button>
           <button
             type="button"
@@ -84,7 +86,7 @@
             class="button button-secondary"
             disabled
           >
-            Print all passes not printed yet (0)
+            Print all coupons not printed yet (0)
           </button>
         </div>
         <div class="pass-filters">
@@ -101,13 +103,13 @@
             <input
               type="search"
               id="filter-search"
-              placeholder="Name, phone or pass number"
+              placeholder="Name, phone or coupon number"
               autocomplete="off"
             />
           </div>
           <label class="checkbox-label" for="filter-unprinted">
             <input type="checkbox" id="filter-unprinted" />
-            Only passes not printed yet
+            Only coupons not printed yet
           </label>
         </div>
         <div class="table-container">
@@ -120,7 +122,7 @@
                 <th>People</th>
                 <th>Phone</th>
                 <th>Details</th>
-                <th>Pass number</th>
+                <th>Coupon number</th>
                 <th>Entered</th>
                 <th>Food</th>
                 <th>Drink</th>
@@ -133,8 +135,8 @@
           </table>
         </div>
         <p id="pass-empty" class="menu-notice" hidden>
-          No passes to show yet. A pass appears here when a payment is approved,
-          or when you create guest passes.
+          No coupons to show yet. A coupon appears here when a payment is
+          approved, or when you create guest coupons.
         </p>
       </section>
     </main>

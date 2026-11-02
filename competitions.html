@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Join the A1 Kitchen Eating Competition and Cooking Competition. Register online, win prizes and certificates."
+    />
+    <title>A1 Kitchen | Competitions</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html"
+        ><img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen home page"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="catering.html">Catering</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="faq.html">FAQ</a> <a href="guide.html">How-To Videos</a>
+        <a href="competitions.html" class="active" aria-current="page"
+          >Competitions</a
+        >
+        <a href="gallery.html">Gallery</a>
+        <a href="birthday.html">Chef A1 Personal Page</a>
+      </nav>
+    </header>
+    <main id="main-content">
+      <section class="page-hero">
+        <p class="home-eyebrow">Competitions</p>
+        <h1>Show Your <span>Skills</span></h1>
+        <p class="page-lead">
+          A1 Kitchen runs eating and cooking competitions. Register online with
+          your photo, get your competitor ticket with a QR code, and compete for
+          prizes. The 1st and 2nd place winners are awarded a prize, and winners
+          receive a certificate that anyone can check by scanning its QR code.
+          Want to watch instead? Get your ticket and come and cheer.
+        </p>
+      </section>
+
+      <section class="events-wrap">
+        <p
+          id="competitions-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+        <div id="competitions-list"></div>
+      </section>
+
+      <section class="home-cta">
+        <h2>Want to Watch?</h2>
+        <p>
+          Buy your entrance ticket on the website and pay less than at the gate.
+        </p>
+        <div class="home-hero-actions">
+          <a href="events.html" class="button button-light">Get a Ticket</a>
+          <a href="verify-certificate.html" class="button button-ghost"
+            >Check a Certificate</a
+          >
+        </div>
+      </section>
+    </main>
+    <footer>
+      <img
+        class="footer-logo"
+        src="images/logo-wide.webp"
+        alt="A1 Kitchen"
+        width="200"
+        height="53"
+        loading="lazy"
+      />
+      <p>Food • Catering • Events</p>
+      <p class="footer-links">
+        <a href="events.html">Events</a> ·
+        <a href="how-it-works.html">How It Works</a> ·
+        <a href="guide.html">How-To Videos</a> ·
+        <a href="privacy.html">Privacy Policy</a> ·
+        <a href="terms.html">Terms &amp; Conditions</a> ·
+        <a href="staff-login.html">Staff Sign In</a>
+      </p>
+    </footer>
+    <script src="supabase-config.js"></script>
+    <script src="competitions.js"></script>
+  </body>
+</html>

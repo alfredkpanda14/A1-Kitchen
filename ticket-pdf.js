@@ -131,6 +131,7 @@ const A1TicketPdf = (function () {
 
     const isBalance = ticket.kind === "balance";
     const isFood = ticket.kind === "food";
+    const isGate = ticket.kind === "gate";
 
     // Header band with logo
     rect(0, PAGE_H - 96, PAGE_W, 96, NAVY);
@@ -163,7 +164,9 @@ const A1TicketPdf = (function () {
         ? "BALANCE PAYMENT TICKET"
         : isFood
           ? "FOOD TICKET"
-          : "EVENT TICKET",
+          : isGate
+            ? "GATE TICKET"
+            : "EVENT TICKET",
       "F2",
       13,
       isBalance ? [0.45, 0.31, 0] : GREEN,
@@ -214,7 +217,7 @@ const A1TicketPdf = (function () {
       y -= parts.length > 1 ? 48 : 34;
     }
     line("TICKET HOLDER", ticket.holder);
-    if (!isFood) {
+    if (!isFood && !isGate) {
       line("REGISTRATION NUMBER", ticket.regNumber);
     }
 

@@ -1,15 +1,17 @@
 /*
-  A1 KITCHEN: FEAST PASS PRINTER
-  ------------------------------
-  Makes a PDF of Feast Passes (free food, drink and water) to print.
-  Four passes fit on one A4 page. Paid passes are green, guest passes are gold.
+  A1 KITCHEN: FEAST COUPON PRINTER
+  --------------------------------
+  Makes a PDF of Feast Coupons (free food, drink and water) to print.
+  Each coupon is on its own A5 page, the same size as the event tickets.
+  Paid coupons are green, guest coupons are gold.
   No outside library is used.
 */
 const A1PassPdf = (function () {
-  const PAGE_W = 595.28; // A4
-  const PAGE_H = 841.89;
-  const CARD_W = PAGE_W / 2;
-  const CARD_H = PAGE_H / 2;
+  const PAGE_W = 419.53; // A5, the same paper size as the event tickets
+  const PAGE_H = 595.28;
+  const CARD_W = 297.64; // each coupon is drawn on this smaller sheet and scaled up to A5
+  const CARD_H = 420.9;
+  const SCALE = PAGE_W / CARD_W;
   const NAVY = [0.047, 0.137, 0.251];
   const BLUE = [0.039, 0.384, 0.69];
   const GREEN = [0.063, 0.47, 0.169];
@@ -67,7 +69,7 @@ const A1PassPdf = (function () {
     });
   }
 
-  /* ---------- one pass, drawn with its own corner as (0, 0) ---------- */
+  /* ---------- one coupon, drawn with its own corner as (0, 0) ---------- */
   function drawCard(pass, hasLogo, logoRatio) {
     const out = [];
     const guest = pass.kind === "guest";
@@ -136,7 +138,7 @@ const A1PassPdf = (function () {
     let y = CARD_H - 56 - 22;
     centered(
       y,
-      guest ? "A1 GUEST FEAST PASS" : "A1 FEAST PASS",
+      guest ? "A1 GUEST COUPON" : "A1 FEAST COUPON",
       "F2",
       guest ? 18 : 22,
       guest ? GOLD_DARK : GREEN,
@@ -251,14 +253,14 @@ const A1PassPdf = (function () {
         out.push("f");
         y = boxY - 13;
       } catch (error) {
-        /* the pass still works without the QR code */
+        /* the coupon still works without the QR code */
       }
     }
     centered(y, pass.passNumber, "F3", 14, NAVY);
 
     centered(
       22,
-      "Show this pass at the serving area. Keep it safe.",
+      "Show this coupon at the serving area. Keep it safe.",
       "F1",
       7,
       GREY,
@@ -273,7 +275,7 @@ const A1PassPdf = (function () {
     return out.join("\n");
   }
 
-  /* ---------- PDF file writer (4 passes per A4 page) ---------- */
+  /* ---------- PDF file writer (one coupon per A5 page) ---------- */
   function toBytes(str) {
     const bytes = new Uint8Array(str.length);
     for (let i = 0; i < str.length; i += 1) {
@@ -298,7 +300,7 @@ const A1PassPdf = (function () {
       push(number + " 0 obj\n");
     }
 
-    const pageCount = Math.max(1, Math.ceil(passes.length / 4));
+    const pageCount = Math.max(1, passes.length);
     const firstPageObject = 7;
     const kids = [];
     for (let i = 0; i < pageCount; i += 1) {
@@ -352,42 +354,18 @@ const A1PassPdf = (function () {
       const pageObject = firstPageObject + page * 2;
       const contentObject = pageObject + 1;
       const parts = [];
-      for (let slot = 0; slot < 4; slot += 1) {
-        const pass = passes[page * 4 + slot];
-        if (!pass) {
-          continue;
-        }
-        const column = slot % 2;
-        const row = Math.floor(slot / 2);
-        const x = column * CARD_W;
-        const y = row === 0 ? CARD_H : 0;
+      const pass = passes[page];
+      if (pass) {
         parts.push(
-          "q 1 0 0 1 " +
-            x.toFixed(2) +
-            " " +
-            y.toFixed(2) +
-            " cm\n" +
+          "q " +
+            SCALE.toFixed(5) +
+            " 0 0 " +
+            SCALE.toFixed(5) +
+            " 0 0 cm\n" +
             drawCard(pass, hasLogo, ratio) +
             "\nQ",
         );
       }
-      // Cut lines
-      parts.push(
-        "q 0.75 0.78 0.82 RG 0.6 w [5 4] 0 d " +
-          CARD_W.toFixed(2) +
-          " 0 m " +
-          CARD_W.toFixed(2) +
-          " " +
-          PAGE_H.toFixed(2) +
-          " l S " +
-          "0 " +
-          CARD_H.toFixed(2) +
-          " m " +
-          PAGE_W.toFixed(2) +
-          " " +
-          CARD_H.toFixed(2) +
-          " l S Q",
-      );
       const contentBytes = toBytes(parts.join("\n"));
       startObject(pageObject);
       push(
@@ -477,7 +455,7 @@ const A1PassPdf = (function () {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = fileName || "A1-Feast-Passes.pdf";
+    link.download = fileName || "A1-Feast-Coupons.pdf";
     document.body.appendChild(link);
     link.click();
     link.remove();

@@ -1,4 +1,4 @@
-/* A1 Kitchen: Feast Passes (paid and guest passes for free food, drink and water) */
+/* A1 Kitchen: Feast Coupons (paid and guest coupons for free food, drink and water) */
 const welcome = document.getElementById("welcome");
 const dashMessage = document.getElementById("dash-message");
 const refreshButton = document.getElementById("refresh-button");
@@ -119,7 +119,7 @@ function renderReport() {
   const paidGrid = el("div", "glance-grid");
   paidGrid.append(
     reportCard(
-      "People who paid (" + paid.passes + " passes)",
+      "People who paid (" + paid.passes + " coupons)",
       paid.people,
       false,
     ),
@@ -134,7 +134,7 @@ function renderReport() {
   const guestGrid = el("div", "glance-grid");
   guestGrid.append(
     reportCard(
-      "Guests invited (" + guest.passes + " passes)",
+      "Guests invited (" + guest.passes + " coupons)",
       guest.people,
       false,
     ),
@@ -157,7 +157,7 @@ function renderReport() {
   reportBox.appendChild(all);
 }
 
-/* ---------- Guest passes (Developer) ---------- */
+/* ---------- Guest coupons (Developer) ---------- */
 
 function renderGuestForm() {
   guestBox.textContent = "";
@@ -165,7 +165,7 @@ function renderGuestForm() {
     return;
   }
   const card = el("div", "card order-card");
-  card.appendChild(el("h3", null, "Create guest passes"));
+  card.appendChild(el("h3", null, "Create guest coupons"));
   card.appendChild(
     el(
       "p",
@@ -190,10 +190,10 @@ function renderGuestForm() {
   const noteLabel = el(
     "label",
     null,
-    "Note printed on these passes (optional)",
+    "Note printed on these coupons (optional)",
   );
   noteLabel.htmlFor = note.id;
-  const button = el("button", "button", "Create guest passes");
+  const button = el("button", "button", "Create guest coupons");
   button.type = "button";
   const message = el("p", "success-message");
   message.setAttribute("role", "status");
@@ -231,7 +231,7 @@ function renderGuestForm() {
       names.value = "";
       message.textContent =
         result.created +
-        ' guest passes created. They are selected below. Press "Print selected passes".';
+        ' guest coupons created. They are selected below. Press "Print selected coupons".';
       (result.numbers || []).forEach((number) => selected.add("n:" + number));
       await loadPasses();
       printSelectedButton.scrollIntoView({
@@ -239,7 +239,7 @@ function renderGuestForm() {
         block: "center",
       });
     } catch (error) {
-      console.error("Create guest passes failed:", error);
+      console.error("Create guest coupons failed:", error);
       message.textContent = friendlyError(error);
     }
     button.disabled = false;
@@ -325,7 +325,10 @@ function renderTable() {
     check.type = "checkbox";
     check.checked = isSelected(pass);
     check.disabled = pass.voided;
-    check.setAttribute("aria-label", "Select the pass of " + pass.holder_name);
+    check.setAttribute(
+      "aria-label",
+      "Select the coupon of " + pass.holder_name,
+    );
     check.addEventListener("change", () => toggleSelected(pass, check.checked));
     const checkCell = el("td");
     checkCell.appendChild(check);
@@ -391,7 +394,7 @@ function renderTable() {
         cancel.addEventListener("click", async () => {
           if (
             !window.confirm(
-              "Cancel the guest pass of " +
+              "Cancel the guest coupon of " +
                 pass.holder_name +
                 "? It will stop working.",
             )
@@ -400,7 +403,7 @@ function renderTable() {
           }
           try {
             await rpc("staff_void_guest_pass", { p_id: pass.id });
-            say("The pass of " + pass.holder_name + " was cancelled.");
+            say("The coupon of " + pass.holder_name + " was cancelled.");
             await loadPasses();
           } catch (error) {
             say(friendlyError(error));
@@ -423,13 +426,13 @@ function selectedPasses() {
 
 function updateButtons() {
   const count = selectedPasses().length;
-  printSelectedButton.textContent = "Print selected passes (" + count + ")";
+  printSelectedButton.textContent = "Print selected coupons (" + count + ")";
   printSelectedButton.disabled = count === 0;
   const unprinted = (data ? data.passes : []).filter(
     (pass) => !pass.voided && !pass.printed_at,
   ).length;
   printUnprintedButton.textContent =
-    "Print all passes not printed yet (" + unprinted + ")";
+    "Print all coupons not printed yet (" + unprinted + ")";
   printUnprintedButton.disabled = unprinted === 0;
 }
 
@@ -451,7 +454,7 @@ function toPdfPass(pass) {
 
 async function printPasses(list) {
   if (list.length === 0) {
-    say("Please choose at least one pass.");
+    say("Please choose at least one coupon.");
     return;
   }
   const unpaid = list.filter(
@@ -463,7 +466,7 @@ async function printPasses(list) {
     unpaid.length > 0 &&
     !window.confirm(
       unpaid.length +
-        " of these passes still have a balance to pay. Print them anyway?",
+        " of these coupons still have a balance to pay. Print them anyway?",
     )
   ) {
     return;
@@ -471,20 +474,20 @@ async function printPasses(list) {
   say(
     "Preparing " +
       list.length +
-      (list.length === 1 ? " pass" : " passes") +
+      (list.length === 1 ? " coupon" : " coupons") +
       " for printing...",
   );
   try {
     await A1PassPdf.download(
       list.map(toPdfPass),
-      "A1-Feast-Passes-" + new Date().toISOString().slice(0, 10) + ".pdf",
+      "A1-Feast-Coupons-" + new Date().toISOString().slice(0, 10) + ".pdf",
     );
     await rpc("staff_mark_passes_printed", {
       p_ids: list.map((pass) => pass.id),
     });
     list.forEach((pass) => selected.delete(pass.id));
     say(
-      "Done. The PDF is ready: open it and print it on A4 paper. Four passes fit on each page. Cut along the dotted lines.",
+      "Done. The PDF is ready: open it and print it on A5 paper, the same size as the tickets. Each coupon has its own page.",
     );
     await loadPasses();
   } catch (error) {
@@ -505,7 +508,7 @@ async function loadPasses() {
   data = await rpc("staff_list_event_passes", {
     p_event_id: eventSelect.value,
   });
-  // passes created a moment ago are selected by their number
+  // coupons created a moment ago are selected by their number
   data.passes.forEach((pass) => {
     if (selected.has("n:" + pass.pass_number)) {
       selected.delete("n:" + pass.pass_number);

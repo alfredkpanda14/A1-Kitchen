@@ -44,9 +44,25 @@
       id: "passes",
       href: "passes-manager.html",
       icon: "🎫",
-      title: "Feast Passes",
-      text: "Paid and guest passes for free food, drink and water. Print and track them.",
+      title: "Feast Coupons",
+      text: "Paid and guest coupons for free food, drink and water. Print and track them.",
       needs: ["passes.manage"],
+    },
+    {
+      id: "gatetickets",
+      href: "gate-tickets.html",
+      icon: "🚪",
+      title: "Gate Tickets and Discount",
+      text: "Sell tickets to walk-in visitors and set the online discount.",
+      needs: ["gatetickets.manage"],
+    },
+    {
+      id: "competitions",
+      href: "competitions-manager.html",
+      icon: "🏆",
+      title: "Competitions",
+      text: "Eating and cooking competitions: verify participants, results and certificates.",
+      needs: ["competitions.manage", "competitions.admin"],
     },
     {
       id: "gate",
@@ -228,6 +244,14 @@
       try {
         const count = await rpc("staff_unprinted_pass_count");
         setCount("passes", Number(count), "to print");
+      } catch (error) {
+        /* ignore */
+      }
+    }
+    if (can("competitions.manage") || can("competitions.admin")) {
+      try {
+        const waitingEntries = await rpc("staff_competition_pending_count");
+        setCount("competitions", Number(waitingEntries), "waiting");
       } catch (error) {
         /* ignore */
       }
