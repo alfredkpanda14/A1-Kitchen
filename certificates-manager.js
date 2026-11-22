@@ -908,11 +908,57 @@ function drawSettings() {
       "These details are printed in the signature area of every new certificate. Certificates that were already issued keep the name and positions they were issued with.",
     ),
   );
+  const honorific = textInput("set-honorific", s.signatory_honorific, 20);
+  honorific.setAttribute("list", "honorific-options");
+  if (!document.getElementById("honorific-options")) {
+    const options = el("datalist");
+    options.id = "honorific-options";
+    [
+      "Mr.",
+      "Mrs.",
+      "Miss",
+      "Ms.",
+      "Dr.",
+      "Prof.",
+      "Chef",
+      "Alhaji",
+      "Hajia",
+      "Rev.",
+      "Hon.",
+    ].forEach((value) => {
+      const option = el("option");
+      option.value = value;
+      options.appendChild(option);
+    });
+    document.body.appendChild(options);
+  }
   const name = textInput("set-name", s.signatory_name, 80);
   const titles = textInput("set-titles", s.signatory_titles, 100);
+  const printedAs = el("p", "cert-meta");
+  function showPrintedAs() {
+    printedAs.textContent = "";
+    printedAs.appendChild(el("strong", null, "Printed on certificates as: "));
+    printedAs.appendChild(
+      document.createTextNode(
+        [honorific.value.trim(), name.value.trim()].filter(Boolean).join(" ") +
+          "  |  " +
+          titles.value.trim(),
+      ),
+    );
+  }
+  [honorific, name, titles].forEach((input) =>
+    input.addEventListener("input", showPrintedAs),
+  );
+  showPrintedAs();
   settingsBox.append(
+    field(
+      "Title (optional)",
+      honorific,
+      "Printed before the name, for example Mr., Mrs., Miss, Dr. or Chef. Leave it empty for no title.",
+    ),
     field("Full name of the person who signs *", name),
     field("Positions *", titles, "For example: Founder & Owner | Head Chef"),
+    printedAs,
   );
 
   const sigBox = el("div", "photo-box");
@@ -996,6 +1042,15 @@ function drawSettings() {
       message.textContent = "Please fill in the name and the positions.";
       return;
     }
+    if (
+      honorific.value.trim() &&
+      !/^[A-Za-z][A-Za-z. ]*$/.test(honorific.value.trim())
+    ) {
+      message.textContent =
+        "The title can only use letters, spaces and full stops, for example Mr. or Dr.";
+      honorific.focus();
+      return;
+    }
     save.disabled = true;
     message.textContent = "Saving...";
     try {
@@ -1003,6 +1058,7 @@ function drawSettings() {
         p_signatory_name: name.value.trim(),
         p_signatory_titles: titles.value.trim(),
         p_signature: removeSignature ? "" : newSignature,
+        p_signatory_honorific: honorific.value.trim(),
       });
       settings = await rpc("staff_cert_settings_get");
       drawSettings();

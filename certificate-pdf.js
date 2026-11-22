@@ -791,7 +791,7 @@ const A1CertPdf = (function () {
     const sigW = 210;
     const sigLineY = 124;
     if (opts.hasSignature) {
-      let sh = 48;
+      let sh = 54;
       let sw = sh * opts.signatureRatio;
       if (sw > sigW - 20) {
         sw = sigW - 20;
@@ -801,24 +801,20 @@ const A1CertPdf = (function () {
     }
     k.line(sigX, sigLineY, sigX + sigW, sigLineY, NAVY, 0.9);
     const scx = sigX + sigW / 2;
-    k.centered(
-      sigLineY - 15,
-      cert.signatory_name || opts.signatoryName || "Alpha Kpanda",
-      "F2",
-      11.5,
-      NAVY,
-      scx,
-    );
-    k.centered(
-      sigLineY - 28,
-      cert.signatory_titles ||
-        opts.signatoryTitles ||
-        "Founder & Owner | Head Chef",
-      "F1",
-      9.5,
-      GREY,
-      scx,
-    );
+    // An issued certificate keeps the signatory details it was issued with
+    const snapshot = Boolean(cert.signatory_name);
+    const signerName = snapshot
+      ? cert.signatory_name
+      : opts.signatoryName || "Alpha Kpanda";
+    const signerTitle = snapshot
+      ? cert.signatory_honorific
+      : opts.signatoryHonorific;
+    const signer = [signerTitle, signerName].filter(Boolean).join(" ");
+    const positions = snapshot
+      ? cert.signatory_titles || ""
+      : opts.signatoryTitles || "Founder & Owner | Head Chef";
+    k.centered(sigLineY - 15, signer, "F2", 11.5, NAVY, scx);
+    k.centered(sigLineY - 28, positions, "F1", 9.5, GREY, scx);
     k.centered(
       sigLineY - 40,
       ORGANISATION + " (" + BRAND + ")",
@@ -1091,6 +1087,7 @@ const A1CertPdf = (function () {
       signatureRatio: signature ? signature.width / signature.height : 1,
       signatoryName: a.signatoryName,
       signatoryTitles: a.signatoryTitles,
+      signatoryHonorific: a.signatoryHonorific,
     });
     return writePdf(
       841.89,
@@ -1147,7 +1144,7 @@ const A1CertPdf = (function () {
     setTimeout(() => URL.revokeObjectURL(url), 10000);
   }
 
-  // settings: { signature_image, signatory_name, signatory_titles }
+  // settings: { signature_image, signatory_honorific, signatory_name, signatory_titles }
   async function download(cert, settings, fileName) {
     const s = settings || {};
     const logo = await loadLogo();
@@ -1156,6 +1153,7 @@ const A1CertPdf = (function () {
       signature: jpegFromDataUrl(s.signature_image),
       signatoryName: s.signatory_name,
       signatoryTitles: s.signatory_titles,
+      signatoryHonorific: s.signatory_honorific,
     });
     save(bytes, fileName || "A1-Certificate.pdf");
   }
