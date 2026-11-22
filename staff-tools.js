@@ -65,6 +65,14 @@
       needs: ["competitions.manage", "competitions.admin"],
     },
     {
+      id: "certificates",
+      href: "certificates-manager.html",
+      icon: "🎓",
+      title: "Certificates",
+      text: "Create, preview, issue, revoke and replace certificates. Signature settings.",
+      needs: ["certificates.manage"],
+    },
+    {
       id: "gate",
       href: "gate.html",
       icon: "📱",
@@ -252,6 +260,17 @@
       try {
         const waitingEntries = await rpc("staff_competition_pending_count");
         setCount("competitions", Number(waitingEntries), "waiting");
+      } catch (error) {
+        /* ignore */
+      }
+    }
+    if (can("certificates.manage")) {
+      try {
+        const drafts = await rpc("staff_cert_list", {
+          p_status: "Draft",
+          p_limit: 1,
+        });
+        setCount("certificates", Number(drafts.total), "draft");
       } catch (error) {
         /* ignore */
       }
