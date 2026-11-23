@@ -401,6 +401,44 @@ function competitionCard(comp) {
     });
     actions.appendChild(publish);
   }
+  if (can("certificates.manage")) {
+    const participation = el(
+      "button",
+      "button button-secondary",
+      "Make participation certificate drafts",
+    );
+    participation.type = "button";
+    participation.addEventListener("click", async () => {
+      const ok = window.confirm(
+        "Make Participation certificate drafts for every approved participant in " +
+          comp.title +
+          " who has no place?\n\nNothing is issued yet. Open the Certificates page to check each draft, delete any for people who did not take part, then Issue.",
+      );
+      if (!ok) {
+        return;
+      }
+      participation.disabled = true;
+      try {
+        const result = await rpc("staff_cert_participation_drafts", {
+          p_competition_id: comp.id,
+        });
+        const made = Number(result.created || 0);
+        const skipped = Number(result.skipped || 0);
+        say(
+          made +
+            " participation draft" +
+            (made === 1 ? "" : "s") +
+            " made" +
+            (skipped ? " (" + skipped + " already had one)" : "") +
+            ". Open the Certificates page to check and issue them.",
+        );
+      } catch (error) {
+        say(friendlyError(error));
+      }
+      participation.disabled = false;
+    });
+    actions.appendChild(participation);
+  }
   card.appendChild(actions);
 
   if (can("competitions.admin")) {
@@ -607,80 +645,86 @@ function entryCard(entry, comp) {
   }
   card.appendChild(actions);
 
-  // Results and certificate (Developer)
-  if (can("competitions.admin") && entry.status === "Approved") {
+  // Results (Developer) and certificate drafts (Developer and Head Chef)
+  const canPlace = can("competitions.admin");
+  const canCertify = can("certificates.manage");
+  if ((canPlace || canCertify) && entry.status === "Approved") {
     const box = el("div", "photo-box");
     box.appendChild(el("h4", null, "Result"));
-    const place = el("select");
-    place.id = "place-" + entry.id;
-    [
-      ["", "No place"],
-      ["1", "1st place"],
-      ["2", "2nd place"],
-    ].forEach(([value, label]) => {
-      const option = el("option", null, label);
-      option.value = value;
-      option.selected = String(entry.place || "") === value;
-      place.appendChild(option);
-    });
-    const savePlace = el("button", "button button-secondary", "Save place");
-    savePlace.type = "button";
-    savePlace.addEventListener("click", async () => {
-      savePlace.disabled = true;
-      try {
-        await rpc("staff_set_entry_place", {
-          p_entry_id: entry.id,
-          p_place: place.value ? Number(place.value) : null,
-        });
-        say("Place saved for " + entry.full_name + ".");
-        await loadAll();
-      } catch (error) {
-        say(friendlyError(error));
-        savePlace.disabled = false;
-      }
-    });
-    box.append(field("Place", place), savePlace);
-    if (entry.place && entry.place <= comp.certificate_places) {
+    if (canPlace) {
+      const place = el("select");
+      place.id = "place-" + entry.id;
+      [
+        ["", "No place"],
+        ["1", "1st place"],
+        ["2", "2nd place"],
+      ].forEach(([value, label]) => {
+        const option = el("option", null, label);
+        option.value = value;
+        option.selected = String(entry.place || "") === value;
+        place.appendChild(option);
+      });
+      const savePlace = el("button", "button button-secondary", "Save place");
+      savePlace.type = "button";
+      savePlace.addEventListener("click", async () => {
+        savePlace.disabled = true;
+        try {
+          await rpc("staff_set_entry_place", {
+            p_entry_id: entry.id,
+            p_place: place.value ? Number(place.value) : null,
+          });
+          say("Place saved for " + entry.full_name + ".");
+          await loadAll();
+        } catch (error) {
+          say(friendlyError(error));
+          savePlace.disabled = false;
+        }
+      });
+      box.append(field("Place", place), savePlace);
+    } else {
+      box.appendChild(
+        el(
+          "p",
+          null,
+          entry.place
+            ? "Place: " + (entry.place === 1 ? "1st" : "2nd")
+            : "No place yet.",
+        ),
+      );
+    }
+    if (entry.certificate_number) {
+      box.appendChild(
+        el(
+          "p",
+          "field-help",
+          "Winner certificate issued: " + entry.certificate_number,
+        ),
+      );
+    }
+    if (canCertify && entry.place && entry.place <= comp.certificate_places) {
       const certificate = el(
         "button",
         "button",
-        "Make and download certificate",
+        "Create winner certificate draft",
       );
       certificate.type = "button";
       certificate.addEventListener("click", async () => {
         certificate.disabled = true;
-        say("Preparing the certificate...");
         try {
-          const data = await rpc("staff_issue_certificate", {
-            p_entry_id: entry.id,
-          });
-          await A1CompPdf.downloadCertificate(
-            {
-              fullName: data.full_name,
-              place: data.place,
-              competitionTitle: data.title,
-              eventDate: data.event_date,
-              location: data.location || "",
-              prize: data.prize || "",
-              certificateNumber: data.certificate_number,
-              issuedAt: data.issued_at,
-              verifyUrl:
-                window.location.origin +
-                "/verify-certificate.html#c=" +
-                data.certificate_number,
-            },
-            "A1-Certificate-" + data.certificate_number + ".pdf",
+          await rpc("staff_cert_from_entry", { p_entry_id: entry.id });
+          say(
+            "Winner certificate draft ready for " +
+              entry.full_name +
+              ". Open the Certificates page to add the prize amount and currency if needed, preview it, then Issue.",
           );
-          say("The certificate is downloading.");
-          await loadAll();
         } catch (error) {
-          console.error("Certificate failed:", error);
+          console.error("Certificate draft failed:", error);
           say(friendlyError(error));
         }
         certificate.disabled = false;
       });
       box.appendChild(certificate);
-    } else if (entry.place) {
+    } else if (entry.place && entry.place > comp.certificate_places) {
       box.appendChild(
         el(
           "p",
@@ -785,6 +829,9 @@ async function start() {
   document.getElementById("nav-menu").hidden = !can("menu.manage");
   document.getElementById("nav-developer").hidden = !can("staff.manage");
   document.getElementById("nav-events").hidden = !can("events.view");
+  document.getElementById("nav-certificates").hidden = !can(
+    "certificates.manage",
+  );
   welcome.textContent =
     "Signed in as " +
     staff.full_name +
