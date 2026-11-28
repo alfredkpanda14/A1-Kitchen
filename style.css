@@ -5967,10 +5967,9 @@ form.area-add {
 
 .area-row {
   display: grid;
-  grid-template-columns: minmax(150px, 2fr) minmax(110px, 1fr) minmax(
-      90px,
-      0.8fr
-    ) auto auto;
+  grid-template-columns:
+    minmax(150px, 2fr) minmax(110px, 1fr) minmax(90px, 0.8fr)
+    auto auto;
   gap: 10px 14px;
   align-items: end;
   margin: 10px 0;
@@ -6182,5 +6181,232 @@ form.area-add {
     margin: 2mm 0 0;
     font-size: 10pt;
     text-align: center;
+  }
+}
+/* ==============================
+   STAR RATINGS AND SALES REPORT
+   ============================== */
+
+/* ---------- Stars ---------- */
+.rating-stars {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.rating-stars .star-on {
+  color: #f2a900;
+}
+
+.rating-stars .star-off {
+  color: #c9d3de;
+}
+
+.rating-stars-big {
+  font-size: 30px;
+}
+
+/* ---------- Track order: rate your food ---------- */
+.flow > .rating-section:not([hidden]) {
+  border-top: 4px solid var(--sunshine);
+}
+
+form.rating-form {
+  max-width: 560px;
+  margin: 10px 0 0;
+}
+
+.rate-stars {
+  display: flex;
+  gap: 6px;
+}
+
+.rate-star {
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+  color: #c9d3de;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease;
+}
+
+.rate-star:hover {
+  transform: scale(1.08);
+}
+
+.rate-star.is-on {
+  border-color: var(--sunshine);
+  background: #fff8e1;
+  color: #f2a900;
+}
+
+.rate-star:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.rate-hint {
+  min-height: 22px;
+  margin: 8px 0 4px;
+  color: var(--navy);
+  font-weight: 700;
+}
+
+@media (max-width: 420px) {
+  .rate-star {
+    width: 46px;
+    height: 46px;
+    font-size: 26px;
+  }
+}
+
+/* ---------- Home page: what our customers say ---------- */
+.rating-summary {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.rating-summary .home-lead {
+  margin-top: 8px;
+}
+
+.rating-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
+  justify-content: center;
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.rating-public {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(12, 35, 64, 0.08);
+}
+
+.rating-public-text {
+  margin: 12px 0 10px;
+  color: var(--text);
+  font-style: italic;
+}
+
+.rating-public-name {
+  margin: 0;
+  color: var(--blue);
+  font-weight: 700;
+}
+
+/* ---------- Staff: ratings page ---------- */
+.rating-card {
+  margin: 12px 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--sunshine);
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.rating-card.is-low {
+  border-left-color: #b32424;
+  background: #fff6f6;
+}
+
+.rating-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.rating-comment {
+  margin: 10px 0 6px;
+  font-size: 17px;
+}
+
+.rating-who {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ---------- Staff: sales report page ---------- */
+.report-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+form.report-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+  max-width: none;
+  margin: 0 0 8px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.report-form .menu-field {
+  margin-top: 0;
+}
+
+.report-form .button {
+  margin: 0;
+}
+
+#report-tiles {
+  margin: 10px 0 20px;
+}
+
+.report-table td:nth-child(2),
+.report-table td:nth-child(3),
+.report-table th:nth-child(2),
+.report-table th:nth-child(3) {
+  text-align: right;
+}
+
+/* ---------- Dark look ---------- */
+:where(html.theme-dark) .rate-star,
+:where(html.theme-dark) .rating-public,
+:where(html.theme-dark) .rating-card {
+  background: #132235;
+}
+
+:where(html.theme-dark) .rate-star.is-on {
+  background: #2b2410;
+}
+
+:where(html.theme-dark) .rating-card.is-low {
+  background: #361616;
+}
+
+:where(html.theme-dark) .rate-hint {
+  color: #e8eef6;
+}
+
+:where(html.theme-dark) .rating-stars .star-off {
+  color: #3a4d63;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rate-star {
+    transition: none;
+  }
+
+  .rate-star:hover {
+    transform: none;
   }
 }

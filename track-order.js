@@ -1,3 +1,4 @@
+/* A1 Kitchen: track an order, confirm delivery, rate it, report a problem */
 const lookupSection = document.getElementById("lookup-section");
 const resultSection = document.getElementById("result-section");
 const orderCard = document.getElementById("order-card");
@@ -19,6 +20,11 @@ const CONFIRMABLE = [
   "Out for Delivery",
   "Ready for Pickup",
   "Delivered — Customer Confirmation Pending",
+];
+
+const RATED_STATUSES = [
+  "Delivered — Customer Confirmation Pending",
+  "Delivered — Customer Confirmed",
 ];
 
 let currentOrderNumber = "";
@@ -221,11 +227,13 @@ function renderOrder(order) {
 
   lookupSection.hidden = true;
   resultSection.hidden = false;
+  renderRating(order);
 }
 
 function showLookup() {
   resultSection.hidden = true;
   problemSection.hidden = true;
+  ratingSection.hidden = true;
   lookupSection.hidden = false;
 }
 
@@ -254,6 +262,184 @@ async function callRpc(name, params) {
   }
 
   return body;
+}
+
+/* ---------- Star rating after delivery ---------- */
+
+const ratingSection = document.createElement("section");
+ratingSection.id = "rating-section";
+ratingSection.className = "rating-section";
+ratingSection.hidden = true;
+resultSection.after(ratingSection);
+
+function make(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) {
+    node.className = className;
+  }
+  if (text !== undefined && text !== null) {
+    node.textContent = text;
+  }
+  return node;
+}
+
+function starRow(count) {
+  const row = make("p", "rating-stars rating-stars-big");
+  row.setAttribute("aria-label", count + " out of 5 stars");
+  for (let i = 1; i <= 5; i += 1) {
+    const star = make("span", i <= count ? "star-on" : "star-off", "★");
+    star.setAttribute("aria-hidden", "true");
+    row.appendChild(star);
+  }
+  return row;
+}
+
+function thankYou(order, stars, canChange) {
+  ratingSection.textContent = "";
+  ratingSection.appendChild(make("h2", null, "Thank You for Your Rating"));
+  ratingSection.appendChild(starRow(stars));
+  ratingSection.appendChild(
+    make(
+      "p",
+      null,
+      "You gave your order " +
+        stars +
+        (stars === 1 ? " star" : " stars") +
+        ". Thank you for helping A1 Kitchen get better every day.",
+    ),
+  );
+  if (canChange) {
+    const change = make(
+      "button",
+      "button button-secondary",
+      "Change my rating",
+    );
+    change.type = "button";
+    change.addEventListener("click", () => ratingForm(order));
+    ratingSection.appendChild(change);
+  }
+}
+
+function ratingForm(order) {
+  const previous = order.rating || null;
+  let chosen = previous ? Number(previous.stars) : 0;
+  ratingSection.textContent = "";
+  ratingSection.appendChild(make("h2", null, "How Was Your Food?"));
+  ratingSection.appendChild(
+    make(
+      "p",
+      null,
+      "Please rate your order. Tap the stars: 1 is poor, 5 is excellent.",
+    ),
+  );
+
+  const form = make("form", "rating-form");
+  form.noValidate = true;
+  const group = make("div", "rate-stars");
+  group.setAttribute("role", "group");
+  group.setAttribute("aria-label", "Your rating");
+  const labels = ["Poor", "Not good", "Okay", "Good", "Excellent"];
+  const hint = make("p", "rate-hint", chosen ? labels[chosen - 1] : "");
+  const buttons = [];
+  function paint() {
+    buttons.forEach((button, index) => {
+      const on = index < chosen;
+      button.classList.toggle("is-on", on);
+      button.setAttribute("aria-pressed", String(index + 1 === chosen));
+    });
+    hint.textContent = chosen ? labels[chosen - 1] : "";
+  }
+  for (let i = 1; i <= 5; i += 1) {
+    const button = make("button", "rate-star", "★");
+    button.type = "button";
+    button.setAttribute(
+      "aria-label",
+      i + (i === 1 ? " star" : " stars") + ": " + labels[i - 1],
+    );
+    button.addEventListener("click", () => {
+      chosen = i;
+      paint();
+    });
+    buttons.push(button);
+    group.appendChild(button);
+  }
+  form.appendChild(group);
+  form.appendChild(hint);
+
+  const label = make("label", null, "Tell us more (optional)");
+  label.htmlFor = "rating-comment";
+  const comment = make("textarea");
+  comment.id = "rating-comment";
+  comment.rows = 3;
+  comment.maxLength = 500;
+  comment.placeholder = "What did you like? What could be better?";
+  comment.value = (previous && previous.comment) || "";
+  form.append(label, comment);
+  form.appendChild(
+    make(
+      "p",
+      "field-help",
+      "If A1 Kitchen shares your rating on the website, only your first name is shown.",
+    ),
+  );
+  const send = make(
+    "button",
+    "button",
+    previous ? "Update my rating" : "Send my rating",
+  );
+  send.type = "submit";
+  form.appendChild(send);
+  const message = make("p", "success-message");
+  message.setAttribute("role", "status");
+  form.appendChild(message);
+  paint();
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!chosen) {
+      message.textContent = "Please tap the stars to choose your rating.";
+      return;
+    }
+    send.disabled = true;
+    message.textContent = "Sending...";
+    try {
+      await callRpc("rate_order", {
+        p_order_number: currentOrderNumber,
+        p_customer_token: currentToken,
+        p_stars: chosen,
+        p_comment: comment.value.trim() || null,
+      });
+      order.rating = {
+        stars: chosen,
+        comment: comment.value.trim(),
+        locked: false,
+      };
+      thankYou(order, chosen, true);
+    } catch (error) {
+      console.error("Rating error:", error);
+      message.textContent =
+        (error.message || "").length < 120 &&
+        !/fetch/i.test(error.message || "")
+          ? error.message
+          : "We could not send your rating. Please try again.";
+      send.disabled = false;
+    }
+  });
+  ratingSection.appendChild(form);
+}
+
+function renderRating(order) {
+  if (!RATED_STATUSES.includes(order.order_status)) {
+    ratingSection.hidden = true;
+    ratingSection.textContent = "";
+    return;
+  }
+  ratingSection.hidden = false;
+  if (order.rating) {
+    thankYou(order, Number(order.rating.stars), !order.rating.locked);
+  } else {
+    ratingForm(order);
+  }
 }
 
 function fetchOrderStatus(orderNumber, token) {

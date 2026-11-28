@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Sales Report</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="theme-init.js"></script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="chef-dashboard.html"
+        ><img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen staff dashboard"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Staff navigation">
+        <a href="chef-dashboard.html">Orders</a>
+        <a href="reports.html" class="active" aria-current="page"
+          >Sales report</a
+        >
+        <a href="master-dashboard.html" id="nav-developer" hidden>Developer</a>
+        <a href="index.html">View website</a>
+      </nav>
+    </header>
+    <main id="main-content" class="staff">
+      <section class="dash-hero">
+        <p class="home-eyebrow">Reports</p>
+        <h1>Sales Report</h1>
+        <p id="welcome">Loading...</p>
+        <div class="dash-bar">
+          <button
+            type="button"
+            id="signout-button"
+            class="button button-secondary"
+          >
+            Sign out
+          </button>
+        </div>
+        <p
+          id="dash-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+      <section class="dash-panel">
+        <h2>Choose the dates</h2>
+        <div id="report-presets" class="report-presets"></div>
+        <form id="report-form" class="report-form" novalidate>
+          <div class="menu-field">
+            <label for="report-from">From</label>
+            <input type="date" id="report-from" required />
+          </div>
+          <div class="menu-field">
+            <label for="report-to">To</label>
+            <input type="date" id="report-to" required />
+          </div>
+          <button type="submit" id="report-show" class="button">
+            Show report
+          </button>
+          <button
+            type="button"
+            id="report-pdf"
+            class="button button-secondary"
+            disabled
+          >
+            Download PDF report
+          </button>
+        </form>
+        <p class="field-help">
+          Sales are food orders whose payment you verified, counted on the day
+          the order was placed. The PDF has the charts, tables and the Head
+          Chef's signature.
+        </p>
+      </section>
+      <section class="dash-panel" id="report-result" hidden>
+        <h2 id="report-title">Summary</h2>
+        <div id="report-tiles" class="glance-grid"></div>
+        <h3 class="special-group">Best-selling dishes</h3>
+        <div class="table-container">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th scope="col">Dish</th>
+                <th scope="col">Portions sold</th>
+                <th scope="col">Sales</th>
+              </tr>
+            </thead>
+            <tbody id="report-dishes"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="report-pdf.js"></script>
+    <script src="reports.js"></script>
+    <script src="site-extras.js" defer></script>
+  </body>
+</html>

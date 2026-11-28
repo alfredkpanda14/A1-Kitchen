@@ -481,3 +481,67 @@ async function loadSpecials() {
 }
 
 loadSpecials().catch((error) => console.error("Home specials error:", error));
+
+/* ---------- Customer star ratings (only the ones staff approved) ---------- */
+
+function ratingStars(count, className) {
+  const row = el("p", "rating-stars " + (className || ""));
+  row.setAttribute("aria-label", count + " out of 5 stars");
+  for (let i = 1; i <= 5; i += 1) {
+    const star = el(
+      "span",
+      i <= Math.round(count) ? "star-on" : "star-off",
+      "★",
+    );
+    star.setAttribute("aria-hidden", "true");
+    row.appendChild(star);
+  }
+  return row;
+}
+
+async function loadRatings() {
+  const data = await callRpc("get_public_ratings", { p_limit: 6 });
+  const items = (data && data.items) || [];
+  if (items.length === 0) {
+    return;
+  }
+  const section = el("section", "home-section home-ratings");
+  section.id = "home-ratings";
+  section.appendChild(el("h2", null, "What Our Customers Say"));
+  if (Number(data.count) >= 3 && data.average) {
+    const summary = el("div", "rating-summary");
+    summary.appendChild(ratingStars(Number(data.average), "rating-stars-big"));
+    summary.appendChild(
+      el(
+        "p",
+        "home-lead",
+        "Rated " +
+          Number(data.average).toFixed(1) +
+          " out of 5 by " +
+          data.count +
+          " customers after their food was delivered.",
+      ),
+    );
+    section.appendChild(summary);
+  }
+  const grid = el("div", "rating-grid");
+  items.forEach((item) => {
+    const card = el("article", "rating-public");
+    card.appendChild(ratingStars(Number(item.stars)));
+    if (item.comment) {
+      card.appendChild(el("p", "rating-public-text", "“" + item.comment + "”"));
+    }
+    card.appendChild(el("p", "rating-public-name", item.name));
+    grid.appendChild(card);
+  });
+  section.appendChild(grid);
+  const anchor =
+    document.getElementById("home-words") ||
+    document.getElementById("home-work") ||
+    document.querySelector(".home-event");
+  if (anchor) {
+    anchor.after(section);
+  }
+}
+
+loadRatings().catch((error) => console.error("Home ratings error:", error));

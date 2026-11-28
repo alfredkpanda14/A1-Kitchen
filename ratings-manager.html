@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Customer Ratings</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="theme-init.js"></script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="chef-dashboard.html"
+        ><img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen staff dashboard"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Staff navigation">
+        <a href="chef-dashboard.html">Orders</a>
+        <a href="ratings-manager.html" class="active" aria-current="page"
+          >Ratings</a
+        >
+        <a href="master-dashboard.html" id="nav-developer" hidden>Developer</a>
+        <a href="index.html">View website</a>
+      </nav>
+    </header>
+    <main id="main-content" class="staff">
+      <section class="dash-hero">
+        <p class="home-eyebrow">Customers</p>
+        <h1>Customer Ratings</h1>
+        <p id="welcome">Loading...</p>
+        <p id="rating-summary" class="special-summary"></p>
+        <div class="dash-bar">
+          <button
+            type="button"
+            id="signout-button"
+            class="button button-secondary"
+          >
+            Sign out
+          </button>
+        </div>
+        <p
+          id="dash-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+      <section class="dash-panel">
+        <h2>How it works</h2>
+        <ul class="special-help">
+          <li>
+            Customers rate their order (1 to 5 stars) after it is delivered or
+            collected.
+          </li>
+          <li>
+            New ratings wait here. <strong>Approve</strong> the ones you are
+            happy to show on the home page. Only the customer's first name is
+            shown.
+          </li>
+          <li>
+            Low ratings (1 or 2 stars) are marked in red. Please call the
+            customer and put things right.
+          </li>
+          <li>
+            The average on the home page counts every rating, not only the
+            approved ones, so it stays honest.
+          </li>
+        </ul>
+      </section>
+      <section class="dash-panel">
+        <h2>Ratings</h2>
+        <div id="rating-tabs" class="report-presets"></div>
+        <div id="rating-list" aria-live="polite"></div>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="ratings-manager.js"></script>
+    <script src="site-extras.js" defer></script>
+  </body>
+</html>

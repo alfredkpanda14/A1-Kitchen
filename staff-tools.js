@@ -105,6 +105,22 @@
       needs: ["delivery.manage"],
     },
     {
+      id: "ratings",
+      href: "ratings-manager.html",
+      icon: "⭐",
+      title: "Customer Ratings",
+      text: "Star ratings after delivery. Approve the ones shown on the home page.",
+      needs: ["ratings.manage"],
+    },
+    {
+      id: "reports",
+      href: "reports.html",
+      icon: "📊",
+      title: "Sales Report",
+      text: "Sales, best-selling dishes and busiest days. Download as a PDF.",
+      needs: ["reports.view"],
+    },
+    {
       id: "help",
       href: "help-desk.html",
       icon: "🛟",
@@ -339,6 +355,22 @@
           p_limit: 1,
         });
         setCount("certificates", Number(drafts.total), "draft");
+      } catch (error) {
+        /* ignore */
+      }
+    }
+    if (can("ratings.manage")) {
+      try {
+        const ratings = await rpc("staff_list_ratings", {
+          p_status: "Pending",
+        });
+        setCount(
+          "ratings",
+          Number(ratings.pending),
+          Number(ratings.low_pending) > 0
+            ? "new (" + ratings.low_pending + " low)"
+            : "new",
+        );
       } catch (error) {
         /* ignore */
       }
