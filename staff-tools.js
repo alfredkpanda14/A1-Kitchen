@@ -121,6 +121,14 @@
       needs: ["reports.view"],
     },
     {
+      id: "attendees",
+      href: "attendee-lists.html",
+      icon: "📋",
+      title: "Attendee Lists",
+      text: "Download everyone registered for an event, as a spreadsheet.",
+      needs: ["events.view"],
+    },
+    {
       id: "help",
       href: "help-desk.html",
       icon: "🛟",

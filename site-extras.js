@@ -488,7 +488,109 @@
     link.appendChild(el("span", "wa-float-text", "Chat with us"));
     document.body.appendChild(link);
   }
+  /* ---------- The A1 Kitchen app: works offline and installs on phones ---------- */
+  if ("serviceWorker" in navigator && window.isSecureContext) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => null);
+    });
+  }
 
+  const APP_KEY = "a1-app-banner-hidden-until";
+  const installed =
+    (window.matchMedia &&
+      window.matchMedia("(display-mode: standalone)").matches) ||
+    window.navigator.standalone === true;
+  let installPrompt = null;
+  let appBanner = null;
+
+  function bannerHidden() {
+    try {
+      return Number(window.localStorage.getItem(APP_KEY) || 0) > Date.now();
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function hideBanner(days) {
+    if (appBanner) {
+      appBanner.remove();
+      appBanner = null;
+    }
+    if (days) {
+      try {
+        window.localStorage.setItem(
+          APP_KEY,
+          String(Date.now() + days * 86400000),
+        );
+      } catch (error) {
+        /* fine */
+      }
+    }
+  }
+
+  function showBanner(message, canInstall) {
+    if (appBanner || installed || isStaff || bannerHidden()) {
+      return;
+    }
+    appBanner = el("div", "app-banner");
+    appBanner.setAttribute("role", "region");
+    appBanner.setAttribute("aria-label", "Install the A1 Kitchen app");
+    const icon = el("img", "app-banner-icon");
+    icon.src = "images/app-icon-192.png";
+    icon.alt = "";
+    icon.width = 48;
+    icon.height = 48;
+    const words = el("div", "app-banner-text");
+    words.appendChild(el("strong", null, "Get the A1 Kitchen app"));
+    words.appendChild(el("span", null, message));
+    const buttons = el("div", "app-banner-buttons");
+    if (canInstall) {
+      const install = el("button", "button", "Install");
+      install.type = "button";
+      install.addEventListener("click", async () => {
+        if (!installPrompt) {
+          hideBanner(0);
+          return;
+        }
+        installPrompt.prompt();
+        try {
+          const choice = await installPrompt.userChoice;
+          hideBanner(choice && choice.outcome === "accepted" ? 365 : 14);
+        } catch (error) {
+          hideBanner(14);
+        }
+        installPrompt = null;
+      });
+      buttons.appendChild(install);
+    }
+    const later = el("button", "button button-secondary", "Not now");
+    later.type = "button";
+    later.addEventListener("click", () => hideBanner(14));
+    buttons.appendChild(later);
+    appBanner.append(icon, words, buttons);
+    document.body.appendChild(appBanner);
+  }
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    installPrompt = event;
+    window.setTimeout(() => {
+      showBanner(
+        "Order faster from your home screen. It is free and uses little data.",
+        true,
+      );
+    }, 4000);
+  });
+
+  window.addEventListener("appinstalled", () => hideBanner(365));
+
+  /* iPhones have no install button: show them how to add it */
+  const isIphone = /iphone|ipad|ipod/i.test(window.navigator.userAgent || "");
+  if (isIphone && !installed) {
+    window.setTimeout(() => {
+      showBanner('Tap the Share button, then "Add to Home Screen".', false);
+    }, 6000);
+  }
   /* ---------- Back to top ---------- */
   const top = el("button", "to-top", "↑");
   top.type = "button";
