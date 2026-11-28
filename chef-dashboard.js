@@ -227,7 +227,13 @@ function quoteBox(order) {
   feeInput.min = "0";
   feeInput.step = "0.01";
   feeInput.inputMode = "decimal";
-  feeInput.value = order.delivery_method === "delivery" ? "" : "0";
+  feeInput.value =
+    order.delivery_method !== "delivery"
+      ? "0"
+      : order.delivery_area_fee !== null &&
+          order.delivery_area_fee !== undefined
+        ? String(order.delivery_area_fee)
+        : "";
   feeField.append(feeLabel, feeInput);
 
   const sendButton = el("button", "button", "Send price");
@@ -566,6 +572,18 @@ function orderCard(order) {
   badges.appendChild(paymentBadge(order.payment_status));
   badges.appendChild(badge(order.order_status));
   card.appendChild(badges);
+  if (window.A1KitchenTicket) {
+    card.appendChild(A1KitchenTicket.button(order));
+  }
+  if (window.A1KitchenTicket) {
+    card.appendChild(A1KitchenTicket.button(order));
+  }
+  if (window.A1KitchenTicket) {
+    card.appendChild(A1KitchenTicket.button(order));
+  }
+  if (window.A1KitchenTicket) {
+    card.appendChild(A1KitchenTicket.button(order));
+  }
 
   addDetail(card, "Ordered:", formatDate(order.created_at));
 
@@ -590,7 +608,12 @@ function orderCard(order) {
   card.appendChild(customer);
 
   if (order.delivery_method === "delivery") {
-    addDetail(card, "Delivery to:", order.delivery_location || "");
+    addDetail(
+      card,
+      "Delivery to:",
+      (order.delivery_area ? order.delivery_area + " — " : "") +
+        (order.delivery_location || ""),
+    );
   } else {
     addDetail(card, "Pickup", "");
   }

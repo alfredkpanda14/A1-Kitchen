@@ -1,3 +1,4 @@
+/* A1 Kitchen: menu page (foods, categories, search, and "Order Now" from home page specials) */
 const menuContainer = document.getElementById("menu-items");
 const menuStatus = document.getElementById("menu-status");
 const menuRetry = document.getElementById("menu-retry");
@@ -146,6 +147,7 @@ async function loadMenu() {
     const data = await fetchAvailableMenu();
     setMenu(data);
     applyMenuToCart(data);
+    addFromLink();
   } catch (error) {
     console.error("Menu load error:", error);
 
@@ -162,6 +164,47 @@ async function loadMenu() {
     }
 
     menuRetry.hidden = false;
+  }
+}
+
+/* ---------- "Order Now" from a special on the home page ----------
+   The home page opens menu.html#add=Food%20Name. We press that food's
+   own "Add to Order" button once, then show the order. */
+function addFromLink() {
+  const params = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+  const wanted = (params.get("add") || "").trim().slice(0, 100);
+  if (!wanted) {
+    return;
+  }
+  /* Remove #add=... so a refresh does not add the food a second time */
+  window.history.replaceState(
+    null,
+    "",
+    window.location.pathname + window.location.search,
+  );
+  const button = Array.from(
+    menuContainer.querySelectorAll(".order-button"),
+  ).find((item) => item.dataset.name === wanted);
+  if (!button) {
+    menuStatus.textContent =
+      "Sorry, " +
+      wanted +
+      " is not available right now. Please choose another food.";
+    return;
+  }
+  button.click();
+  const card = button.closest(".menu-item");
+  if (card) {
+    card.classList.add("is-picked");
+  }
+  menuStatus.textContent =
+    wanted + " has been added to your order. You can add more foods below.";
+  const cart = document.getElementById("cart");
+  const target = cart || card;
+  if (target) {
+    window.setTimeout(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 150);
   }
 }
 

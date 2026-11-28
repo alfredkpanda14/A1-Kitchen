@@ -5667,3 +5667,520 @@ footer {
   grid-template-columns: repeat(auto-fit, minmax(240px, 300px));
   justify-content: center;
 }
+/* ==============================
+   CUSTOMER HELP DESK, AND THE PICKED SPECIAL ON THE MENU
+   ============================== */
+
+.help-rules {
+  border-left: 6px solid var(--sunshine);
+}
+
+form.help-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+  max-width: none;
+  margin: 0 0 10px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.help-search .menu-field {
+  flex: 1 1 280px;
+  max-width: 460px;
+  margin-top: 0;
+}
+
+.help-search .menu-field input {
+  width: 100%;
+}
+
+.help-search .button {
+  margin: 0;
+}
+
+.help-group {
+  margin-top: 8px;
+}
+
+.help-card {
+  margin: 12px 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.help-card h3 {
+  margin: 0 0 2px;
+  color: var(--navy);
+  font-size: 19px;
+}
+
+.help-phone {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.help-detail {
+  margin: 0 0 6px;
+}
+
+ul.help-list {
+  max-width: none;
+  margin: 0 0 6px;
+  padding: 0 0 0 20px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.help-list li {
+  margin: 4px 0;
+}
+
+.help-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.help-buttons .button {
+  margin: 0;
+}
+
+.help-confirm,
+.help-pin {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+}
+
+.help-confirm {
+  border: 1px solid #e0c36a;
+  background: #fff8e1;
+}
+
+.help-confirm p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.help-pin {
+  border: 2px solid var(--green);
+  background: #f3fbf5;
+  text-align: center;
+}
+
+.help-pin-label {
+  margin: 0;
+  font-weight: 700;
+}
+
+.help-pin-number {
+  margin: 6px 0;
+  color: var(--navy);
+  font-family: "Courier New", monospace;
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: 12px;
+}
+
+.help-pin .help-buttons {
+  justify-content: center;
+}
+
+/* Menu: the dish chosen from a home page special */
+.menu-item.is-picked {
+  outline: 3px solid var(--sunshine);
+  outline-offset: 3px;
+}
+
+/* Dark look */
+:where(html.theme-dark) .help-card {
+  background: #132235;
+}
+
+:where(html.theme-dark) .help-card h3,
+:where(html.theme-dark) .help-pin-number {
+  color: #e8eef6;
+}
+
+:where(html.theme-dark) .help-confirm {
+  border-color: #5a4a1c;
+  background: #2b2410;
+}
+
+:where(html.theme-dark) .help-pin {
+  background: #10291c;
+}
+
+.help-note {
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  border-left: 4px solid var(--green);
+  border-radius: 8px;
+  background: #e8f5ec;
+  color: #0b4a1d;
+  font-weight: 700;
+}
+
+:where(html.theme-dark) .help-note {
+  background: #10291c;
+  color: #9be3b1;
+}
+
+/* Messages in the dark banner of every staff page: easy to read */
+.staff > section:first-child .success-message {
+  border-left-color: var(--sunshine);
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+/* ==============================
+   "A1 KITCHEN" IN THE AQUARIUM, DELIVERY AREAS, USER COUNT, KITCHEN TICKET
+   ============================== */
+
+/* ---------- Shimmering sign floating in the water ---------- */
+.aq-title {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: min(66%, 330px);
+  height: auto;
+  overflow: visible;
+  transform: translateX(-50%);
+  animation: aqTitleSway 5s ease-in-out infinite;
+}
+
+.aq-title-text {
+  paint-order: stroke fill;
+  stroke: #0c2340;
+  stroke-linejoin: round;
+  stroke-width: 1.4px;
+}
+
+.aq-title-a1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 31px;
+  font-style: italic;
+  font-weight: 700;
+}
+
+.aq-title-kitchen {
+  font-family: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+.aq-star {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: aqTwinkle 2.4s ease-in-out infinite;
+}
+
+.aq-star-2 {
+  animation-delay: -0.6s;
+}
+
+.aq-star-3 {
+  animation-delay: -1.2s;
+}
+
+.aq-star-4 {
+  animation-delay: -1.8s;
+}
+
+@keyframes aqTitleSway {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateX(-50%) translateY(4px) rotate(1.5deg);
+  }
+}
+
+@keyframes aqTwinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    scale: 0.6;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.15;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aq-title,
+  .aq-star {
+    animation: none;
+  }
+}
+
+/* ---------- Order page: delivery area and fee ---------- */
+#delivery-area-field {
+  margin-bottom: 6px;
+}
+
+.order-fee-line:not([hidden]) {
+  margin: 10px 0 0;
+  color: var(--green);
+  font-weight: 700;
+}
+
+:where(html.theme-dark) .order-fee-line {
+  color: #9be3b1;
+}
+
+/* ---------- Staff: delivery areas page ---------- */
+form.area-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.area-add .menu-field {
+  flex: 1 1 160px;
+  margin-top: 0;
+}
+
+.area-add .menu-field input {
+  width: 100%;
+}
+
+.area-add .button {
+  margin: 0;
+}
+
+.area-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 2fr) minmax(110px, 1fr) minmax(
+      90px,
+      0.8fr
+    ) auto auto;
+  gap: 10px 14px;
+  align-items: end;
+  margin: 10px 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.area-row.is-off {
+  opacity: 0.7;
+  border-style: dashed;
+}
+
+.area-row .menu-field {
+  margin-top: 0;
+}
+
+.area-row .menu-field input {
+  width: 100%;
+}
+
+.area-row .checkbox-label {
+  margin-bottom: 10px;
+}
+
+.area-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.area-buttons .button {
+  margin: 0;
+}
+
+.area-row .help-confirm {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 760px) {
+  .area-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .area-row .menu-field:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .area-row .checkbox-label,
+  .area-buttons {
+    grid-column: 1 / -1;
+  }
+}
+
+:where(html.theme-dark) .area-row {
+  background: #132235;
+}
+
+/* ---------- User count cards ---------- */
+.glance-card .glance-note {
+  display: block;
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+/* ---------- Kitchen ticket ---------- */
+.kt-button {
+  margin: 0 0 8px;
+}
+
+.kitchen-ticket {
+  display: none;
+}
+
+@media print {
+  body.printing-ticket > *:not(#kitchen-ticket-print) {
+    display: none !important;
+  }
+
+  html,
+  body.printing-ticket {
+    display: block;
+    min-height: 0;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+
+  @page {
+    margin: 6mm;
+  }
+
+  body.printing-ticket .kitchen-ticket {
+    display: block;
+    width: 100%;
+    max-width: 120mm;
+    margin: 0 auto;
+    padding: 4mm 2mm;
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13pt;
+    line-height: 1.3;
+  }
+
+  .kt-head {
+    padding-bottom: 2mm;
+    border-bottom: 2px solid #000000;
+    text-align: center;
+  }
+
+  .kt-brand {
+    margin: 0;
+    font-size: 20pt;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  .kt-kind {
+    margin: 0;
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: 3px;
+  }
+
+  .kt-number {
+    margin: 3mm 0 1mm;
+    font-family: "Courier New", monospace;
+    font-size: 18pt;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .kt-method {
+    margin: 0 0 3mm;
+    padding: 1.5mm 0;
+    border: 2px solid #000000;
+    font-size: 16pt;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-align: center;
+  }
+
+  .kt-block {
+    padding: 2mm 0;
+    border-bottom: 1px dashed #000000;
+  }
+
+  .kt-line {
+    display: flex;
+    gap: 2mm;
+    margin: 0.8mm 0;
+  }
+
+  .kt-label {
+    flex: 0 0 24mm;
+    font-weight: 700;
+  }
+
+  .kt-value {
+    flex: 1;
+    word-break: break-word;
+  }
+
+  .kt-section {
+    margin: 0 0 1mm;
+    font-size: 10pt;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  ul.kt-items {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    list-style: none;
+  }
+
+  .kt-items li {
+    display: flex;
+    gap: 3mm;
+    margin: 1.2mm 0;
+    font-size: 15pt;
+    font-weight: 700;
+  }
+
+  .kt-qty {
+    flex: 0 0 14mm;
+    font-size: 17pt;
+    font-weight: 800;
+  }
+
+  .kt-count {
+    margin: 1mm 0 0;
+    font-size: 10pt;
+  }
+
+  .kt-note {
+    margin: 0.8mm 0;
+    font-weight: 700;
+  }
+
+  .kt-foot {
+    margin: 2mm 0 0;
+    font-size: 10pt;
+    text-align: center;
+  }
+}

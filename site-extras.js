@@ -1,7 +1,8 @@
 /*
   A1 KITCHEN: SITE EXTRAS (every page)
   - Sun / moon button: light or dark look, remembered on this device
-  - Aquarium with six colourful swimming fish under each page title, and banner sparkles
+  - Aquarium with six colourful fish and a shimmering "A1 KITCHEN" sign
+    under each page title, and banner sparkles
   - Floating WhatsApp button (public pages only)
   - Back to top button
 */
@@ -298,6 +299,121 @@
     return svg;
   }
 
+  /* "A1 KITCHEN" floating in the water: shimmering gold and rainbow letters */
+  let titleCount = 0;
+
+  function gradient(id, stops, seconds) {
+    const grad = svgEl("linearGradient", {
+      id: id,
+      x1: "0",
+      y1: "0",
+      x2: "1",
+      y2: "0",
+      spreadMethod: "reflect",
+    });
+    stops.forEach((color, index) => {
+      grad.appendChild(
+        svgEl("stop", {
+          offset: String(index / (stops.length - 1)),
+          "stop-color": color,
+        }),
+      );
+    });
+    grad.appendChild(
+      svgEl("animateTransform", {
+        attributeName: "gradientTransform",
+        type: "translate",
+        values: "0 0; 1 0; 0 0",
+        dur: seconds + "s",
+        repeatCount: "indefinite",
+      }),
+    );
+    return grad;
+  }
+
+  function aquariumTitle() {
+    titleCount += 1;
+    const gold = "aqGold" + titleCount;
+    const rainbow = "aqRainbow" + titleCount;
+    const glow = "aqGlow" + titleCount;
+    const svg = svgEl("svg", {
+      class: "aq-title",
+      viewBox: "0 0 240 48",
+      "aria-hidden": "true",
+    });
+    const defs = svgEl("defs");
+    defs.appendChild(
+      gradient(
+        gold,
+        ["#fff6c2", "#ffd23f", "#ff9f1c", "#e63946", "#ffd23f"],
+        4,
+      ),
+    );
+    defs.appendChild(
+      gradient(
+        rainbow,
+        ["#ff70a6", "#ffd23f", "#7df9ff", "#9bf6a0", "#c77dff"],
+        6,
+      ),
+    );
+    const filter = svgEl("filter", {
+      id: glow,
+      x: "-20%",
+      y: "-40%",
+      width: "140%",
+      height: "180%",
+    });
+    filter.appendChild(
+      svgEl("feDropShadow", {
+        dx: "0",
+        dy: "0",
+        stdDeviation: "2.2",
+        "flood-color": "#fff4b8",
+        "flood-opacity": "0.75",
+      }),
+    );
+    defs.appendChild(filter);
+    svg.appendChild(defs);
+
+    const text = svgEl("text", {
+      x: "120",
+      y: "34",
+      "text-anchor": "middle",
+      filter: "url(#" + glow + ")",
+      class: "aq-title-text",
+    });
+    const a1 = svgEl("tspan", {
+      class: "aq-title-a1",
+      fill: "url(#" + gold + ")",
+    });
+    a1.textContent = "A1";
+    const kitchen = svgEl("tspan", {
+      class: "aq-title-kitchen",
+      fill: "url(#" + rainbow + ")",
+      dx: "8",
+    });
+    kitchen.textContent = "KITCHEN";
+    text.append(a1, kitchen);
+    svg.appendChild(text);
+
+    /* Little twinkling stars on each side */
+    [
+      ["18", "20"],
+      ["30", "34"],
+      ["222", "18"],
+      ["210", "34"],
+    ].forEach(([x, y], index) => {
+      const star = svgEl("path", {
+        class: "aq-star aq-star-" + (index + 1),
+        d: "M0 -5 L1.3 -1.3 L5 0 L1.3 1.3 L0 5 L-1.3 1.3 L-5 0 L-1.3 -1.3 Z",
+        transform: "translate(" + x + " " + y + ")",
+        fill: index % 2 ? "#7df9ff" : "#ffd23f",
+      });
+      svg.appendChild(star);
+    });
+    return svg;
+  }
+
   function aquarium() {
     const tank = el("div", "aquarium");
     tank.setAttribute("aria-hidden", "true");
@@ -316,6 +432,7 @@
     tank.appendChild(seaweed("aq-weed-1"));
     tank.appendChild(seaweed("aq-weed-2"));
     tank.appendChild(seaweed("aq-weed-3"));
+    tank.appendChild(aquariumTitle());
     for (let i = 1; i <= 7; i += 1) {
       tank.appendChild(el("span", "aq-bubble aq-b" + i));
     }
@@ -364,7 +481,7 @@
     svg.appendChild(
       svgEl("path", {
         fill: "#ffffff",
-        d: "M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4c-1.2-1.8-1.8-3.800-1.8-5.900C5 9.9 9.9 5.1 16 5.1s11 4.8 11 10.7-4.9 10.6-11 10.6zm6-7.9c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.6-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.8-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.200 1.1-1.2 2.7s1.2 3.1 1.4 3.4c.2.2 2.4 3.6 5.8 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 2-.8 2.2-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z",
+        d: "M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4c-1.2-1.8-1.8-3.8-1.8-5.9C5 9.9 9.9 5.1 16 5.1s11 4.8 11 10.7-4.9 10.6-11 10.6zm6-7.9c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.6-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.8-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.7s1.2 3.1 1.4 3.4c.2.2 2.4 3.6 5.8 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 2-.8 2.2-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z",
       }),
     );
     link.appendChild(svg);
@@ -373,7 +490,7 @@
   }
 
   /* ---------- Back to top ---------- */
-  const top = el("button", "to-top", "\u2191");
+  const top = el("button", "to-top", "↑");
   top.type = "button";
   top.setAttribute("aria-label", "Back to the top of the page");
   top.addEventListener("click", () =>

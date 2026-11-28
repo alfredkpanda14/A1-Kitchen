@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Delivery Areas and Fees</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="theme-init.js"></script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="chef-dashboard.html"
+        ><img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen staff dashboard"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Staff navigation">
+        <a href="chef-dashboard.html">Orders</a>
+        <a href="delivery-areas.html" class="active" aria-current="page"
+          >Delivery areas</a
+        >
+        <a href="master-dashboard.html" id="nav-developer" hidden>Developer</a>
+        <a href="index.html">View website</a>
+      </nav>
+    </header>
+    <main id="main-content" class="staff">
+      <section class="dash-hero">
+        <p class="home-eyebrow">Orders</p>
+        <h1>Delivery Areas and Fees</h1>
+        <p id="welcome">Loading...</p>
+        <div class="dash-bar">
+          <a href="order.html" class="button" target="_blank" rel="noopener"
+            >See the order page</a
+          >
+          <button
+            type="button"
+            id="signout-button"
+            class="button button-secondary"
+          >
+            Sign out
+          </button>
+        </div>
+        <p
+          id="dash-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+      <section class="dash-panel">
+        <h2>How it works</h2>
+        <ul class="special-help">
+          <li>
+            Customers choose their area on the order page and see the delivery
+            fee straight away.
+          </li>
+          <li>
+            If every food in the order has a price, the customer can pay at
+            once. No need to send a price.
+          </li>
+          <li>
+            Customers can also choose <strong>"My area is not listed"</strong>.
+            Then the order comes to "Needs price" as before and you send the
+            price.
+          </li>
+          <li>
+            Switch an area off to hide it for a while (for example in heavy
+            rain) without deleting it.
+          </li>
+        </ul>
+      </section>
+      <section class="dash-panel">
+        <h2>Add an area</h2>
+        <form id="area-form" class="area-add" novalidate>
+          <div class="menu-field">
+            <label for="new-name">Area name</label>
+            <input
+              type="text"
+              id="new-name"
+              maxlength="60"
+              autocomplete="off"
+              placeholder="e.g. Lumley"
+            />
+          </div>
+          <div class="menu-field">
+            <label for="new-fee">Delivery fee (NLe)</label>
+            <input
+              type="number"
+              id="new-fee"
+              min="0"
+              step="0.01"
+              inputmode="decimal"
+            />
+          </div>
+          <div class="menu-field">
+            <label for="new-sort">List order</label>
+            <input
+              type="number"
+              id="new-sort"
+              min="0"
+              max="9999"
+              step="1"
+              value="100"
+            />
+          </div>
+          <button type="submit" id="add-button" class="button">Add area</button>
+        </form>
+      </section>
+      <section class="dash-panel">
+        <h2>All Areas</h2>
+        <p class="field-help">
+          Lower "list order" numbers show first. Areas with the same number are
+          listed A to Z.
+        </p>
+        <div id="area-list" aria-live="polite"></div>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="delivery-areas.js"></script>
+    <script src="site-extras.js" defer></script>
+  </body>
+</html>

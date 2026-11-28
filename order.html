@@ -53,6 +53,8 @@
           <p>Loading your order...</p>
         </div>
 
+        <p id="order-fee-line" class="order-fee-line" hidden></p>
+
         <h3>
           Total: NLe
           <span id="order-total">0</span>
@@ -102,6 +104,18 @@
           </select>
 
           <div id="delivery-location-container">
+            <div id="delivery-area-field" hidden>
+              <label for="delivery-area">Your Area *</label>
+              <select id="delivery-area" name="delivery-area">
+                <option value="">Choose your area</option>
+              </select>
+              <p
+                id="delivery-fee-note"
+                class="field-help"
+                aria-live="polite"
+              ></p>
+            </div>
+
             <label for="delivery-location">
               Delivery Location / Address (required for delivery)
             </label>
@@ -174,7 +188,7 @@
       <p class="footer-links">
         <a href="events.html">Events</a> ·
         <a href="how-it-works.html">How It Works</a> ·
-        <a href="guide.html">How-To Videos</a> · ·
+        <a href="guide.html">How-To Videos</a> ·
         <a href="privacy.html">Privacy Policy</a> ·
         <a href="terms.html">Terms &amp; Conditions</a> ·
         <a href="staff-login.html">Staff Sign In</a>

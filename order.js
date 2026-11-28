@@ -1,3 +1,4 @@
+/* A1 Kitchen: order page (details, delivery area and fee, send order) */
 const orderForm = document.getElementById("order-form");
 const orderSummary = document.getElementById("order-summary");
 const orderTotal = document.getElementById("order-total");
@@ -10,11 +11,18 @@ const deliveryLocation = document.getElementById("delivery-location");
 const submitButton = orderForm.querySelector('button[type="submit"]');
 const whatsappSection = document.getElementById("whatsapp-order");
 const whatsappLink = document.getElementById("whatsapp-order-link");
+const deliveryAreaField = document.getElementById("delivery-area-field");
+const deliveryArea = document.getElementById("delivery-area");
+const deliveryFeeNote = document.getElementById("delivery-fee-note");
+const orderFeeLine = document.getElementById("order-fee-line");
 
 const MAX_PER_ITEM = 20;
 
+const AREA_NOT_LISTED = "__not_listed__";
+
 let cart = [];
 let isSubmitting = false;
+let areas = [];
 
 /* A short note above the button explaining what happens next */
 const quoteNote = document.createElement("p");
@@ -66,6 +74,76 @@ function cartTotal() {
   );
 }
 
+/* ---------- Delivery areas and fees ---------- */
+
+function money(value) {
+  return "NLe " + Number(value || 0).toLocaleString("en-GB");
+}
+
+/* The area the customer picked, or null (pickup, nothing chosen, or not listed) */
+function selectedArea() {
+  if (deliveryMethod.value !== "delivery") {
+    return null;
+  }
+  return areas.find((area) => area.name === deliveryArea.value) || null;
+}
+
+function fillAreas() {
+  const chosen = deliveryArea.value;
+  deliveryArea.textContent = "";
+  const first = document.createElement("option");
+  first.value = "";
+  first.textContent = "Choose your area";
+  deliveryArea.appendChild(first);
+  areas.forEach((area) => {
+    const option = document.createElement("option");
+    option.value = area.name;
+    option.textContent = area.name + " — " + money(area.fee);
+    deliveryArea.appendChild(option);
+  });
+  const other = document.createElement("option");
+  other.value = AREA_NOT_LISTED;
+  other.textContent = "My area is not listed";
+  deliveryArea.appendChild(other);
+  if (
+    chosen &&
+    Array.from(deliveryArea.options).some((o) => o.value === chosen)
+  ) {
+    deliveryArea.value = chosen;
+  }
+}
+
+async function loadAreas() {
+  try {
+    const { data, error } = await supabaseClient.rpc("get_delivery_areas");
+    if (error) {
+      throw error;
+    }
+    areas = Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error("Could not load delivery areas:", error);
+    areas = [];
+  }
+  if (areas.length > 0) {
+    fillAreas();
+  }
+  updateDeliveryFields();
+  displayOrder();
+}
+
+function updateAreaNote() {
+  const area = selectedArea();
+  if (area) {
+    deliveryFeeNote.textContent =
+      "Delivery fee to " + area.name + ": " + money(area.fee) + ".";
+  } else if (deliveryArea.value === AREA_NOT_LISTED) {
+    deliveryFeeNote.textContent =
+      "No problem. A1 Kitchen will tell you the delivery fee for your location.";
+  } else {
+    deliveryFeeNote.textContent = "";
+  }
+}
+
 /* ---------- Notes and button label ---------- */
 function updateQuoteInfo() {
   const unpriced = hasUnpricedItems();
@@ -85,6 +163,17 @@ function updateQuoteInfo() {
       pickupText;
     quoteNote.hidden = false;
     submitButton.textContent = "Send My Order";
+  } else if (isDelivery && selectedArea()) {
+    const area = selectedArea();
+    quoteNote.textContent =
+      "Delivery to " +
+      area.name +
+      " costs " +
+      money(area.fee) +
+      ", already added to your total. You can pay straight after sending " +
+      "your order.";
+    quoteNote.hidden = false;
+    submitButton.textContent = "Continue to Payment";
   } else if (isDelivery) {
     quoteNote.textContent =
       "A1 Kitchen will add your delivery fee, which depends on your " +
@@ -123,7 +212,8 @@ function buildWhatsAppMessage() {
   });
 
   if (priced) {
-    lines.push("Total: NLe " + cartTotal());
+    const area = selectedArea();
+    lines.push("Total: NLe " + (cartTotal() + (area ? Number(area.fee) : 0)));
   }
 
   const nameValue = document.getElementById("customer-name").value.trim();
@@ -141,6 +231,10 @@ function buildWhatsAppMessage() {
   }
 
   if (methodValue === "delivery") {
+    const area = selectedArea();
+    if (area) {
+      lines.push("Area: " + area.name + " (delivery fee NLe " + area.fee + ")");
+    }
     lines.push("Delivery" + (locationValue ? " to: " + locationValue : ""));
   } else if (methodValue === "pickup") {
     lines.push("Pickup");
@@ -210,11 +304,31 @@ function displayOrder() {
   });
 
   const unpriced = hasUnpricedItems();
+  const area = selectedArea();
   orderTotal.parentElement.hidden = unpriced;
 
   if (!unpriced) {
-    orderTotal.textContent = cartTotal();
+    orderTotal.textContent = cartTotal() + (area ? Number(area.fee) : 0);
   }
+
+  if (area && !unpriced) {
+    orderFeeLine.textContent =
+      "Food " +
+      money(cartTotal()) +
+      " + delivery to " +
+      area.name +
+      " " +
+      money(area.fee);
+    orderFeeLine.hidden = false;
+  } else if (area) {
+    orderFeeLine.textContent =
+      "Delivery to " + area.name + ": " + money(area.fee);
+    orderFeeLine.hidden = false;
+  } else {
+    orderFeeLine.hidden = true;
+  }
+
+  updateAreaNote();
 
   updateQuoteInfo();
   updateWhatsAppLink();
@@ -250,12 +364,15 @@ function updateDeliveryFields() {
 
   deliveryLocationContainer.hidden = !isDelivery;
   deliveryLocation.required = isDelivery;
+  deliveryAreaField.hidden = !isDelivery || areas.length === 0;
+  deliveryArea.required = isDelivery && areas.length > 0;
 
   if (!isDelivery) {
     deliveryLocation.value = "";
+    deliveryArea.value = "";
   }
 
-  updateQuoteInfo();
+  displayOrder();
 }
 
 function isValidPhone(value) {
@@ -287,6 +404,10 @@ function friendlyOrderError(error) {
   if (text.includes("Too many orders") || text.includes("a lot of requests")) {
     return text;
   }
+  if (text.includes("Delivery area not found")) {
+    loadAreas();
+    return "Your delivery area has just changed. Please choose your area again.";
+  }
   if (text.includes("Food item is unavailable")) {
     const foodName = text.split("unavailable:")[1];
     return (
@@ -303,6 +424,7 @@ function friendlyOrderError(error) {
 }
 
 deliveryMethod.addEventListener("change", updateDeliveryFields);
+deliveryArea.addEventListener("change", displayOrder);
 orderForm.addEventListener("input", updateWhatsAppLink);
 orderForm.addEventListener("change", updateWhatsAppLink);
 
@@ -356,6 +478,14 @@ orderForm.addEventListener("submit", async (event) => {
     return;
   }
 
+  if (method === "delivery" && areas.length > 0 && deliveryArea.value === "") {
+    showProblem(
+      'Please choose your area, or "My area is not listed".',
+      deliveryArea,
+    );
+    return;
+  }
+
   if (method === "delivery" && location.length < 5) {
     showProblem(
       "Please enter your delivery location so we can find you.",
@@ -380,6 +510,8 @@ orderForm.addEventListener("submit", async (event) => {
       name: item.name,
       quantity: Number(item.quantity),
     })),
+    p_delivery_area:
+      method === "delivery" && selectedArea() ? selectedArea().name : null,
   });
 
   if (error) {
@@ -403,6 +535,8 @@ orderForm.addEventListener("submit", async (event) => {
       })),
       method: method,
       location: location,
+      area: data.delivery_area || null,
+      delivery_fee: Number(data.delivery_fee) || 0,
     }),
   );
   localStorage.removeItem("a1KitchenCart");
@@ -414,3 +548,4 @@ cart = loadCart();
 updateDeliveryFields();
 displayOrder();
 refreshPrices();
+loadAreas();

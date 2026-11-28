@@ -443,7 +443,7 @@ function specialCard(item) {
   meta.appendChild(el("span", null, specialEnds(item.special_until)));
   body.appendChild(meta);
   const link = el("a", "button", "Order Now");
-  link.href = "menu.html";
+  link.href = "menu.html#add=" + encodeURIComponent(item.name);
   link.setAttribute("aria-label", "Order " + item.name + " from the menu");
   body.appendChild(link);
   card.appendChild(body);

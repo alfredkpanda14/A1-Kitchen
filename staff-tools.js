@@ -97,6 +97,14 @@
       needs: ["menu.manage"],
     },
     {
+      id: "delivery",
+      href: "delivery-areas.html",
+      icon: "🛵",
+      title: "Delivery Areas and Fees",
+      text: "The areas you deliver to and the fee for each one.",
+      needs: ["delivery.manage"],
+    },
+    {
       id: "help",
       href: "help-desk.html",
       icon: "🛟",
@@ -198,11 +206,50 @@
 
   /* ---------- At a glance ---------- */
 
-  function glanceCard(label, value, alert) {
+  function glanceCard(label, value, alert, note) {
     const card = el("div", "glance-card" + (alert ? " is-alert" : ""));
     card.appendChild(el("strong", null, String(value)));
     card.appendChild(el("span", null, label));
+    if (note) {
+      card.title = note;
+      card.appendChild(el("small", "glance-note", note));
+    }
     return card;
+  }
+
+  /* People using A1 Kitchen: one phone number = one person, plus staff */
+  function drawUsers(users) {
+    if (!glance || !users) {
+      return;
+    }
+    const by = users.by_source || {};
+    const parts = [
+      ["orders", "ordered food"],
+      ["events", "events"],
+      ["catering", "catering"],
+      ["competitions", "competitions"],
+    ]
+      .filter(([key]) => Number(by[key]) > 0)
+      .map(([key, name]) => by[key] + " " + name);
+    glance.appendChild(
+      glanceCard(
+        "Users (customers + staff)",
+        Number(users.total).toLocaleString("en-GB"),
+        false,
+        Number(users.customers) +
+          " customers and " +
+          Number(users.staff) +
+          " staff",
+      ),
+    );
+    glance.appendChild(
+      glanceCard(
+        "New customers this month",
+        Number(users.new_this_month).toLocaleString("en-GB"),
+        false,
+        parts.length > 0 ? parts.join(" · ") : null,
+      ),
+    );
   }
 
   function drawGlance(summary) {
@@ -245,6 +292,11 @@
       try {
         const summary = await rpc("staff_dashboard_summary");
         drawGlance(summary);
+        try {
+          drawUsers(await rpc("staff_user_count"));
+        } catch (userError) {
+          /* the user count needs the Step 121 SQL */
+        }
         setCount(
           "orders",
           Number(summary.needs_price) + Number(summary.payments_to_check),

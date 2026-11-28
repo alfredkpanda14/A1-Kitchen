@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Customer Help Desk</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="theme-init.js"></script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="chef-dashboard.html"
+        ><img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen staff dashboard"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Staff navigation">
+        <a href="chef-dashboard.html">Orders</a>
+        <a href="help-desk.html" class="active" aria-current="page"
+          >Help Desk</a
+        >
+        <a href="master-dashboard.html" id="nav-developer" hidden>Developer</a>
+        <a href="events-manager.html" id="nav-events" hidden>Events</a>
+        <a href="index.html">View website</a>
+      </nav>
+    </header>
+    <main id="main-content" class="staff">
+      <section class="dash-hero">
+        <p class="home-eyebrow">Customer care</p>
+        <h1>Customer Help Desk</h1>
+        <p id="welcome">Loading...</p>
+        <div class="dash-bar">
+          <button
+            type="button"
+            id="signout-button"
+            class="button button-secondary"
+          >
+            Sign out
+          </button>
+        </div>
+        <p
+          id="dash-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+      <section class="dash-panel help-rules">
+        <h2>Safety rules</h2>
+        <ul class="special-help">
+          <li>
+            <strong>Never ask a customer for their PIN or password.</strong>
+            You never need it here.
+          </li>
+          <li>
+            Links and new PINs are sent <strong>only</strong> to the phone
+            number already on the customer's record. If the person is calling
+            from a different number, do not send it there.
+          </li>
+          <li>
+            Check the name and the event with the caller before you send
+            anything. Every link sent and every PIN change is written in the
+            activity log.
+          </li>
+        </ul>
+      </section>
+      <section class="dash-panel">
+        <h2>Find a customer</h2>
+        <form id="help-form" class="help-search" novalidate>
+          <div class="menu-field">
+            <label for="help-term">Name or phone number</label>
+            <input
+              type="search"
+              id="help-term"
+              maxlength="60"
+              autocomplete="off"
+              placeholder="e.g. Fatmata or 079 123 456"
+            />
+          </div>
+          <button type="submit" id="help-go" class="button">Search</button>
+        </form>
+        <div id="help-results" aria-live="polite"></div>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="help-desk.js"></script>
+    <script src="site-extras.js" defer></script>
+  </body>
+</html>
