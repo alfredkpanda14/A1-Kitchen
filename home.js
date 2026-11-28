@@ -324,7 +324,7 @@ async function loadEvents() {
   const today = freetownToday();
   const next = events.find((event) => String(event.event_date) >= today);
   events.slice(0, 3).forEach((event) => {
-    const band = eventBand(event, event === next);
+    const band = eventBand(event, true);
     last.after(band);
     last = band;
   });

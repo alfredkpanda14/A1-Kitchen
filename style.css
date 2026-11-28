@@ -5502,3 +5502,168 @@ ul.special-help {
     transform: none;
   }
 }
+/* ==============================
+   MORE FISH, FOOTER SPACE, CENTRED COUNTDOWN, NEATER SPECIALS
+   ============================== */
+
+/* ---------- A bigger aquarium with six colourful fish ---------- */
+.aquarium {
+  width: min(100%, 520px);
+  height: 78px;
+}
+
+.aq-fish {
+  --fw: 54px;
+  width: var(--fw);
+  height: calc(var(--fw) * 0.53);
+  animation: aqSwimAll 16s ease-in-out infinite;
+}
+
+.aq-fish-1 {
+  --fw: 54px;
+  top: 22px;
+  left: 6%;
+}
+
+.aq-fish-2 {
+  --fw: 44px;
+  top: 7px;
+  left: 30%;
+  animation-duration: 13s;
+  animation-delay: -6s;
+}
+
+.aq-fish-3 {
+  --fw: 40px;
+  top: 43px;
+  left: 55%;
+  animation-duration: 19s;
+  animation-delay: -12s;
+}
+
+.aq-fish-4 {
+  --fw: 32px;
+  top: 30px;
+  left: 75%;
+  animation-duration: 11s;
+  animation-delay: -3s;
+}
+
+.aq-fish-5 {
+  --fw: 28px;
+  top: 12px;
+  left: 88%;
+  animation-duration: 9s;
+  animation-delay: -5s;
+}
+
+.aq-fish-6 {
+  --fw: 24px;
+  top: 52px;
+  left: 18%;
+  animation-duration: 14s;
+  animation-delay: -9s;
+}
+
+.aq-fish-2 svg {
+  animation-duration: 2s;
+}
+
+.aq-fish-4 svg,
+.aq-fish-6 svg {
+  animation-duration: 1.6s;
+}
+
+.aq-fish-4 .aq-tail,
+.aq-fish-5 .aq-tail,
+.aq-fish-6 .aq-tail {
+  animation-duration: 0.3s;
+}
+
+@keyframes aqSwimAll {
+  0% {
+    left: 2%;
+    transform: scaleX(1);
+  }
+  46% {
+    left: calc(98% - var(--fw));
+    transform: scaleX(1);
+  }
+  50% {
+    left: calc(98% - var(--fw));
+    transform: scaleX(-1);
+  }
+  96% {
+    left: 2%;
+    transform: scaleX(-1);
+  }
+  100% {
+    left: 2%;
+    transform: scaleX(1);
+  }
+}
+
+/* Swaying seaweed */
+.aq-weed {
+  position: absolute;
+  bottom: 3px;
+  width: 14px;
+  height: 30px;
+  transform-origin: bottom center;
+  animation: aqWeed 3.5s ease-in-out infinite alternate;
+}
+
+.aq-weed-1 {
+  left: 12%;
+}
+
+.aq-weed-2 {
+  left: 47%;
+  height: 24px;
+  animation-delay: -1.2s;
+}
+
+.aq-weed-3 {
+  left: 84%;
+  height: 34px;
+  animation-delay: -2.4s;
+}
+
+@keyframes aqWeed {
+  from {
+    transform: rotate(-7deg);
+  }
+  to {
+    transform: rotate(7deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aq-weed {
+    animation: none;
+  }
+}
+
+/* ---------- Footer: room so the round buttons never cover its links ---------- */
+footer {
+  padding-bottom: 110px;
+}
+
+@media (max-width: 600px) {
+  footer {
+    padding-bottom: 96px;
+  }
+}
+
+/* ---------- Countdown sits in the middle when the event band is centred ---------- */
+@media (max-width: 860px) {
+  .home-countdown-row {
+    justify-content: center;
+  }
+}
+
+/* ---------- Specials: cards keep a neat size even when there are only one or two ---------- */
+.special-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 300px));
+  justify-content: center;
+}

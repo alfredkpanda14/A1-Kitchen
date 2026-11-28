@@ -1,7 +1,7 @@
 /*
   A1 KITCHEN: SITE EXTRAS (every page)
   - Sun / moon button: light or dark look, remembered on this device
-  - Aquarium with a swimming fish under each page title, and banner sparkles
+  - Aquarium with six colourful swimming fish under each page title, and banner sparkles
   - Floating WhatsApp button (public pages only)
   - Back to top button
 */
@@ -135,9 +135,55 @@
   }
 
   /* ---------- Aquarium and sparkles in the page banners ---------- */
-  function fishSvg() {
+  /* Fish colours: body top, body bottom, fins, stripe (or null) */
+  const FISH = [
+    {
+      kind: "gold",
+      top: "#ffd23f",
+      bottom: "#f48c06",
+      fin: "#e8890c",
+      stripe: null,
+    },
+    {
+      kind: "blue",
+      top: "#6fd3ff",
+      bottom: "#1f63c9",
+      fin: "#ffd23f",
+      stripe: "#0c2f6b",
+    },
+    {
+      kind: "coral",
+      top: "#ff9966",
+      bottom: "#e8431c",
+      fin: "#ffffff",
+      stripe: "#ffffff",
+    },
+    {
+      kind: "green",
+      top: "#b5ef6a",
+      bottom: "#2f9e44",
+      fin: "#1b7a34",
+      stripe: null,
+    },
+    {
+      kind: "purple",
+      top: "#e0a8ff",
+      bottom: "#8a3ffc",
+      fin: "#5a189a",
+      stripe: null,
+    },
+    {
+      kind: "pink",
+      top: "#ffc2e2",
+      bottom: "#ff5fa2",
+      fin: "#d63384",
+      stripe: null,
+    },
+  ];
+
+  function fishSvg(look) {
     fishCount += 1;
-    const id = "fishGold" + fishCount;
+    const id = "fishBody" + fishCount;
     const svg = svgEl("svg", { viewBox: "0 0 64 34", "aria-hidden": "true" });
     const defs = svgEl("defs");
     const grad = svgEl("linearGradient", {
@@ -147,20 +193,20 @@
       x2: "0",
       y2: "1",
     });
-    grad.appendChild(svgEl("stop", { offset: "0", "stop-color": "#ffd23f" }));
-    grad.appendChild(svgEl("stop", { offset: "1", "stop-color": "#f48c06" }));
+    grad.appendChild(svgEl("stop", { offset: "0", "stop-color": look.top }));
+    grad.appendChild(svgEl("stop", { offset: "1", "stop-color": look.bottom }));
     defs.appendChild(grad);
     svg.appendChild(defs);
     const tail = svgEl("g", { class: "aq-tail" });
     tail.appendChild(
-      svgEl("path", { d: "M16 17 L2 6 Q6 17 2 28 Z", fill: "#e8890c" }),
+      svgEl("path", { d: "M16 17 L2 6 Q6 17 2 28 Z", fill: look.fin }),
     );
     svg.appendChild(tail);
     svg.appendChild(
-      svgEl("path", { d: "M27 7 Q33 1 41 6 L37 9 Z", fill: "#e8890c" }),
+      svgEl("path", { d: "M27 7 Q33 1 41 6 L37 9 Z", fill: look.fin }),
     );
     svg.appendChild(
-      svgEl("path", { d: "M29 27 Q33 32 38 28 Z", fill: "#e8890c" }),
+      svgEl("path", { d: "M29 27 Q33 32 38 28 Z", fill: look.fin }),
     );
     svg.appendChild(
       svgEl("ellipse", {
@@ -171,21 +217,40 @@
         fill: "url(#" + id + ")",
       }),
     );
-    svg.appendChild(
-      svgEl("path", {
-        d: "M27 9 Q31 17 27 25",
-        stroke: "#e8890c",
-        "stroke-width": "1.6",
-        fill: "none",
-      }),
-    );
+    if (look.stripe) {
+      svg.appendChild(
+        svgEl("path", {
+          d: "M30 8 Q34 17 30 26",
+          stroke: look.stripe,
+          "stroke-width": "3",
+          fill: "none",
+        }),
+      );
+      svg.appendChild(
+        svgEl("path", {
+          d: "M41 6.5 Q44 17 41 27.5",
+          stroke: look.stripe,
+          "stroke-width": "3",
+          fill: "none",
+        }),
+      );
+    } else {
+      svg.appendChild(
+        svgEl("path", {
+          d: "M27 9 Q31 17 27 25",
+          stroke: look.fin,
+          "stroke-width": "1.6",
+          fill: "none",
+        }),
+      );
+    }
     svg.appendChild(
       svgEl("path", {
         d: "M33 10 Q45 7 52 13",
-        stroke: "#fff4cc",
+        stroke: "#ffffff",
         "stroke-width": "1.4",
         fill: "none",
-        opacity: "0.8",
+        opacity: "0.55",
       }),
     );
     svg.appendChild(
@@ -197,9 +262,37 @@
     svg.appendChild(
       svgEl("path", {
         d: "M56 20 Q54 22 52 21",
-        stroke: "#b35c00",
-        "stroke-width": "1.2",
+        stroke: "#0c2340",
+        "stroke-width": "1.1",
         fill: "none",
+        opacity: "0.6",
+      }),
+    );
+    return svg;
+  }
+
+  function seaweed(className) {
+    const svg = svgEl("svg", {
+      class: "aq-weed " + className,
+      viewBox: "0 0 20 40",
+      "aria-hidden": "true",
+    });
+    svg.appendChild(
+      svgEl("path", {
+        d: "M10 40 Q4 30 10 20 Q16 10 10 0",
+        stroke: "#2f9e44",
+        "stroke-width": "4",
+        fill: "none",
+        "stroke-linecap": "round",
+      }),
+    );
+    svg.appendChild(
+      svgEl("path", {
+        d: "M6 40 Q2 32 6 24",
+        stroke: "#4cc26a",
+        "stroke-width": "3",
+        fill: "none",
+        "stroke-linecap": "round",
       }),
     );
     return svg;
@@ -220,12 +313,20 @@
     d += " V0 H0 Z";
     waves.appendChild(svgEl("path", { d: d, fill: "rgba(255,255,255,0.35)" }));
     tank.appendChild(waves);
+    tank.appendChild(seaweed("aq-weed-1"));
+    tank.appendChild(seaweed("aq-weed-2"));
+    tank.appendChild(seaweed("aq-weed-3"));
     for (let i = 1; i <= 7; i += 1) {
       tank.appendChild(el("span", "aq-bubble aq-b" + i));
     }
-    const fish = el("div", "aq-fish");
-    fish.appendChild(fishSvg());
-    tank.appendChild(fish);
+    FISH.forEach((look, index) => {
+      const fish = el(
+        "div",
+        "aq-fish aq-fish-" + (index + 1) + " aq-" + look.kind,
+      );
+      fish.appendChild(fishSvg(look));
+      tank.appendChild(fish);
+    });
     tank.appendChild(el("span", "aq-sand"));
     return tank;
   }
@@ -263,7 +364,7 @@
     svg.appendChild(
       svgEl("path", {
         fill: "#ffffff",
-        d: "M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4c-1.2-1.8-1.8-3.8-1.8-5.9C5 9.9 9.9 5.1 16 5.1s11 4.8 11 10.7-4.9 10.6-11 10.6zm6-7.9c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.6-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.8-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.7s1.2 3.1 1.4 3.4c.2.2 2.4 3.6 5.8 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 2-.8 2.2-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z",
+        d: "M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4c-1.2-1.8-1.8-3.800-1.8-5.900C5 9.9 9.9 5.1 16 5.1s11 4.8 11 10.7-4.9 10.6-11 10.6zm6-7.9c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.6-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.8-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.200 1.1-1.2 2.7s1.2 3.1 1.4 3.4c.2.2 2.4 3.6 5.8 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 2-.8 2.2-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z",
       }),
     );
     link.appendChild(svg);
