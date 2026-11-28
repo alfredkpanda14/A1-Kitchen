@@ -5137,3 +5137,368 @@ html.theme-dark {
 :where(html.theme-dark) .cert-editor {
   background: #0f1c2c;
 }
+/* ==============================
+   TODAY'S SPECIALS, EVENT COUNTDOWN AND SPECIALS PAGE
+   ============================== */
+
+/* ---------- Home page: specials band ---------- */
+.home-specials {
+  margin-top: 56px;
+}
+
+.special-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.special-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(12, 35, 64, 0.1);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.special-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(12, 35, 64, 0.16);
+}
+
+.special-photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fff3cd 0%, #dff3e4 100%);
+}
+
+.special-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  object-fit: cover;
+}
+
+.special-noimg {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-size: 64px;
+}
+
+.special-ribbon {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  max-width: calc(100% - 24px);
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--sunshine);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: #2b1d00;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.special-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 16px 18px 18px;
+}
+
+.special-body h3 {
+  margin: 0 0 6px;
+  color: var(--navy);
+  font-size: 20px;
+}
+
+.special-desc {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.special-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin: auto 0 12px;
+  padding-top: 6px;
+}
+
+.special-meta strong {
+  color: var(--green);
+  font-size: 19px;
+}
+
+.special-meta span {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.special-body .button {
+  margin: 0;
+  text-align: center;
+}
+
+/* ---------- Home page: countdown in the event band ---------- */
+.home-countdown {
+  margin-top: 14px;
+}
+
+.home-countdown-label {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.home-event .home-countdown-label {
+  color: var(--sunshine);
+}
+
+.home-countdown-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-countdown-cell {
+  min-width: 70px;
+  padding: 10px 8px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.14);
+  text-align: center;
+}
+
+.home-countdown-cell strong {
+  display: block;
+  color: #ffffff;
+  font-size: 30px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-countdown-cell span {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.home-countdown.is-live .home-countdown-label {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--sunshine);
+  color: #2b1d00;
+  letter-spacing: 0.3px;
+  text-transform: none;
+}
+
+@media (max-width: 600px) {
+  .home-countdown-row {
+    gap: 7px;
+  }
+
+  .home-countdown-cell {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 8px 4px 6px;
+  }
+
+  .home-countdown-cell strong {
+    font-size: 24px;
+  }
+
+  .home-countdown-cell span {
+    font-size: 10.5px;
+  }
+}
+
+/* ---------- Staff: specials page ---------- */
+.special-summary {
+  font-weight: 700;
+}
+
+ul.special-help {
+  max-width: none;
+  margin: 0;
+  padding: 4px 0 0 22px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.special-help li {
+  margin: 6px 0;
+}
+
+.special-search {
+  max-width: 420px;
+  margin-bottom: 8px;
+}
+
+.special-group {
+  margin: 26px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--line);
+  color: var(--navy);
+}
+
+.special-list .special-group:first-child {
+  margin-top: 10px;
+}
+
+.special-row {
+  display: grid;
+  grid-template-columns: 76px minmax(160px, 1fr) minmax(260px, 1.6fr);
+  gap: 16px;
+  align-items: center;
+  margin: 10px 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.special-row.is-on {
+  border: 2px solid var(--green);
+  background: #f3fbf5;
+}
+
+.special-thumb {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--mist);
+  font-size: 34px;
+}
+
+.special-thumb img {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  object-fit: cover;
+}
+
+.special-info h3 {
+  margin: 0 0 4px;
+  color: var(--navy);
+  font-size: 18px;
+}
+
+.special-sub {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.special-controls {
+  display: grid;
+  grid-template-columns: 1fr 170px;
+  gap: 0 12px;
+  align-items: end;
+}
+
+.special-controls .menu-field {
+  margin-top: 0;
+}
+
+.special-controls .menu-field input {
+  width: 100%;
+}
+
+.special-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.special-buttons .button {
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .special-row {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .special-thumb {
+    width: 64px;
+    height: 64px;
+  }
+
+  .special-controls {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+/* ---------- Dark look for the new parts ---------- */
+:where(html.theme-dark) .special-card,
+:where(html.theme-dark) .special-row {
+  background: #132235;
+}
+
+:where(html.theme-dark) .special-row.is-on {
+  background: #10291c;
+}
+
+:where(html.theme-dark) .special-photo {
+  background: linear-gradient(135deg, #2b2410 0%, #10291c 100%);
+}
+
+:where(html.theme-dark) .special-body h3,
+:where(html.theme-dark) .special-info h3,
+:where(html.theme-dark) .special-group {
+  color: #e8eef6;
+}
+
+:where(html.theme-dark) .special-meta strong {
+  color: #9be3b1;
+}
+
+:where(html.theme-dark) .special-thumb {
+  background: #16283d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .special-card {
+    transition: none;
+  }
+
+  .special-card:hover {
+    transform: none;
+  }
+}

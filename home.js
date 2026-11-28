@@ -1,4 +1,5 @@
-/* A1 Kitchen: home page extras (latest photos and customer words) */
+/* A1 Kitchen: home page extras (specials, event countdown, latest photos,
+   customer words, upcoming events and how-to guides) */
 const BUCKET_URL = SUPABASE_URL + "/storage/v1/object/public/gallery/";
 
 function el(tag, className, text) {
@@ -102,6 +103,130 @@ async function loadWords() {
 loadWork().catch((error) => console.error("Home photos error:", error));
 loadWords().catch((error) => console.error("Home words error:", error));
 
+/* ---------- Countdown to the next event (Freetown time = GMT) ---------- */
+
+function freetownToday() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/* Reads times such as "10:00 AM", "2pm", "4.30 p.m." or "14:00" */
+function startMinutes(timeText) {
+  const text = String(timeText || "").trim();
+  let match = text.match(/(\d{1,2})(?:\s*[:.]\s*(\d{2}))?\s*([ap])\.?\s*m\b/i);
+  if (match) {
+    let hours = Number(match[1]);
+    const minutes = Number(match[2] || 0);
+    if (hours < 1 || hours > 12 || minutes > 59) {
+      return null;
+    }
+    const pm = match[3].toLowerCase() === "p";
+    if (hours === 12) {
+      hours = pm ? 12 : 0;
+    } else if (pm) {
+      hours += 12;
+    }
+    return hours * 60 + minutes;
+  }
+  match = text.match(/\b(\d{1,2})[:.](\d{2})\b/);
+  if (match && Number(match[1]) < 24 && Number(match[2]) < 60) {
+    return Number(match[1]) * 60 + Number(match[2]);
+  }
+  return null;
+}
+
+const countdowns = [];
+let countdownTimer = null;
+
+function countdownBox(event) {
+  const parts = String(event.event_date || "")
+    .split("-")
+    .map(Number);
+  if (parts.length !== 3 || parts.some((part) => !Number.isFinite(part))) {
+    return null;
+  }
+  const minutes = startMinutes(event.start_time);
+  const dayStart = Date.UTC(parts[0], parts[1] - 1, parts[2]);
+  const target = dayStart + (minutes === null ? 0 : minutes * 60000);
+  const dayEnd = dayStart + 24 * 3600000;
+  if (Date.now() >= dayEnd) {
+    return null;
+  }
+
+  const box = el("div", "home-countdown");
+  box.setAttribute("role", "timer");
+  const label = el(
+    "p",
+    "home-countdown-label",
+    minutes === null ? "The big day is in" : "Starts in",
+  );
+  const row = el("div", "home-countdown-row");
+  const cells = {};
+  [
+    ["days", "Days"],
+    ["hours", "Hours"],
+    ["mins", "Mins"],
+    ["secs", "Secs"],
+  ].forEach(([key, name]) => {
+    const cell = el("div", "home-countdown-cell");
+    const number = el("strong", null, "0");
+    cell.append(number, el("span", null, name));
+    row.appendChild(cell);
+    cells[key] = number;
+  });
+  box.append(label, row);
+  countdowns.push({
+    box,
+    label,
+    row,
+    cells,
+    target,
+    dayEnd,
+    title: event.title,
+  });
+  tickCountdowns();
+  if (!countdownTimer) {
+    countdownTimer = window.setInterval(tickCountdowns, 1000);
+  }
+  return box;
+}
+
+function tickCountdowns() {
+  const now = Date.now();
+  countdowns.forEach((item) => {
+    const left = item.target - now;
+    if (left <= 0) {
+      if (!item.done) {
+        item.done = true;
+        item.row.remove();
+        item.label.textContent =
+          now < item.dayEnd
+            ? "It's happening today! Come and join us."
+            : "This event has ended. Thank you for coming!";
+        item.box.classList.add("is-live");
+      }
+      return;
+    }
+    const seconds = Math.floor(left / 1000);
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    item.cells.days.textContent = String(days);
+    item.cells.hours.textContent = String(hours).padStart(2, "0");
+    item.cells.mins.textContent = String(mins).padStart(2, "0");
+    item.cells.secs.textContent = String(secs).padStart(2, "0");
+    item.box.setAttribute(
+      "aria-label",
+      item.title +
+        " starts in " +
+        days +
+        (days === 1 ? " day " : " days ") +
+        hours +
+        (hours === 1 ? " hour" : " hours"),
+    );
+  });
+}
+
 /* ---------- Upcoming events (same design for every event) ---------- */
 
 function longDate(dateText) {
@@ -121,7 +246,7 @@ function shorten(text, max) {
   return clean.length > max ? clean.slice(0, max - 1).trim() + "…" : clean;
 }
 
-function eventBand(event) {
+function eventBand(event, withCountdown) {
   const date = new Date(event.event_date + "T00:00:00");
   const validDate = !Number.isNaN(date.getTime());
   const band = el("section", "home-event");
@@ -165,6 +290,13 @@ function eventBand(event) {
     );
   }
 
+  if (withCountdown) {
+    const countdown = countdownBox(event);
+    if (countdown) {
+      body.appendChild(countdown);
+    }
+  }
+
   const link = el(
     "a",
     "button button-light",
@@ -189,8 +321,10 @@ async function loadEvents() {
     return;
   }
   let last = fallback;
+  const today = freetownToday();
+  const next = events.find((event) => String(event.event_date) >= today);
   events.slice(0, 3).forEach((event) => {
-    const band = eventBand(event);
+    const band = eventBand(event, event === next);
     last.after(band);
     last = band;
   });
@@ -252,3 +386,98 @@ async function loadGuide() {
 }
 
 loadGuide().catch((error) => console.error("Home guide error:", error));
+
+/* ---------- Today's specials (chosen by staff in the Specials page) ---------- */
+
+function specialPrice(price) {
+  if (price === null || price === undefined || price === "") {
+    return "Price on request";
+  }
+  return "NLe " + Number(price).toLocaleString("en-GB");
+}
+
+function specialEnds(untilText) {
+  if (!untilText || String(untilText).slice(0, 10) <= freetownToday()) {
+    return "Today only";
+  }
+  const date = new Date(String(untilText).slice(0, 10) + "T00:00:00Z");
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+  return (
+    "Until " +
+    date.toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      timeZone: "UTC",
+    })
+  );
+}
+
+function specialCard(item) {
+  const card = el("article", "special-card");
+  const media = el("div", "special-photo");
+  if (item.image_path) {
+    const image = el("img");
+    image.src = item.image_path;
+    image.alt = item.name;
+    image.loading = "lazy";
+    image.decoding = "async";
+    media.appendChild(image);
+  } else {
+    media.appendChild(el("span", "special-noimg", "🍲"));
+  }
+  media.appendChild(
+    el("span", "special-ribbon", item.special_note || "Special"),
+  );
+  card.appendChild(media);
+
+  const body = el("div", "special-body");
+  body.appendChild(el("h3", null, item.name));
+  if (item.description) {
+    body.appendChild(el("p", "special-desc", shorten(item.description, 110)));
+  }
+  const meta = el("p", "special-meta");
+  meta.appendChild(el("strong", null, specialPrice(item.price)));
+  meta.appendChild(el("span", null, specialEnds(item.special_until)));
+  body.appendChild(meta);
+  const link = el("a", "button", "Order Now");
+  link.href = "menu.html";
+  link.setAttribute("aria-label", "Order " + item.name + " from the menu");
+  body.appendChild(link);
+  card.appendChild(body);
+  return card;
+}
+
+async function loadSpecials() {
+  const items = await callRpc("get_home_specials", {});
+  if (!Array.isArray(items) || items.length === 0) {
+    return;
+  }
+  const section = el("section", "home-section home-specials");
+  section.id = "home-specials";
+  section.setAttribute("aria-labelledby", "home-specials-title");
+  const title = el("h2", null, "Today's Specials");
+  title.id = "home-specials-title";
+  section.appendChild(title);
+  section.appendChild(
+    el(
+      "p",
+      "home-lead",
+      "Chef A1's picks for today. Order them from the menu while they last.",
+    ),
+  );
+  const grid = el("div", "special-grid");
+  items.forEach((item) => grid.appendChild(specialCard(item)));
+  section.appendChild(grid);
+  const strip = document.querySelector(".home-strip");
+  const anchor = strip || document.querySelector(".home-hero");
+  if (anchor) {
+    anchor.after(section);
+  } else {
+    document.getElementById("main-content").prepend(section);
+  }
+}
+
+loadSpecials().catch((error) => console.error("Home specials error:", error));

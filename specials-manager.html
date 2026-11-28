@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>A1 Kitchen | Today's Specials</title>
+    <link rel="icon" type="image/png" href="images/logo-mark.png" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="theme-init.js"></script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="chef-dashboard.html"
+        ><img
+          src="images/logo-wide.webp"
+          alt="A1 Kitchen staff dashboard"
+          width="260"
+          height="68"
+      /></a>
+      <nav aria-label="Staff navigation">
+        <a href="chef-dashboard.html">Orders</a>
+        <a href="menu-manager.html" id="nav-menu" hidden>Menu manager</a>
+        <a href="specials-manager.html" class="active" aria-current="page"
+          >Specials</a
+        >
+        <a href="master-dashboard.html" id="nav-developer" hidden>Developer</a>
+        <a href="events-manager.html" id="nav-events" hidden>Events</a>
+        <a href="index.html">View website</a>
+      </nav>
+    </header>
+    <main id="main-content" class="staff">
+      <section class="dash-hero">
+        <p class="home-eyebrow">Home page</p>
+        <h1>Today's Specials</h1>
+        <p id="welcome">Loading...</p>
+        <p id="special-summary" class="special-summary"></p>
+        <div class="dash-bar">
+          <a href="index.html" class="button" target="_blank" rel="noopener"
+            >See the home page</a
+          >
+          <button
+            type="button"
+            id="refresh-button"
+            class="button button-secondary"
+          >
+            Refresh
+          </button>
+          <button
+            type="button"
+            id="signout-button"
+            class="button button-secondary"
+          >
+            Sign out
+          </button>
+        </div>
+        <p
+          id="dash-message"
+          class="success-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+      <section class="dash-panel">
+        <h2>How it works</h2>
+        <ul class="special-help">
+          <li>
+            Pick up to <strong>6 foods</strong>. They show in a "Today's
+            Specials" band near the top of the home page.
+          </li>
+          <li>
+            Add a short note if you like, such as "Today only" or "Weekend
+            deal". Choose the last day it should show (up to 30 days ahead).
+          </li>
+          <li>
+            A special stops showing by itself after its last day, or when the
+            food is switched off in the Menu Manager.
+          </li>
+          <li>
+            The price comes from the menu. To change a price, use the Menu
+            Manager.
+          </li>
+        </ul>
+      </section>
+      <section class="dash-panel">
+        <h2>All Foods</h2>
+        <div class="menu-field special-search">
+          <label for="special-filter">Find a food</label>
+          <input
+            type="search"
+            id="special-filter"
+            maxlength="60"
+            autocomplete="off"
+            placeholder="Type part of the name"
+          />
+        </div>
+        <div id="special-list" class="special-list" aria-live="polite"></div>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2026 A1 Kitchen. Staff area.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="specials-manager.js"></script>
+    <script src="site-extras.js" defer></script>
+  </body>
+</html>

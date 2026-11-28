@@ -89,6 +89,22 @@
       needs: ["menu.manage"],
     },
     {
+      id: "specials",
+      href: "specials-manager.html",
+      icon: "⭐",
+      title: "Today's Specials",
+      text: "Choose the foods shown as specials on the home page.",
+      needs: ["menu.manage"],
+    },
+    {
+      id: "help",
+      href: "help-desk.html",
+      icon: "🛟",
+      title: "Customer Help Desk",
+      text: "Resend a lost ticket link, or give a catering guest a new PIN safely.",
+      needs: ["help.tools"],
+    },
+    {
       id: "gallery",
       href: "gallery-manager.html",
       icon: "🖼️",
