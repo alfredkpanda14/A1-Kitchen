@@ -13,19 +13,19 @@
   "categories": ["food", "shopping", "lifestyle"],
   "icons": [
     {
-      "src": "/images/app-icon-192.png",
+      "src": "/images/app-icon-192.png?v=2",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/images/app-icon-512.png",
+      "src": "/images/app-icon-512.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/images/app-icon-maskable-512.png",
+      "src": "/images/app-icon-maskable-512.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -36,19 +36,19 @@
       "name": "Menu",
       "short_name": "Menu",
       "url": "/menu.html",
-      "icons": [{ "src": "/images/app-icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/images/app-icon-192.png?v=2", "sizes": "192x192" }]
     },
     {
-      "name": "Track my order",
-      "short_name": "Track order",
-      "url": "/track-order.html",
-      "icons": [{ "src": "/images/app-icon-192.png", "sizes": "192x192" }]
+      "name": "My orders",
+      "short_name": "My orders",
+      "url": "/my-orders.html",
+      "icons": [{ "src": "/images/app-icon-192.png?v=2", "sizes": "192x192" }]
     },
     {
       "name": "Events",
       "short_name": "Events",
       "url": "/events.html",
-      "icons": [{ "src": "/images/app-icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/images/app-icon-192.png?v=2", "sizes": "192x192" }]
     }
   ]
 }

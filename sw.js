@@ -10,13 +10,14 @@
     here: only this website's own pages, styles, scripts and pictures.
   Change VERSION when you want every phone to drop its old saved copies.
 */
-const VERSION = "a1-app-v1";
+const VERSION = "a1-app-v2";
 const OFFLINE_PAGE = "offline.html";
 const CORE = [
   "index.html",
   "menu.html",
   "order.html",
   "track-order.html",
+  "my-orders.html",
   "events.html",
   "contact.html",
   "offline.html",
