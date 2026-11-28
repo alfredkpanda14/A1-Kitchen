@@ -4,6 +4,7 @@
   Makes a PDF of Feast Coupons (free food, drink and water) to print.
   Each coupon is on its own A5 page, the same size as the event tickets.
   Paid coupons are green, guest coupons are gold.
+  Every coupon carries the Head Chef's signature, name and title.
   No outside library is used.
 */
 const A1PassPdf = (function () {
@@ -23,12 +24,12 @@ const A1PassPdf = (function () {
 
   function clean(text) {
     return String(text === undefined || text === null ? "" : text)
-      .replace(/[\u2018\u2019]/g, "'")
-      .replace(/[\u201C\u201D]/g, '"')
-      .replace(/[\u2013\u2014]/g, "-")
-      .replace(/\u00D7/g, "x")
-      .replace(/\u2022/g, "-")
-      .replace(/[^\x20-\x7E\u00A0-\u00FF]/g, "?");
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[–—]/g, "-")
+      .replace(/×/g, "x")
+      .replace(/•/g, "-")
+      .replace(/[^\x20-\x7E -ÿ]/g, "?");
   }
   function escapePdf(text) {
     return clean(text)
@@ -69,8 +70,130 @@ const A1PassPdf = (function () {
     });
   }
 
+  /* ---------- Head Chef's title, name and signature ----------
+     They come from the Certificates page (Signature and Signatory), so a
+     change there shows on every new ticket and coupon. */
+  let signatoryPromise = null;
+
+  function jpegInfo(bytes) {
+    let i = 2;
+    while (i + 8 < bytes.length) {
+      if (bytes[i] !== 0xff) {
+        i += 1;
+        continue;
+      }
+      const marker = bytes[i + 1];
+      if (
+        marker >= 0xc0 &&
+        marker <= 0xcf &&
+        marker !== 0xc4 &&
+        marker !== 0xc8 &&
+        marker !== 0xcc
+      ) {
+        return {
+          height: (bytes[i + 5] << 8) | bytes[i + 6],
+          width: (bytes[i + 7] << 8) | bytes[i + 8],
+        };
+      }
+      i += 2 + ((bytes[i + 2] << 8) | bytes[i + 3]);
+    }
+    return null;
+  }
+
+  function signatureFromDataUrl(dataUrl) {
+    try {
+      if (!dataUrl || !/^data:image\/jpe?g;base64,/i.test(dataUrl)) {
+        return null;
+      }
+      const binary = atob(dataUrl.split("base64,")[1]);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      const size = jpegInfo(bytes);
+      return size && size.width > 0 && size.height > 0
+        ? { bytes: bytes, width: size.width, height: size.height }
+        : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function loadSignatory() {
+    if (!signatoryPromise) {
+      signatoryPromise = (async () => {
+        try {
+          if (
+            typeof SUPABASE_URL === "undefined" ||
+            typeof SUPABASE_PUBLISHABLE_KEY === "undefined"
+          ) {
+            return null;
+          }
+          const response = await fetch(
+            SUPABASE_URL + "/rest/v1/rpc/get_signatory",
+            {
+              method: "POST",
+              headers: {
+                apikey: SUPABASE_PUBLISHABLE_KEY,
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: "{}",
+            },
+          );
+          if (!response.ok) {
+            return null;
+          }
+          const data = await response.json();
+          if (!data) {
+            return null;
+          }
+          return {
+            name: [data.honorific, data.name].filter(Boolean).join(" ").trim(),
+            titles: data.titles || "",
+            image: signatureFromDataUrl(data.signature),
+          };
+        } catch (error) {
+          return null;
+        }
+      })();
+    }
+    return signatoryPromise;
+  }
+
+  /* Font size that makes a line fit the space */
+  function fitSize(str, size, bold, maxWidth) {
+    const width = approxWidth(str, size, bold);
+    return width > maxWidth ? Math.max(5, (size * maxWidth) / width) : size;
+  }
+
+  /* Draws the signature block centred on cx, with its signing line at lineY.
+     "draw" is { image(name, x, y, w, h), rect(x, y, w, h, color),
+     centered(y, str, font, size, color, cx) } */
+  function drawSignature(draw, signatory, hasImage, cx, lineY, width, scale) {
+    const s = scale || 1;
+    const who = signatory || {};
+    if (hasImage && who.image) {
+      const maxH = 26 * s;
+      let h = maxH;
+      let w = (h * who.image.width) / who.image.height;
+      if (w > width) {
+        w = width;
+        h = (w * who.image.height) / who.image.width;
+      }
+      draw.image("ImSig", cx - w / 2, lineY + 1.5 * s, w, h);
+    }
+    draw.rect(cx - width / 2, lineY, width, 0.8 * s, NAVY);
+    const name = who.name || "Head Chef";
+    const titles = who.titles || "A1 Kitchen";
+    const nameSize = fitSize(name, 8 * s, true, width);
+    draw.centered(lineY - 9 * s, name, "F2", nameSize, NAVY, cx);
+    const titleSize = fitSize(titles, 6.5 * s, false, width + 10 * s);
+    draw.centered(lineY - 17 * s, titles, "F1", titleSize, GREY, cx);
+  }
+
   /* ---------- one coupon, drawn with its own corner as (0, 0) ---------- */
-  function drawCard(pass, hasLogo, logoRatio) {
+  function drawCard(pass, hasLogo, logoRatio, signatory, hasSignature) {
     const out = [];
     const guest = pass.kind === "guest";
     const accent = guest ? GOLD : GREEN;
@@ -215,6 +338,7 @@ const A1PassPdf = (function () {
     y -= 28 + 8;
 
     // QR code and number
+    const qrTop = y;
     if (pass.verifyUrl && typeof A1Qr !== "undefined") {
       try {
         const qr = A1Qr.make(pass.verifyUrl, "M");
@@ -258,6 +382,35 @@ const A1PassPdf = (function () {
     }
     centered(y, pass.passNumber, "F3", 14, NAVY);
 
+    // Head Chef's signature, to the right of the QR code
+    drawSignature(
+      {
+        image(name, x, sy, w, h) {
+          out.push(
+            "q " +
+              w.toFixed(2) +
+              " 0 0 " +
+              h.toFixed(2) +
+              " " +
+              x.toFixed(2) +
+              " " +
+              sy.toFixed(2) +
+              " cm /" +
+              name +
+              " Do Q",
+          );
+        },
+        rect: rect,
+        centered: centered,
+      },
+      signatory,
+      hasSignature,
+      CARD_W - 18 - 43,
+      qrTop - 52,
+      84,
+      1,
+    );
+
     centered(
       22,
       "Show this coupon at the serving area. Keep it safe.",
@@ -284,8 +437,12 @@ const A1PassPdf = (function () {
     return bytes;
   }
 
-  function buildPdf(passes, logo) {
+  function buildPdf(passes, logo, signatory) {
     const hasLogo = Boolean(logo && logo.bytes && logo.bytes.length);
+    const signature = signatory && signatory.image;
+    const hasSignature = Boolean(
+      signature && signature.bytes && signature.bytes.length,
+    );
     const ratio = hasLogo ? logo.width / logo.height : 1;
     const chunks = [];
     const offsets = [];
@@ -301,12 +458,12 @@ const A1PassPdf = (function () {
     }
 
     const pageCount = Math.max(1, passes.length);
-    const firstPageObject = 7;
+    const firstPageObject = 8; // 6 is the logo, 7 the signature
     const kids = [];
     for (let i = 0; i < pageCount; i += 1) {
       kids.push(firstPageObject + i * 2 + " 0 R");
     }
-    const totalObjects = 6 + pageCount * 2;
+    const totalObjects = 7 + pageCount * 2;
 
     push("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n");
     startObject(1);
@@ -350,6 +507,25 @@ const A1PassPdf = (function () {
       );
     }
 
+    startObject(7);
+    if (hasSignature) {
+      push(
+        "<< /Type /XObject /Subtype /Image /Width " +
+          signature.width +
+          " /Height " +
+          signature.height +
+          " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " +
+          signature.bytes.length +
+          " >>\nstream\n",
+      );
+      push(signature.bytes);
+      push("\nendstream\nendobj\n");
+    } else {
+      push(
+        "<< /Type /XObject /Subtype /Image /Width 1 /Height 1 /ColorSpace /DeviceGray /BitsPerComponent 8 /Length 1 >>\nstream\n\x00\nendstream\nendobj\n",
+      );
+    }
+
     for (let page = 0; page < pageCount; page += 1) {
       const pageObject = firstPageObject + page * 2;
       const contentObject = pageObject + 1;
@@ -362,7 +538,7 @@ const A1PassPdf = (function () {
             " 0 0 " +
             SCALE.toFixed(5) +
             " 0 0 cm\n" +
-            drawCard(pass, hasLogo, ratio) +
+            drawCard(pass, hasLogo, ratio, signatory, hasSignature) +
             "\nQ",
         );
       }
@@ -374,7 +550,7 @@ const A1PassPdf = (function () {
           " " +
           PAGE_H +
           "] " +
-          "/Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> /XObject << /Im1 6 0 R >> >> " +
+          "/Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> /XObject << /Im1 6 0 R /ImSig 7 0 R >> >> " +
           "/Contents " +
           contentObject +
           " 0 R >>\nendobj\n",
@@ -449,8 +625,8 @@ const A1PassPdf = (function () {
   }
 
   async function download(passes, fileName) {
-    const logo = await loadLogo();
-    const bytes = buildPdf(passes, logo);
+    const [logo, signatory] = await Promise.all([loadLogo(), loadSignatory()]);
+    const bytes = buildPdf(passes, logo, signatory);
     const blob = new Blob([bytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -462,5 +638,10 @@ const A1PassPdf = (function () {
     setTimeout(() => URL.revokeObjectURL(url), 10000);
   }
 
-  return { buildPdf: buildPdf, download: download };
+  return {
+    buildPdf: buildPdf,
+    download: download,
+    loadSignatory: loadSignatory,
+    signatureFromDataUrl: signatureFromDataUrl,
+  };
 })();

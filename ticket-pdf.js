@@ -4,6 +4,7 @@
   Builds a downloadable PDF ticket in the browser. It needs no outside
   library, so your security rules (Content-Security-Policy) stay strict.
   One page = one ticket (A5 size, prints well on A4 too).
+  Every ticket carries the Head Chef's signature, name and title.
 */
 const A1TicketPdf = (function () {
   const PAGE_W = 419.53; // A5 width in points
@@ -17,12 +18,12 @@ const A1TicketPdf = (function () {
   /* ---------- text helpers ---------- */
   function clean(text) {
     return String(text === undefined || text === null ? "" : text)
-      .replace(/[\u2018\u2019]/g, "'")
-      .replace(/[\u201C\u201D]/g, '"')
-      .replace(/[\u2013\u2014]/g, "-")
-      .replace(/\u00D7/g, "x")
-      .replace(/\u2022/g, "-")
-      .replace(/[^\x20-\x7E\u00A0-\u00FF]/g, "?");
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[–—]/g, "-")
+      .replace(/×/g, "x")
+      .replace(/•/g, "-")
+      .replace(/[^\x20-\x7E -ÿ]/g, "?");
   }
   function escapePdf(text) {
     return clean(text)
@@ -77,8 +78,130 @@ const A1TicketPdf = (function () {
     });
   }
 
+  /* ---------- Head Chef's title, name and signature ----------
+     They come from the Certificates page (Signature and Signatory), so a
+     change there shows on every new ticket and coupon. */
+  let signatoryPromise = null;
+
+  function jpegInfo(bytes) {
+    let i = 2;
+    while (i + 8 < bytes.length) {
+      if (bytes[i] !== 0xff) {
+        i += 1;
+        continue;
+      }
+      const marker = bytes[i + 1];
+      if (
+        marker >= 0xc0 &&
+        marker <= 0xcf &&
+        marker !== 0xc4 &&
+        marker !== 0xc8 &&
+        marker !== 0xcc
+      ) {
+        return {
+          height: (bytes[i + 5] << 8) | bytes[i + 6],
+          width: (bytes[i + 7] << 8) | bytes[i + 8],
+        };
+      }
+      i += 2 + ((bytes[i + 2] << 8) | bytes[i + 3]);
+    }
+    return null;
+  }
+
+  function signatureFromDataUrl(dataUrl) {
+    try {
+      if (!dataUrl || !/^data:image\/jpe?g;base64,/i.test(dataUrl)) {
+        return null;
+      }
+      const binary = atob(dataUrl.split("base64,")[1]);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      const size = jpegInfo(bytes);
+      return size && size.width > 0 && size.height > 0
+        ? { bytes: bytes, width: size.width, height: size.height }
+        : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function loadSignatory() {
+    if (!signatoryPromise) {
+      signatoryPromise = (async () => {
+        try {
+          if (
+            typeof SUPABASE_URL === "undefined" ||
+            typeof SUPABASE_PUBLISHABLE_KEY === "undefined"
+          ) {
+            return null;
+          }
+          const response = await fetch(
+            SUPABASE_URL + "/rest/v1/rpc/get_signatory",
+            {
+              method: "POST",
+              headers: {
+                apikey: SUPABASE_PUBLISHABLE_KEY,
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: "{}",
+            },
+          );
+          if (!response.ok) {
+            return null;
+          }
+          const data = await response.json();
+          if (!data) {
+            return null;
+          }
+          return {
+            name: [data.honorific, data.name].filter(Boolean).join(" ").trim(),
+            titles: data.titles || "",
+            image: signatureFromDataUrl(data.signature),
+          };
+        } catch (error) {
+          return null;
+        }
+      })();
+    }
+    return signatoryPromise;
+  }
+
+  /* Font size that makes a line fit the space */
+  function fitSize(str, size, bold, maxWidth) {
+    const width = approxWidth(str, size, bold);
+    return width > maxWidth ? Math.max(5, (size * maxWidth) / width) : size;
+  }
+
+  /* Draws the signature block centred on cx, with its signing line at lineY.
+     "draw" is { image(name, x, y, w, h), rect(x, y, w, h, color),
+     centered(y, str, font, size, color, cx) } */
+  function drawSignature(draw, signatory, hasImage, cx, lineY, width, scale) {
+    const s = scale || 1;
+    const who = signatory || {};
+    if (hasImage && who.image) {
+      const maxH = 26 * s;
+      let h = maxH;
+      let w = (h * who.image.width) / who.image.height;
+      if (w > width) {
+        w = width;
+        h = (w * who.image.height) / who.image.width;
+      }
+      draw.image("ImSig", cx - w / 2, lineY + 1.5 * s, w, h);
+    }
+    draw.rect(cx - width / 2, lineY, width, 0.8 * s, NAVY);
+    const name = who.name || "Head Chef";
+    const titles = who.titles || "A1 Kitchen";
+    const nameSize = fitSize(name, 8 * s, true, width);
+    draw.centered(lineY - 9 * s, name, "F2", nameSize, NAVY, cx);
+    const titleSize = fitSize(titles, 6.5 * s, false, width + 10 * s);
+    draw.centered(lineY - 17 * s, titles, "F1", titleSize, GREY, cx);
+  }
+
   /* ---------- one page of drawing commands ---------- */
-  function drawPage(ticket, hasLogo) {
+  function drawPage(ticket, hasLogo, signatory, hasSignature) {
     const out = [];
     const rgbFill = (c) => c[0] + " " + c[1] + " " + c[2] + " rg";
     const rgbStroke = (c) => c[0] + " " + c[1] + " " + c[2] + " RG";
@@ -326,6 +449,35 @@ const A1TicketPdf = (function () {
       }
     }
 
+    // Head Chef's signature, bottom right (under the QR code)
+    drawSignature(
+      {
+        image(name, x, y, w, h) {
+          out.push(
+            "q " +
+              w.toFixed(2) +
+              " 0 0 " +
+              h.toFixed(2) +
+              " " +
+              x.toFixed(2) +
+              " " +
+              y.toFixed(2) +
+              " cm /" +
+              name +
+              " Do Q",
+          );
+        },
+        rect: rect,
+        centered: centered,
+      },
+      signatory,
+      hasSignature,
+      PAGE_W - 48 - 56,
+      90,
+      112,
+      1,
+    );
+
     // Footer
     rect(34, 66, PAGE_W - 68, 1, SOFT);
     if (isFood) {
@@ -381,8 +533,12 @@ const A1TicketPdf = (function () {
     return bytes;
   }
 
-  function buildPdf(tickets, logo) {
+  function buildPdf(tickets, logo, signatory) {
     const hasLogo = Boolean(logo && logo.bytes && logo.bytes.length);
+    const signature = signatory && signatory.image;
+    const hasSignature = Boolean(
+      signature && signature.bytes && signature.bytes.length,
+    );
     const chunks = [];
     const offsets = [];
     let length = 0;
@@ -396,14 +552,15 @@ const A1TicketPdf = (function () {
       push(number + " 0 obj\n");
     }
 
-    // Object numbers: 1 catalog, 2 pages, 3-5 fonts, 6 image, then 2 per page
+    // Object numbers: 1 catalog, 2 pages, 3-5 fonts, 6 logo, 7 signature,
+    // then 2 per page
     const pageCount = tickets.length;
-    const firstPageObject = 7;
+    const firstPageObject = 8;
     const kids = [];
     for (let i = 0; i < pageCount; i += 1) {
       kids.push(firstPageObject + i * 2 + " 0 R");
     }
-    const totalObjects = 6 + pageCount * 2;
+    const totalObjects = 7 + pageCount * 2;
 
     push("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n");
     startObject(1);
@@ -447,6 +604,25 @@ const A1TicketPdf = (function () {
       );
     }
 
+    startObject(7);
+    if (hasSignature) {
+      push(
+        "<< /Type /XObject /Subtype /Image /Width " +
+          signature.width +
+          " /Height " +
+          signature.height +
+          " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " +
+          signature.bytes.length +
+          " >>\nstream\n",
+      );
+      push(signature.bytes);
+      push("\nendstream\nendobj\n");
+    } else {
+      push(
+        "<< /Type /XObject /Subtype /Image /Width 1 /Height 1 /ColorSpace /DeviceGray /BitsPerComponent 8 /Length 1 >>\nstream\n\x00\nendstream\nendobj\n",
+      );
+    }
+
     tickets.forEach((ticket, index) => {
       const pageObject = firstPageObject + index * 2;
       const contentObject = pageObject + 1;
@@ -457,6 +633,8 @@ const A1TicketPdf = (function () {
           hasLogo ? { logoWidth: logo.width, logoHeight: logo.height } : {},
         ),
         hasLogo,
+        signatory,
+        hasSignature,
       );
       startObject(pageObject);
       push(
@@ -465,7 +643,7 @@ const A1TicketPdf = (function () {
           " " +
           PAGE_H +
           "] " +
-          "/Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> /XObject << /Im1 6 0 R >> >> " +
+          "/Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> /XObject << /Im1 6 0 R /ImSig 7 0 R >> >> " +
           "/Contents " +
           contentObject +
           " 0 R >>\nendobj\n",
@@ -541,8 +719,8 @@ const A1TicketPdf = (function () {
   }
 
   async function download(tickets, fileName) {
-    const logo = await loadLogo();
-    const bytes = buildPdf(tickets, logo);
+    const [logo, signatory] = await Promise.all([loadLogo(), loadSignatory()]);
+    const bytes = buildPdf(tickets, logo, signatory);
     const blob = new Blob([bytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -554,5 +732,10 @@ const A1TicketPdf = (function () {
     setTimeout(() => URL.revokeObjectURL(url), 10000);
   }
 
-  return { buildPdf: buildPdf, download: download };
+  return {
+    buildPdf: buildPdf,
+    download: download,
+    loadSignatory: loadSignatory,
+    signatureFromDataUrl: signatureFromDataUrl,
+  };
 })();

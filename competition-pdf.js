@@ -4,6 +4,7 @@
   Makes two kinds of PDF in the browser, with no outside library:
     1. The competitor ticket (A5, with the participant's photo at the top right)
     2. The certificate (A4 landscape, with a QR code anyone can scan to check it)
+  Both carry the Head Chef's signature, name and title.
 */
 const A1CompPdf = (function () {
   const NAVY = [0.047, 0.137, 0.251];
@@ -19,12 +20,12 @@ const A1CompPdf = (function () {
   /* ---------- text helpers ---------- */
   function clean(text) {
     return String(text === undefined || text === null ? "" : text)
-      .replace(/[\u2018\u2019]/g, "'")
-      .replace(/[\u201C\u201D]/g, '"')
-      .replace(/[\u2013\u2014]/g, "-")
-      .replace(/\u00D7/g, "x")
-      .replace(/\u2022/g, "-")
-      .replace(/[^\x20-\x7E\u00A0-\u00FF]/g, "?");
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[–—]/g, "-")
+      .replace(/×/g, "x")
+      .replace(/•/g, "-")
+      .replace(/[^\x20-\x7E -ÿ]/g, "?");
   }
   function escapePdf(text) {
     return clean(text)
@@ -74,6 +75,128 @@ const A1CompPdf = (function () {
       month: "short",
       year: "numeric",
     });
+  }
+
+  /* ---------- Head Chef's title, name and signature ----------
+     They come from the Certificates page (Signature and Signatory), so a
+     change there shows on every new ticket and coupon. */
+  let signatoryPromise = null;
+
+  function jpegInfo(bytes) {
+    let i = 2;
+    while (i + 8 < bytes.length) {
+      if (bytes[i] !== 0xff) {
+        i += 1;
+        continue;
+      }
+      const marker = bytes[i + 1];
+      if (
+        marker >= 0xc0 &&
+        marker <= 0xcf &&
+        marker !== 0xc4 &&
+        marker !== 0xc8 &&
+        marker !== 0xcc
+      ) {
+        return {
+          height: (bytes[i + 5] << 8) | bytes[i + 6],
+          width: (bytes[i + 7] << 8) | bytes[i + 8],
+        };
+      }
+      i += 2 + ((bytes[i + 2] << 8) | bytes[i + 3]);
+    }
+    return null;
+  }
+
+  function signatureFromDataUrl(dataUrl) {
+    try {
+      if (!dataUrl || !/^data:image\/jpe?g;base64,/i.test(dataUrl)) {
+        return null;
+      }
+      const binary = atob(dataUrl.split("base64,")[1]);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      const size = jpegInfo(bytes);
+      return size && size.width > 0 && size.height > 0
+        ? { bytes: bytes, width: size.width, height: size.height }
+        : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function loadSignatory() {
+    if (!signatoryPromise) {
+      signatoryPromise = (async () => {
+        try {
+          if (
+            typeof SUPABASE_URL === "undefined" ||
+            typeof SUPABASE_PUBLISHABLE_KEY === "undefined"
+          ) {
+            return null;
+          }
+          const response = await fetch(
+            SUPABASE_URL + "/rest/v1/rpc/get_signatory",
+            {
+              method: "POST",
+              headers: {
+                apikey: SUPABASE_PUBLISHABLE_KEY,
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: "{}",
+            },
+          );
+          if (!response.ok) {
+            return null;
+          }
+          const data = await response.json();
+          if (!data) {
+            return null;
+          }
+          return {
+            name: [data.honorific, data.name].filter(Boolean).join(" ").trim(),
+            titles: data.titles || "",
+            image: signatureFromDataUrl(data.signature),
+          };
+        } catch (error) {
+          return null;
+        }
+      })();
+    }
+    return signatoryPromise;
+  }
+
+  /* Font size that makes a line fit the space */
+  function fitSize(str, size, bold, maxWidth) {
+    const width = approxWidth(str, size, bold);
+    return width > maxWidth ? Math.max(5, (size * maxWidth) / width) : size;
+  }
+
+  /* Draws the signature block centred on cx, with its signing line at lineY.
+     "draw" is { image(name, x, y, w, h), rect(x, y, w, h, color),
+     centered(y, str, font, size, color, cx) } */
+  function drawSignature(draw, signatory, hasImage, cx, lineY, width, scale) {
+    const s = scale || 1;
+    const who = signatory || {};
+    if (hasImage && who.image) {
+      const maxH = 26 * s;
+      let h = maxH;
+      let w = (h * who.image.width) / who.image.height;
+      if (w > width) {
+        w = width;
+        h = (w * who.image.height) / who.image.width;
+      }
+      draw.image("ImSig", cx - w / 2, lineY + 1.5 * s, w, h);
+    }
+    draw.rect(cx - width / 2, lineY, width, 0.8 * s, NAVY);
+    const name = who.name || "Head Chef";
+    const titles = who.titles || "A1 Kitchen";
+    const nameSize = fitSize(name, 8 * s, true, width);
+    draw.centered(lineY - 9 * s, name, "F2", nameSize, NAVY, cx);
+    const titleSize = fitSize(titles, 6.5 * s, false, width + 10 * s);
+    draw.centered(lineY - 17 * s, titles, "F1", titleSize, GREY, cx);
   }
 
   /* ---------- a small drawing kit for one page ---------- */
@@ -197,7 +320,14 @@ const A1CompPdf = (function () {
   }
 
   /* ---------- the competitor ticket (A5) ---------- */
-  function drawTicket(ticket, hasLogo, logoRatio, hasPhoto) {
+  function drawTicket(
+    ticket,
+    hasLogo,
+    logoRatio,
+    hasPhoto,
+    signatory,
+    hasSignature,
+  ) {
     const W = 419.53;
     const H = 595.28;
     const k = kit(W, H);
@@ -308,6 +438,9 @@ const A1CompPdf = (function () {
       W - 34 - 14 - 56,
     );
 
+    // Head Chef's signature, bottom right (under the QR code)
+    drawSignature(k, signatory, hasSignature, W - 48 - 56, 90, 112, 1);
+
     k.rect(34, 66, W - 68, 1, SOFT);
     k.centered(
       50,
@@ -334,7 +467,7 @@ const A1CompPdf = (function () {
   }
 
   /* ---------- the certificate (A4 landscape) ---------- */
-  function drawCertificate(cert, hasLogo, logoRatio) {
+  function drawCertificate(cert, hasLogo, logoRatio, signatory, hasSignature) {
     const W = 841.89;
     const H = 595.28;
     const k = kit(W, H);
@@ -391,10 +524,8 @@ const A1CompPdf = (function () {
       k.centered(y - 2, "Prize: " + cert.prize, "F2", 13, GOLD_DARK);
     }
 
-    // Signature
-    k.rect(70, 92, 190, 1, NAVY);
-    k.text(70, 78, "Chef A1", "F2", 12, NAVY);
-    k.text(70, 64, "A1 Kitchen", "F1", 10, GREY);
+    // Head Chef's signature, name and title
+    drawSignature(k, signatory, hasSignature, 165, 92, 190, 1.5);
 
     // QR code to check the certificate
     k.qr(cert.verifyUrl, W - 70 - 96, 70, 96);
@@ -453,9 +584,12 @@ const A1CompPdf = (function () {
     return null;
   }
 
-  function writePdf(pageWidth, pageHeight, content, logo, photo) {
+  function writePdf(pageWidth, pageHeight, content, logo, photo, signature) {
     const hasLogo = Boolean(logo && logo.bytes && logo.bytes.length);
     const hasPhoto = Boolean(photo && photo.bytes && photo.bytes.length);
+    const hasSignature = Boolean(
+      signature && signature.bytes && signature.bytes.length,
+    );
     const chunks = [];
     const offsets = [];
     let length = 0;
@@ -516,22 +650,23 @@ const A1CompPdf = (function () {
         " " +
         pageHeight +
         "] " +
-        "/Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> /XObject << /Im1 6 0 R /Im2 7 0 R >> >> " +
+        "/Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> /XObject << /Im1 6 0 R /Im2 7 0 R /ImSig 10 0 R >> >> " +
         "/Contents 9 0 R >>\nendobj\n",
     );
     startObject(9);
     push("<< /Length " + contentBytes.length + " >>\nstream\n");
     push(contentBytes);
     push("\nendstream\nendobj\n");
+    image(10, signature, hasSignature);
 
     const xrefStart = length;
-    let xref = "xref\n0 10\n0000000000 65535 f \n";
-    for (let n = 1; n <= 9; n += 1) {
+    let xref = "xref\n0 11\n0000000000 65535 f \n";
+    for (let n = 1; n <= 10; n += 1) {
       xref += String(offsets[n]).padStart(10, "0") + " 00000 n \n";
     }
     push(xref);
     push(
-      "trailer\n<< /Size 10 /Root 1 0 R >>\nstartxref\n" +
+      "trailer\n<< /Size 11 /Root 1 0 R >>\nstartxref\n" +
         xrefStart +
         "\n%%EOF\n",
     );
@@ -560,28 +695,39 @@ const A1CompPdf = (function () {
       : null;
   }
 
-  function buildTicketPdf(ticket, logo, photo) {
+  function buildTicketPdf(ticket, logo, photo, signatory) {
     const hasLogo = Boolean(logo && logo.bytes && logo.bytes.length);
     const hasPhoto = Boolean(photo && photo.bytes && photo.bytes.length);
     const ratio = hasLogo ? logo.width / logo.height : 1;
+    const signature = signatory && signatory.image;
     return writePdf(
       419.53,
       595.28,
-      drawTicket(ticket, hasLogo, ratio, hasPhoto),
+      drawTicket(
+        ticket,
+        hasLogo,
+        ratio,
+        hasPhoto,
+        signatory,
+        Boolean(signature),
+      ),
       logo,
       photo,
+      signature,
     );
   }
 
-  function buildCertificatePdf(cert, logo) {
+  function buildCertificatePdf(cert, logo, signatory) {
     const hasLogo = Boolean(logo && logo.bytes && logo.bytes.length);
     const ratio = hasLogo ? logo.width / logo.height : 1;
+    const signature = signatory && signatory.image;
     return writePdf(
       841.89,
       595.28,
-      drawCertificate(cert, hasLogo, ratio),
+      drawCertificate(cert, hasLogo, ratio, signatory, Boolean(signature)),
       logo,
       null,
+      signature,
     );
   }
 
@@ -638,16 +784,19 @@ const A1CompPdf = (function () {
   }
 
   async function downloadTicket(ticket, fileName) {
-    const logo = await loadLogo();
+    const [logo, signatory] = await Promise.all([loadLogo(), loadSignatory()]);
     save(
-      buildTicketPdf(ticket, logo, photoFromDataUrl(ticket.photo)),
+      buildTicketPdf(ticket, logo, photoFromDataUrl(ticket.photo), signatory),
       fileName || "A1-Competitor-Ticket.pdf",
     );
   }
 
   async function downloadCertificate(cert, fileName) {
-    const logo = await loadLogo();
-    save(buildCertificatePdf(cert, logo), fileName || "A1-Certificate.pdf");
+    const [logo, signatory] = await Promise.all([loadLogo(), loadSignatory()]);
+    save(
+      buildCertificatePdf(cert, logo, signatory),
+      fileName || "A1-Certificate.pdf",
+    );
   }
 
   return {
@@ -656,5 +805,6 @@ const A1CompPdf = (function () {
     photoFromDataUrl: photoFromDataUrl,
     downloadTicket: downloadTicket,
     downloadCertificate: downloadCertificate,
+    loadSignatory: loadSignatory,
   };
 })();
