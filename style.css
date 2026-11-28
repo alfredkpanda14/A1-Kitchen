@@ -4146,3 +4146,767 @@ body.login-page {
     grid-template-columns: 1fr;
   }
 }
+/* ==============================
+   DESIGN UPGRADE: PHONE MENU, WHATSAPP, BACK TO TOP,
+   SWIMMING FISH, POLISH AND DARK MODE
+   ============================== */
+
+:root {
+  color-scheme: light dark;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(242, 169, 0, 0.35);
+}
+
+main p a:not(.button),
+main li a:not(.button),
+main dd a:not(.button) {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+main p a:not(.button):hover,
+main li a:not(.button):hover {
+  color: var(--green);
+}
+
+[id] {
+  scroll-margin-top: 16px;
+}
+
+/* ---------- Phone menu button (added by site-extras.js) ---------- */
+.nav-toggle {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .has-nav-toggle .nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+    min-height: 48px;
+    margin: 12px auto 0;
+    padding: 10px 18px;
+    border: 1px solid var(--sky);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .nav-toggle-icon {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .nav-toggle-page {
+    color: var(--sunshine);
+  }
+
+  .has-nav-toggle nav {
+    display: none;
+  }
+
+  .has-nav-toggle.nav-open nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 420px;
+    margin: 0 auto;
+    animation: navDrop 0.2s ease both;
+  }
+
+  .has-nav-toggle.nav-open nav a {
+    text-align: center;
+  }
+}
+
+@keyframes navDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Floating WhatsApp button (public pages) ---------- */
+.wa-float {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 18px 0 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #25d366 0%, #128c4a 100%);
+  box-shadow: 0 10px 24px rgba(18, 140, 74, 0.45);
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.wa-float:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(18, 140, 74, 0.55);
+  color: #ffffff;
+}
+
+.wa-float svg {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 600px) {
+  .wa-float {
+    right: 14px;
+    bottom: 14px;
+    width: 58px;
+    height: 58px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .wa-float-text {
+    display: none;
+  }
+}
+
+/* ---------- Back to top button ---------- */
+.to-top {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 900;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--sky);
+  border-radius: 50%;
+  background: var(--navy);
+  box-shadow: 0 8px 18px rgba(12, 35, 64, 0.35);
+  color: #ffffff;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ---------- Swimming fish (behind the page content) ---------- */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  opacity: 0.32;
+}
+
+body::before {
+  top: 28vh;
+  width: 240px;
+  height: 110px;
+  background-image:
+    url("images/fish-gold.svg"), url("images/fish-blue.svg"),
+    url("images/fish-green.svg");
+  background-position:
+    0 26px,
+    96px 0,
+    150px 70px;
+  background-size:
+    64px 32px,
+    50px 25px,
+    40px 20px;
+  animation: fishRight 46s linear infinite;
+}
+
+body::after {
+  top: 68vh;
+  width: 190px;
+  height: 90px;
+  background-image: url("images/fish-blue.svg"), url("images/fish-gold.svg");
+  background-position:
+    0 10px,
+    100px 46px;
+  background-size:
+    56px 28px,
+    44px 22px;
+  animation: fishLeft 60s linear infinite;
+  animation-delay: -22s;
+}
+
+@keyframes fishRight {
+  0% {
+    transform: translate(-260px, 0);
+  }
+  25% {
+    transform: translate(22vw, -24px);
+  }
+  50% {
+    transform: translate(48vw, 12px);
+  }
+  75% {
+    transform: translate(74vw, -14px);
+  }
+  100% {
+    transform: translate(calc(100vw + 20px), 0);
+  }
+}
+
+@keyframes fishLeft {
+  0% {
+    transform: translate(calc(100vw + 20px), 0) scaleX(-1);
+  }
+  30% {
+    transform: translate(66vw, 18px) scaleX(-1);
+  }
+  60% {
+    transform: translate(34vw, -16px) scaleX(-1);
+  }
+  100% {
+    transform: translate(-220px, 0) scaleX(-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    display: none;
+  }
+
+  .wa-float,
+  .to-top {
+    transition: none;
+  }
+}
+
+@media print {
+  body::before,
+  body::after,
+  .wa-float,
+  .to-top,
+  .nav-toggle {
+    display: none !important;
+  }
+}
+
+/* ---------- Dark mode: colours ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-bg: #0b1622;
+    --text: #e6edf5;
+    --muted: #a9b8c9;
+    --line: #22344a;
+    --border: #2c4058;
+    --mist: #16283d;
+  }
+
+  body::before,
+  body::after {
+    opacity: 0.38;
+  }
+
+  input,
+  select,
+  textarea {
+    color: var(--text);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #7f93a8;
+  }
+
+  img {
+    border-color: #1c2f45;
+  }
+
+  main p a:not(.button),
+  main li a:not(.button),
+  main dd a:not(.button) {
+    color: #86c4ff;
+  }
+
+  .home-guide {
+    border-color: #2c4058;
+    background: linear-gradient(135deg, #1c2a1a 0%, #10263d 100%);
+  }
+
+  .birthday-message {
+    background: linear-gradient(135deg, #132235, #16283d);
+  }
+
+  .tool-tile.is-current {
+    background: linear-gradient(180deg, #10291c, #132235);
+  }
+
+  .home-quote::before {
+    color: var(--sunshine);
+  }
+
+  .to-top {
+    background: #132235;
+  }
+}
+
+/* ---------- Dark mode: surfaces and text (matches every block above) ---------- */
+@media (prefers-color-scheme: dark) {
+  h2 {
+    color: #e8eef6;
+  }
+
+  h3 {
+    color: #86c4ff;
+  }
+
+  .welcome-message {
+    background-color: #132235;
+  }
+
+  ul {
+    background-color: #132235;
+  }
+
+  table {
+    background-color: #132235;
+  }
+
+  .card {
+    background-color: #132235;
+  }
+
+  #cart {
+    background-color: #132235;
+  }
+
+  form {
+    background-color: #132235;
+  }
+
+  label {
+    color: #e8eef6;
+  }
+
+  .menu-notice,
+  .step-label {
+    color: #86c4ff;
+  }
+
+  .filter-button {
+    background: #132235;
+    color: #86c4ff;
+  }
+
+  .order-number {
+    color: #e8eef6;
+  }
+
+  .badge {
+    color: #e8eef6;
+  }
+
+  .badge-warn {
+    background: #2b2410;
+    color: #ffd77a;
+  }
+
+  .badge-good {
+    background: #14361f;
+    color: #9be3b1;
+  }
+
+  .badge-bad {
+    background: #3a1717;
+    color: #ffb4b4;
+  }
+
+  .button-secondary {
+    background: #132235;
+    color: #86c4ff;
+  }
+
+  .alert-banner {
+    background: #2b2410;
+    color: #ffd77a;
+  }
+
+  .duplicate-warning {
+    background: #3a1717;
+    color: #ffb4b4;
+  }
+
+  .home-strip-item {
+    background: #132235;
+    color: #e8eef6;
+  }
+
+  .home-step {
+    background: #132235;
+  }
+
+  .home-step h3 {
+    color: #e8eef6;
+  }
+
+  .home-service {
+    background: #132235;
+  }
+
+  .home-service h3 {
+    color: #e8eef6;
+  }
+
+  .home-media-card {
+    background: #132235;
+  }
+
+  .home-media-card h3 {
+    color: #e8eef6;
+  }
+
+  .home-quote {
+    background: #132235;
+  }
+
+  .home-quote-by {
+    color: #86c4ff;
+  }
+
+  .home-note {
+    background: #132235;
+  }
+
+  .gate-result {
+    background: #132235;
+  }
+
+  .gate-result-valid {
+    background: #10291c;
+  }
+
+  .gate-result-warn {
+    background: #2b2410;
+  }
+
+  .gate-result-bad {
+    background: #361616;
+  }
+
+  .gate-status {
+    color: #e8eef6;
+  }
+
+  .order-card summary {
+    color: #86c4ff;
+  }
+
+  .story-card {
+    background: #132235;
+  }
+
+  .contact-card,
+  .info-card {
+    background: #132235;
+  }
+
+  .contact-card h3,
+  .info-card h3 {
+    color: #e8eef6;
+  }
+
+  .contact-card a {
+    color: #86c4ff;
+  }
+
+  .note-card {
+    background: #132235;
+  }
+
+  .note-card h3 {
+    color: #e8eef6;
+  }
+
+  .faq-item {
+    background: #132235;
+  }
+
+  .faq-item summary {
+    color: #e8eef6;
+  }
+
+  .faq-item summary::after {
+    color: #86c4ff;
+  }
+
+  .form-card {
+    background: #132235;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  select,
+  textarea {
+    border: 1.5px solid #2c4058;
+    background: #132235;
+  }
+
+  label {
+    color: #e8eef6;
+  }
+
+  .photo-box {
+    background: #0f1c2c;
+  }
+
+  p.menu-notice:not(:empty) {
+    background: #10263d;
+  }
+
+  .flow > section:first-child .card h2 {
+    color: #e8eef6;
+  }
+
+  .flow > section:first-child .card .order-number {
+    color: #e8eef6;
+  }
+
+  .flow > section:first-child .card p.menu-notice {
+    color: #86c4ff;
+  }
+
+  .flow > .success-message:not(:empty) {
+    background: #10291c;
+  }
+
+  .menu-tools {
+    background: #132235;
+  }
+
+  .menu-item h3 {
+    color: #e8eef6;
+  }
+
+  .menu-item strong {
+    color: #e8eef6;
+  }
+
+  #cart > h3 {
+    color: #e8eef6;
+  }
+
+  .success-hero {
+    background: #132235;
+  }
+
+  .success-hero h1 {
+    color: #e8eef6;
+  }
+
+  .birthday-photo {
+    background: #132235;
+  }
+
+  .legal > section {
+    background: #132235;
+  }
+
+  .legal h3 {
+    color: #86c4ff;
+  }
+
+  .staff .table-container {
+    background: #132235;
+  }
+
+  .staff table {
+    background: #132235;
+  }
+
+  .staff tbody tr:nth-child(even) {
+    background: #0f1c2c;
+  }
+
+  .login-card {
+    background: #132235;
+  }
+
+  .login-card h1 {
+    color: #e8eef6;
+  }
+
+  .dash-panel {
+    background: #132235;
+  }
+
+  .tool-tile {
+    background: #132235;
+  }
+
+  .tool-body strong {
+    color: #e8eef6;
+  }
+
+  #summary-box .card .order-number {
+    color: #86c4ff;
+  }
+
+  #summary-box h3 {
+    color: #e8eef6;
+  }
+
+  .feature-card {
+    background: #132235;
+  }
+
+  .legal-intro-card {
+    background: #132235;
+  }
+
+  .legal-highlight {
+    border: 1px solid #24503a;
+    background: #10291c;
+    color: #e8eef6;
+  }
+
+  .legal-toc {
+    background: #132235;
+  }
+
+  .legal-toc a:hover {
+    color: #86c4ff;
+  }
+
+  .legal-card {
+    background: #132235;
+  }
+
+  .legal-card h3 {
+    color: #86c4ff;
+  }
+
+  .legal-subcard {
+    background: #0f1c2c;
+  }
+
+  .guide-start-card {
+    background: #132235;
+  }
+
+  .guide-start-card strong {
+    color: #e8eef6;
+  }
+
+  .lesson-card h3 {
+    color: #e8eef6;
+  }
+
+  .guide-empty {
+    border: 2px dashed #2c4058;
+    background: #132235;
+  }
+
+  .home-guide {
+    border: 1px solid #5a4a1c;
+  }
+
+  .home-guide .home-eyebrow {
+    color: #86c4ff;
+  }
+
+  .vision-block h3 {
+    color: #e8eef6;
+  }
+
+  .pass-name {
+    color: #e8eef6;
+  }
+
+  .included-box {
+    border: 1px solid #24503a;
+    background: #10291c;
+  }
+
+  .winners-box {
+    border: 1px solid #5a4a1c;
+    background: #2b2410;
+  }
+
+  .winners-box h3 {
+    color: #e8eef6;
+  }
+
+  .success-hero h2 {
+    color: #e8eef6;
+  }
+
+  .cert-status-valid {
+    background: #14361f;
+    color: #9be3b1;
+  }
+
+  .cert-status-revoked {
+    background: #3a1717;
+    color: #ffb4b4;
+  }
+
+  .cert-status-replaced {
+    background: #2b2410;
+    color: #ffd77a;
+  }
+
+  .cert-row dd {
+    color: #e8eef6;
+  }
+
+  .cert-card-top h3 {
+    color: #e8eef6;
+  }
+
+  .cert-number {
+    color: #e8eef6;
+  }
+
+  .cert-editor {
+    background: #0f1c2c;
+  }
+}
