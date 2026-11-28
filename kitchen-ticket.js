@@ -50,6 +50,10 @@
     ticket.id = "kitchen-ticket-print";
 
     const head = el("div", "kt-head");
+    const logo = el("img", "kt-logo");
+    logo.src = "images/logo-mark.png";
+    logo.alt = "A1 Kitchen logo";
+    head.appendChild(logo);
     head.appendChild(el("p", "kt-brand", "A1 KITCHEN"));
     head.appendChild(el("p", "kt-kind", "KITCHEN TICKET"));
     ticket.appendChild(head);
@@ -140,7 +144,13 @@
       window.removeEventListener("afterprint", finish);
     };
     window.addEventListener("afterprint", finish);
-    window.setTimeout(() => {
+
+    let started = false;
+    const startPrint = () => {
+      if (started) {
+        return;
+      }
+      started = true;
       window.print();
       /* Some phones do not send "afterprint"; tidy up a little later */
       window.setTimeout(() => {
@@ -148,7 +158,17 @@
           finish();
         }
       }, 60000);
-    }, 50);
+    };
+
+    /* Wait for the logo so it appears on the paper (at most 2 seconds) */
+    const logo = ticket.querySelector(".kt-logo");
+    if (logo && !logo.complete) {
+      logo.addEventListener("load", () => window.setTimeout(startPrint, 50));
+      logo.addEventListener("error", () => window.setTimeout(startPrint, 50));
+      window.setTimeout(startPrint, 2000);
+    } else {
+      window.setTimeout(startPrint, 50);
+    }
   }
 
   window.A1KitchenTicket = {

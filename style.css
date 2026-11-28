@@ -6522,3 +6522,297 @@ form.report-form {
 :where(html.theme-dark) .attendee-row h3 {
   color: #e8eef6;
 }
+/* ---------- Payment page: Need Help contacts ---------- */
+.need-help-intro {
+  margin-bottom: 10px;
+}
+
+.need-help-order {
+  display: inline-block;
+  margin: 0 0 18px;
+  padding: 8px 16px;
+  border: 1px dashed var(--sunshine);
+  border-radius: 999px;
+  background: #fff8e6;
+  color: var(--navy);
+  font-size: 0.95rem;
+}
+
+.need-help-order strong {
+  margin-left: 4px;
+  letter-spacing: 0.5px;
+}
+
+.help-contacts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.help-contact {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--blue);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(12, 35, 64, 0.07);
+}
+
+.help-contact-whatsapp {
+  border-left-color: #1fa855;
+}
+
+.help-contact-icon {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #e3effa;
+  color: var(--blue);
+}
+
+.help-contact-whatsapp .help-contact-icon {
+  background: #e2f6ea;
+  color: #12813f;
+}
+
+.help-contact-body {
+  min-width: 0;
+}
+
+.help-contact-label {
+  margin: 0 0 2px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.help-contact-value {
+  margin: 0;
+  color: var(--navy);
+  font-size: 1.1rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.help-contact-value a {
+  color: var(--navy);
+  font-weight: 800;
+  text-decoration: none;
+  border-bottom: 0;
+  letter-spacing: 0.5px;
+}
+
+.help-contact-value a:hover,
+.help-contact-value a:focus-visible {
+  color: var(--blue);
+  text-decoration: underline;
+}
+
+.need-help-note {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.need-help-note::before {
+  content: "🔒 ";
+}
+
+:where(html.theme-dark) .help-contact {
+  background: #132235;
+}
+
+:where(html.theme-dark) .help-contact-value,
+:where(html.theme-dark) .help-contact-value a {
+  color: #ffffff;
+}
+
+:where(html.theme-dark) .help-contact-value a:hover,
+:where(html.theme-dark) .help-contact-value a:focus-visible {
+  color: var(--sky);
+}
+
+:where(html.theme-dark) .help-contact-label,
+:where(html.theme-dark) .need-help-note {
+  color: #c9d6e4;
+}
+
+:where(html.theme-dark) .help-contact-icon {
+  background: #1c3450;
+  color: var(--sky);
+}
+
+:where(html.theme-dark) .help-contact-whatsapp .help-contact-icon {
+  background: #163a27;
+  color: #5fd88f;
+}
+
+:where(html.theme-dark) .need-help-order {
+  background: #2b2410;
+  color: #ffffff;
+}
+
+/* ---------- Kitchen ticket logo ---------- */
+.kt-logo {
+  display: none;
+}
+
+@media print {
+  body.printing-ticket .kt-logo {
+    display: block;
+    width: 26mm;
+    height: 26mm;
+    margin: 0 auto 2mm;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: none;
+  }
+}
+
+/* ---------- Home: customer reviews that open and close ---------- */
+.rating-hint {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.rating-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  align-items: start;
+  gap: 14px;
+  max-width: 980px;
+  margin: 22px auto 0;
+}
+
+.rating-toggle {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(12, 35, 64, 0.07);
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.rating-toggle[open] {
+  border-color: var(--sunshine);
+  box-shadow: 0 10px 26px rgba(12, 35, 64, 0.12);
+}
+
+.rating-toggle-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.rating-toggle-head::-webkit-details-marker {
+  display: none;
+}
+
+.rating-toggle-head:hover {
+  background: var(--mist);
+}
+
+.rating-toggle-head:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.rating-toggle[open] .rating-toggle-head {
+  border-radius: 16px 16px 0 0;
+}
+
+.rating-toggle-badge {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--green));
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.rating-toggle-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--navy);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.rating-toggle-arrow {
+  flex: 0 0 auto;
+  color: var(--blue);
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.rating-toggle[open] .rating-toggle-arrow {
+  transform: rotate(180deg);
+}
+
+.rating-toggle-body {
+  padding: 4px 18px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.rating-toggle-body .rating-stars {
+  margin: 10px 0 6px;
+}
+
+.rating-toggle-text {
+  margin: 0;
+  color: var(--text);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+:where(html.theme-dark) .rating-toggle {
+  background: #132235;
+}
+
+:where(html.theme-dark) .rating-toggle-head:hover {
+  background: #1c3450;
+}
+
+:where(html.theme-dark) .rating-toggle-name {
+  color: #ffffff;
+}
+
+:where(html.theme-dark) .rating-toggle-arrow {
+  color: var(--sky);
+}
+
+:where(html.theme-dark) .rating-toggle-text {
+  color: #e8eef6;
+}
+
+:where(html.theme-dark) .rating-hint {
+  color: #c9d6e4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rating-toggle,
+  .rating-toggle-arrow {
+    transition: none;
+  }
+}

@@ -499,8 +499,21 @@ function ratingStars(count, className) {
   return row;
 }
 
+function ratingInitials(name) {
+  const parts = String(name || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (parts.length === 0) {
+    return "A1";
+  }
+  const first = parts[0].charAt(0);
+  const last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : "";
+  return (first + last).toUpperCase();
+}
+
 async function loadRatings() {
-  const data = await callRpc("get_public_ratings", { p_limit: 6 });
+  const data = await callRpc("get_public_ratings", { p_limit: 12 });
   const items = (data && data.items) || [];
   if (items.length === 0) {
     return;
@@ -524,17 +537,47 @@ async function loadRatings() {
     );
     section.appendChild(summary);
   }
-  const grid = el("div", "rating-grid");
+  section.appendChild(
+    el(
+      "p",
+      "rating-hint",
+      "Tap a name to read what they said. Tap again to close.",
+    ),
+  );
+
+  const list = el("div", "rating-list");
   items.forEach((item) => {
-    const card = el("article", "rating-public");
-    card.appendChild(ratingStars(Number(item.stars)));
-    if (item.comment) {
-      card.appendChild(el("p", "rating-public-text", "“" + item.comment + "”"));
-    }
-    card.appendChild(el("p", "rating-public-name", item.name));
-    grid.appendChild(card);
+    const card = el("details", "rating-toggle");
+
+    const summary = el("summary", "rating-toggle-head");
+    const badge = el("span", "rating-toggle-badge", ratingInitials(item.name));
+    badge.setAttribute("aria-hidden", "true");
+    summary.appendChild(badge);
+    summary.appendChild(
+      el("span", "rating-toggle-name", item.name || "A1 Kitchen customer"),
+    );
+    const arrow = el("span", "rating-toggle-arrow", "▾");
+    arrow.setAttribute("aria-hidden", "true");
+    summary.appendChild(arrow);
+    card.appendChild(summary);
+
+    const body = el("div", "rating-toggle-body");
+    body.appendChild(ratingStars(Number(item.stars)));
+    body.appendChild(
+      el(
+        "p",
+        "rating-toggle-text",
+        item.comment
+          ? "“" + item.comment + "”"
+          : "Gave " + item.stars + " out of 5 stars.",
+      ),
+    );
+    card.appendChild(body);
+
+    list.appendChild(card);
   });
-  section.appendChild(grid);
+  section.appendChild(list);
+
   const anchor =
     document.getElementById("home-words") ||
     document.getElementById("home-work") ||

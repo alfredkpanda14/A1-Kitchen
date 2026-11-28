@@ -3,11 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="How A1 Kitchen (Awan Kitchen and Catering Services) collects, uses and protects your information."
-    />
-    <title>Privacy Policy | A1 Kitchen</title>
+    <meta name="description" content="Your A1 Kitchen order and payment." />
+    <meta name="robots" content="noindex" />
+    <title>A1 Kitchen | Your Order</title>
     <link rel="icon" type="image/png" href="images/logo-mark.png" />
     <link rel="stylesheet" href="style.css" />
     <link rel="manifest" href="manifest.webmanifest" />
@@ -15,8 +13,10 @@
     <link rel="apple-touch-icon" href="images/app-icon-180.png" />
     <script src="theme-init.js"></script>
   </head>
+
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <header class="site-header">
       <a class="brand" href="index.html"
         ><img
@@ -31,326 +31,184 @@
         <a href="catering.html">Catering</a>
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
-        <a href="faq.html">FAQ</a>
-        <a href="guide.html">How-To Videos</a>
+        <a href="faq.html">FAQ</a> <a href="guide.html">How-To Videos</a>
         <a href="competitions.html">Competitions</a>
         <a href="gallery.html">Gallery</a>
         <a href="birthday.html">Chef A1 Personal Page</a>
       </nav>
     </header>
-    <main id="main-content">
-      <section class="page-hero">
-        <p class="home-eyebrow">Legal</p>
-        <h1>Privacy <span>Policy</span></h1>
-        <p class="page-lead">
-          How A1 Kitchen collects, uses and protects your information.
+
+    <main id="main-content" class="flow">
+      <section>
+        <p class="step-label" id="step-label">Step 2 of 3: Payment</p>
+        <h1 id="page-title">Payment</h1>
+
+        <p id="page-intro">
+          Your order has been recorded. Please keep your order number safe.
         </p>
-        <p class="legal-updated">Last updated: 21 November 2026.</p>
+
+        <div class="card">
+          <h2>Order Number</h2>
+          <p class="order-number" id="payment-order-number">Loading...</p>
+
+          <button type="button" id="copy-order-number" class="button">
+            Copy order number
+          </button>
+          <p id="copy-message" class="menu-notice" role="status"></p>
+
+          <div id="total-block">
+            <h2>Total</h2>
+            <p>
+              NLe
+              <strong id="payment-total">0</strong>
+            </p>
+          </div>
+        </div>
+
+        <p id="no-order" hidden>
+          We could not find a current order on this device.
+          <a href="menu.html">Go to the menu</a> to place an order.
+        </p>
       </section>
 
-      <section class="legal-intro-card">
-        <p>
-          This policy is from
-          <strong>Awan Kitchen and Catering Services</strong>, a restaurant and
-          catering business registered in Sierra Leone ("Awan Kitchen", "we",
-          "us"). Our customers know us as A1 Kitchen. This is the same business:
-          "Awan" is the Krio way of saying A1.
-        </p>
-        <p>
-          Our address:
-          <span data-info="address">address will be added soon.</span>
-        </p>
-        <p>
-          We respect your privacy. This policy explains what information we
-          collect through our website, why we collect it, how we use it, and how
-          we protect it.
-        </p>
-      </section>
-
-      <section class="legal-highlights" aria-label="Privacy in short">
-        <div class="legal-highlight">
-          We never ask for your mobile money PIN or password.
-        </div>
-        <div class="legal-highlight">
-          We do not sell your personal information.
-        </div>
-        <div class="legal-highlight">
-          Only authorised staff can see your orders and payment screenshots.
+      <section id="quote-section" hidden>
+        <h2>What Happens Next</h2>
+        <div class="card">
+          <p>
+            A1 Kitchen will contact you on the phone number you gave us with
+            your price and any delivery fee.
+          </p>
+          <p>
+            When you agree, open your tracking link below and pay the full
+            amount. Your food is prepared only after your payment is complete
+            and confirmed.
+          </p>
+          <p>Orders that have been paid for cannot be refunded.</p>
         </div>
       </section>
 
-      <div class="legal-layout">
-        <aside class="legal-toc" aria-label="On this page">
-          <h2>On This Page</h2>
-          <ol>
-            <li><a href="#p-collect">Information We Collect</a></li>
-            <li><a href="#p-use">How We Use Your Information</a></li>
-            <li><a href="#p-see">Who Can See Your Information</a></li>
-            <li><a href="#p-device">Information Saved on Your Device</a></li>
-            <li><a href="#p-protect">How We Protect Your Information</a></li>
-            <li><a href="#p-keep">How Long We Keep Information</a></li>
-            <li><a href="#p-choices">Your Choices</a></li>
-            <li><a href="#p-children">Children</a></li>
-            <li><a href="#p-law">The Law</a></li>
-            <li><a href="#p-changes">Changes to This Policy</a></li>
-            <li><a href="#p-contact">Contact Us</a></li>
-          </ol>
-        </aside>
-        <div class="legal-content">
-          <section class="legal-card" id="p-collect">
-            <h2>Information We Collect</h2>
-            <div class="legal-subcard">
-              <h3>When you place an order</h3>
-              <p>
-                Your full name, phone number, WhatsApp number (if you give one),
-                whether you want delivery or pickup, your delivery location and
-                instructions, your order notes, and the food you ordered.
+      <section id="order-summary-section">
+        <h2>Your Order</h2>
+        <div class="card" id="payment-summary"></div>
+      </section>
+
+      <section id="payment-method-section">
+        <h2>Select Payment Method</h2>
+
+        <form id="payment-form">
+          <label for="payment-method">Payment Method *</label>
+
+          <select id="payment-method" required>
+            <option value="">Select payment method</option>
+            <option value="Orange Money">Orange Money</option>
+            <option value="Afrimoney">Afrimoney</option>
+          </select>
+
+          <div id="payment-instructions" class="card" aria-live="polite">
+            <p>Select a payment method to see the instructions.</p>
+          </div>
+
+          <p class="menu-notice">
+            Please pay the full amount. Your food is prepared after your payment
+            is confirmed. Orders that have been paid for cannot be refunded.
+          </p>
+
+          <button type="submit" class="button">
+            Continue to Payment Proof
+          </button>
+        </form>
+      </section>
+
+      <section id="track-box">
+        <h2>Track Your Order</h2>
+        <p>
+          Copy this private link to check your order and payment status at any
+          time. Anyone with the link can see your order status, so keep it
+          private.
+        </p>
+        <button type="button" id="copy-track-link" class="button">
+          Copy tracking link
+        </button>
+        <a href="track-order.html" id="track-link" class="button"
+          >Check order status</a
+        >
+        <p id="track-message" class="menu-notice" role="status"></p>
+      </section>
+
+      <section class="need-help" id="need-help">
+        <h2>Need Help?</h2>
+        <p class="need-help-intro">
+          Contact A1 Kitchen and tell us your order number.
+        </p>
+        <p class="need-help-order" id="need-help-order" hidden>
+          Your order number:
+          <strong id="need-help-number"></strong>
+        </p>
+
+        <div class="help-contacts">
+          <div class="help-contact help-contact-call">
+            <span class="help-contact-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+              >
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                />
+              </svg>
+            </span>
+            <div class="help-contact-body">
+              <p class="help-contact-label">Call or text us</p>
+              <p class="help-contact-value" data-info="phone" data-type="phone">
+                Phone number will be added soon.
               </p>
             </div>
-            <div class="legal-subcard">
-              <h3>When you pay</h3>
-              <p>
-                The payment method you choose (Orange Money or AfriMoney) and
-                the payment screenshot you upload as proof of payment. A
-                screenshot may show other information, such as names or phone
-                numbers. If it shows anything unrelated to the payment, you may
-                crop it before uploading, as long as the amount, date and
-                payment status stay visible.
-              </p>
-              <p>
-                We never ask for your Orange Money PIN, AfriMoney PIN, bank PIN,
-                password or any other secret login information. Please never
-                share these with us or with anyone claiming to represent us.
-              </p>
-            </div>
-            <div class="legal-subcard">
-              <h3>When you confirm delivery or report a problem</h3>
-              <p>
-                Your order number, your confirmation code, and the description
-                of any problem you tell us about.
-              </p>
-            </div>
-            <div class="legal-subcard">
-              <h3>When you register for an event</h3>
-              <p>
-                Your name, phone number, number of guests, and any additional
-                information you choose to give us.
-              </p>
-              <p>
-                If you pay for event tickets, we also keep the payment
-                screenshot you upload, the ticket and coupon numbers we issue to
-                you, and a record of when your tickets and coupons were used at
-                the event. Your registrations and tickets are shown on a private
-                dashboard that only people who have your private link can open.
+          </div>
+
+          <div class="help-contact help-contact-whatsapp">
+            <span class="help-contact-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+              >
+                <path
+                  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+                />
+              </svg>
+            </span>
+            <div class="help-contact-body">
+              <p class="help-contact-label">Chat on WhatsApp</p>
+              <p
+                class="help-contact-value"
+                data-info="whatsapp"
+                data-type="whatsapp"
+              >
+                WhatsApp number will be added soon.
               </p>
             </div>
-            <div class="legal-subcard">
-              <h3>When you register as a guest at a catering event</h3>
-              <p>
-                Your full name, your phone number and a 4-digit PIN that you
-                choose. The PIN is only for finding your tickets on our website,
-                so please never use your mobile money PIN. We store it in a
-                scrambled form that our staff cannot read. Staff can only give
-                you a new PIN. We also keep your meal tickets and a record of
-                when each meal was served.
-              </p>
-            </div>
-            <div class="legal-subcard">
-              <h3>When you enter a competition</h3>
-              <p>
-                Your name, phone number and the photo you upload. If the
-                competition has a registration fee, we also keep the payment
-                screenshot you upload. We keep your competitor ticket number, a
-                record of when you arrived, and, if you win, your place and your
-                certificate number.
-              </p>
-              <p>
-                Your photo is printed on your competitor ticket and shown to our
-                staff when they check your registration and scan your ticket at
-                the gate. If you win, your name and place are shown on our
-                Competitions page and on your certificate. Anyone who scans the
-                QR code on a certificate, or types its number on our Check a
-                Certificate page, can see the winner's name, place and
-                competition.
-              </p>
-            </div>
-            <div class="legal-subcard">
-              <h3>Photos, videos and customer words</h3>
-              <p>
-                If we show a photo, video or comment from a customer on our
-                website, we do so with that person's permission.
-              </p>
-            </div>
-          </section>
-
-          <section class="legal-card" id="p-use">
-            <h2>How We Use Your Information</h2>
-            <p>
-              We use your information to prepare and deliver your order (or
-              arrange pickup), check your payment, contact you about your order,
-              confirm delivery, deal with problems or complaints, process event
-              registrations, run competitions and issue tickets and
-              certificates, and provide customer support.
-            </p>
-            <p>
-              We may also use it where reasonably necessary to keep our business
-              records, protect our website and services, and prevent fraud or
-              misuse. We do not use your information for unrelated purposes.
-            </p>
-          </section>
-
-          <section class="legal-card" id="p-see">
-            <h2>Who Can See Your Information</h2>
-            <p>
-              Only authorised Awan Kitchen staff can see your order details and
-              payment screenshots. Delivery staff can see the details they need
-              to reach you, such as your name, phone number and delivery
-              address. Payment screenshots for event tickets can be seen only by
-              the Head Chef, the Manager and the Developer. Payment screenshots
-              for competition fees can be seen only by the Head Chef and the
-              Developer.
-            </p>
-            <p>We do not sell your personal information.</p>
-            <h3>Service providers</h3>
-            <p>
-              To run this website we use trusted technology providers: Netlify
-              for website hosting, and Supabase for our online database and file
-              storage. They handle information for us only to keep the website
-              and our systems working.
-            </p>
-            <p>
-              These providers may store or process information outside Sierra
-              Leone, including in Europe.
-            </p>
-            <p>
-              To alert our staff when a new order, payment screenshot, catering
-              request or problem report arrives, we use an automation service
-              and SMS and WhatsApp messaging services. These alerts contain only
-              a short count, such as "2 new orders", and never your name, phone
-              number or order details.
-            </p>
-            <h3>Other websites and apps</h3>
-            <p>
-              Some links, such as WhatsApp, take you to other services. Those
-              services have their own privacy policies, and Awan Kitchen does
-              not control them.
-            </p>
-          </section>
-
-          <section class="legal-card" id="p-device">
-            <h2>Information Saved on Your Device</h2>
-            <p>
-              To make ordering easier, your browser saves your food selection
-              and details of your current order, such as your order number and
-              confirmation code, on your own device. It may also save the
-              private link to your event or competition page, so you can open it
-              again later.
-            </p>
-            <p>
-              You can remove this at any time by clearing your browser data. On
-              a shared phone or computer, we recommend clearing it after you
-              finish.
-            </p>
-          </section>
-
-          <section class="legal-card" id="p-protect">
-            <h2>How We Protect Your Information</h2>
-            <p>
-              We take reasonable steps to protect your information from
-              unauthorised access, loss, misuse or disclosure. For example,
-              access to orders and payment screenshots is limited to authorised
-              staff who sign in to a protected area.
-            </p>
-            <p>
-              No website or online service can be guaranteed to be completely
-              secure. Please do not send PINs or passwords through our website
-              or any of our communication channels.
-            </p>
-          </section>
-
-          <section class="legal-card" id="p-keep">
-            <h2>How Long We Keep Information</h2>
-            <p>
-              We keep order, payment, event, competition and related records for
-              as long as reasonably necessary to run the business, keep proper
-              records, resolve problems or disputes, and protect against fraud
-              or misuse. The time can differ depending on the type of
-              information.
-            </p>
-          </section>
-
-          <section class="legal-card" id="p-choices">
-            <h2>Your Choices</h2>
-            <p>
-              You can contact us to ask what information we hold about you, to
-              ask us to correct it, or to ask us to delete it. We may need to
-              keep some records where this is reasonably necessary for the
-              business, for security, to resolve disputes, or because the law
-              requires it.
-            </p>
-          </section>
-
-          <section class="legal-card" id="p-children">
-            <h2>Children</h2>
-            <p>
-              This website is not designed for children, and we do not knowingly
-              ask them for unnecessary personal information. If you believe a
-              child has given us personal information, please contact us so we
-              can review it.
-            </p>
-          </section>
-
-          <section class="legal-card" id="p-law">
-            <h2>The Law</h2>
-            <p>
-              Awan Kitchen aims to handle personal information responsibly.
-              Sierra Leone's Cyber Security and Crime Act 2021 makes it an
-              offence to access computer systems, or to intercept or interfere
-              with data, without authorisation.
-            </p>
-            <p>
-              Sierra Leone is also working on a dedicated data protection law.
-              We will review and update this policy when new legal requirements
-              apply.
-            </p>
-          </section>
-
-          <section class="legal-card" id="p-changes">
-            <h2>Changes to This Policy</h2>
-            <p>
-              We may update this policy when our services, website features or
-              the law change. When we do, we will change the "Last updated" date
-              at the top of this page.
-            </p>
-          </section>
-
-          <section class="legal-card" id="p-contact">
-            <h2>Contact Us</h2>
-            <p>
-              If you have questions about this policy or how we handle your
-              information, please contact us:
-            </p>
-            <p data-info="phone" data-type="phone">
-              Phone number will be added soon.
-            </p>
-            <p data-info="email" data-type="email">
-              Email address will be added soon.
-            </p>
-          </section>
+          </div>
         </div>
-      </div>
 
-      <section class="home-cta">
-        <h2>Questions About Your Privacy?</h2>
-        <p>We are happy to explain anything in this policy.</p>
-        <div class="home-hero-actions">
-          <a href="contact.html" class="button button-light"
-            >Contact A1 Kitchen</a
-          >
-          <a href="terms.html" class="button button-ghost">Read the Terms</a>
-        </div>
+        <p class="need-help-note">
+          A1 Kitchen will never ask for your PIN or password.
+        </p>
       </section>
     </main>
+
     <footer>
       <img
         class="footer-logo"
@@ -360,6 +218,7 @@
         height="53"
         loading="lazy"
       />
+
       <p>Food • Catering • Events</p>
       <p class="footer-links">
         <a href="events.html">Events</a> ·
@@ -370,7 +229,9 @@
         <a href="staff-login.html">Staff Sign In</a>
       </p>
     </footer>
+
     <script src="site-info.js"></script>
+    <script src="payment.js"></script>
     <script src="site-extras.js" defer></script>
   </body>
 </html>

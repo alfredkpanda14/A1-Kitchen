@@ -96,6 +96,15 @@ if (!orderData) {
 } else {
   orderNumber.textContent = orderData.order_number;
 
+  // Show the order number again beside the help contacts
+  const helpOrder = document.getElementById("need-help-order");
+  const helpNumber = document.getElementById("need-help-number");
+
+  if (helpOrder && helpNumber) {
+    helpNumber.textContent = orderData.order_number;
+    helpOrder.hidden = false;
+  }
+
   if (orderData.quote_required) {
     // No price yet: the Head Chef will contact the customer first
     stepLabel.textContent = "Your order request";
