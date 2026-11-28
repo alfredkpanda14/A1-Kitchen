@@ -4,12 +4,17 @@
   - Aquarium with six colourful fish and a shimmering "A1 KITCHEN" sign
     under each page title, and banner sparkles
   - Floating WhatsApp button (public pages only)
+  - The A1 Kitchen app: offline copies and an "Install" banner on phones
+  - Data saver: hides pictures and animations to use less mobile data
+  - My Orders: remembers the orders made on this phone
+  - Footer links: My Orders and the A1 Kitchen WhatsApp group
   - Back to top button
 */
 (function () {
   const WHATSAPP =
     "https://wa.me/23231857434?text=" +
     encodeURIComponent("Hello A1 Kitchen, ");
+  const WHATSAPP_GROUP = "https://chat.whatsapp.com/F1ja59ql39C4VCcZN7Vsts";
   const SVG_NS = "http://www.w3.org/2000/svg";
   const root = document.documentElement;
   let fishCount = 0;
@@ -133,6 +138,90 @@
   } else {
     toggle.classList.add("theme-toggle-floating");
     document.body.appendChild(toggle);
+  }
+
+  /* ---------- Data saver (low-data mode) ---------- */
+  const LOW_KEY = "a1-lowdata";
+  const lowData = root.classList.contains("low-data");
+
+  function setLowData(on) {
+    try {
+      window.localStorage.setItem(LOW_KEY, on ? "on" : "off");
+    } catch (error) {
+      /* the choice just will not be remembered */
+    }
+    /* Reload so pictures load again, or stop loading */
+    window.location.reload();
+  }
+
+  function dataIcon() {
+    const svg = svgEl("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" });
+    [
+      ["4", "15", "4"],
+      ["10", "10", "9"],
+      ["16", "5", "14"],
+    ].forEach(([x, y, h]) => {
+      svg.appendChild(
+        svgEl("rect", {
+          x: x,
+          y: y,
+          width: "4",
+          height: h,
+          rx: "1",
+          fill: "currentColor",
+        }),
+      );
+    });
+    svg.appendChild(
+      svgEl("path", {
+        class: "data-slash",
+        d: "M3 3 L21 21",
+        stroke: "currentColor",
+        "stroke-width": "2.4",
+        "stroke-linecap": "round",
+      }),
+    );
+    return svg;
+  }
+
+  const dataToggle = el("button", "data-toggle");
+  dataToggle.type = "button";
+  dataToggle.appendChild(dataIcon());
+  dataToggle.setAttribute("aria-pressed", lowData ? "true" : "false");
+  dataToggle.setAttribute(
+    "aria-label",
+    lowData
+      ? "Data saver is on. Turn it off to show pictures"
+      : "Turn on data saver (hide pictures and animations)",
+  );
+  dataToggle.title = lowData ? "Data saver is on" : "Data saver";
+  dataToggle.addEventListener("click", () => setLowData(!lowData));
+
+  if (header) {
+    header.appendChild(dataToggle);
+  } else {
+    dataToggle.classList.add("data-toggle-floating");
+    document.body.appendChild(dataToggle);
+  }
+
+  if (lowData) {
+    const main = document.querySelector("main");
+    if (main) {
+      const note = el("div", "lowdata-note");
+      note.setAttribute("role", "status");
+      note.appendChild(
+        el(
+          "span",
+          null,
+          "Data saver is on. Pictures and animations are hidden to save your mobile data.",
+        ),
+      );
+      const show = el("button", "button button-secondary", "Show pictures");
+      show.type = "button";
+      show.addEventListener("click", () => setLowData(false));
+      note.appendChild(show);
+      main.insertBefore(note, main.firstChild);
+    }
   }
 
   /* ---------- Aquarium and sparkles in the page banners ---------- */
@@ -448,24 +537,26 @@
     return tank;
   }
 
-  document
-    .querySelectorAll(
-      ".page-hero, .home-hero, .flow > section:first-child, .staff > section:first-child",
-    )
-    .forEach((hero) => {
-      const title = hero.querySelector("h1");
-      if (title && !hero.querySelector(".aquarium")) {
-        title.insertAdjacentElement("afterend", aquarium());
+  /* No aquarium or sparkles when the data saver is on */
+  const heroes = lowData
+    ? []
+    : document.querySelectorAll(
+        ".page-hero, .home-hero, .flow > section:first-child, .staff > section:first-child",
+      );
+  heroes.forEach((hero) => {
+    const title = hero.querySelector("h1");
+    if (title && !hero.querySelector(".aquarium")) {
+      title.insertAdjacentElement("afterend", aquarium());
+    }
+    if (!hero.querySelector(".hero-sparkles")) {
+      const sparkles = el("div", "hero-sparkles");
+      sparkles.setAttribute("aria-hidden", "true");
+      for (let i = 1; i <= 7; i += 1) {
+        sparkles.appendChild(el("span", "spark spark-" + i));
       }
-      if (!hero.querySelector(".hero-sparkles")) {
-        const sparkles = el("div", "hero-sparkles");
-        sparkles.setAttribute("aria-hidden", "true");
-        for (let i = 1; i <= 7; i += 1) {
-          sparkles.appendChild(el("span", "spark spark-" + i));
-        }
-        hero.insertBefore(sparkles, hero.firstChild);
-      }
-    });
+      hero.insertBefore(sparkles, hero.firstChild);
+    }
+  });
 
   /* ---------- WhatsApp button (not on staff pages) ---------- */
   const isStaff =
@@ -488,6 +579,132 @@
     link.appendChild(el("span", "wa-float-text", "Chat with us"));
     document.body.appendChild(link);
   }
+
+  /* ---------- My Orders: remember the orders made on this phone ---------- */
+  const MY_ORDERS_KEY = "a1KitchenMyOrders";
+  const ORDER_RE = /^A1-\d{8}-[A-Z0-9]{6}$/;
+  const TOKEN_RE =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  function rememberOrder(number, token) {
+    number = String(number || "").trim();
+    token = String(token || "").trim();
+    if (!ORDER_RE.test(number) || !TOKEN_RE.test(token)) {
+      return;
+    }
+    try {
+      let list = JSON.parse(window.localStorage.getItem(MY_ORDERS_KEY) || "[]");
+      if (!Array.isArray(list)) {
+        list = [];
+      }
+      const found = list.find((item) => item && item.o === number);
+      if (found) {
+        if (found.removed) {
+          return;
+        }
+        found.t = token;
+      } else {
+        list.unshift({ o: number, t: token, at: Date.now() });
+      }
+      window.localStorage.setItem(
+        MY_ORDERS_KEY,
+        JSON.stringify(list.slice(0, 40)),
+      );
+    } catch (error) {
+      /* storage is full or switched off */
+    }
+  }
+
+  try {
+    rememberOrder(
+      window.localStorage.getItem("a1KitchenOrderNumber"),
+      window.localStorage.getItem("a1KitchenCustomerToken"),
+    );
+  } catch (error) {
+    /* fine */
+  }
+  if (/track-order\.html$/.test(window.location.pathname)) {
+    const params = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    rememberOrder(params.get("o"), params.get("t"));
+
+    /* An order found with the number and code form is remembered too,
+       but only once it has been found */
+    const lookupForm = document.getElementById("lookup-form");
+    const result = document.getElementById("result-section");
+    let typed = null;
+    if (lookupForm && result) {
+      lookupForm.addEventListener("submit", () => {
+        const number = document.getElementById("lookup-order");
+        const code = document.getElementById("lookup-token");
+        typed = {
+          o: number ? number.value.trim().toUpperCase() : "",
+          t: code ? code.value.trim().toLowerCase() : "",
+        };
+      });
+      new MutationObserver(() => {
+        if (typed && !result.hidden) {
+          rememberOrder(typed.o, typed.t);
+          typed = null;
+        }
+      }).observe(result, { attributes: true, attributeFilter: ["hidden"] });
+    }
+  }
+
+  /* ---------- Footer: My Orders and the WhatsApp group ---------- */
+  const footer = document.querySelector("footer");
+  if (footer && !isStaff) {
+    const links = footer.querySelector(".footer-links");
+    if (links && !links.querySelector('a[href="my-orders.html"]')) {
+      const mine = el("a", null, "My Orders");
+      mine.href = "my-orders.html";
+      links.insertBefore(document.createTextNode(" · "), links.firstChild);
+      links.insertBefore(mine, links.firstChild);
+    }
+
+    const group = el("a", "wa-group-link");
+    group.href = WHATSAPP_GROUP;
+    group.target = "_blank";
+    group.rel = "noopener noreferrer";
+    const groupIcon = svgEl("svg", {
+      viewBox: "0 0 24 24",
+      "aria-hidden": "true",
+    });
+    groupIcon.appendChild(
+      svgEl("circle", { cx: "9", cy: "8", r: "3.5", fill: "currentColor" }),
+    );
+    groupIcon.appendChild(
+      svgEl("circle", {
+        cx: "17",
+        cy: "9",
+        r: "2.6",
+        fill: "currentColor",
+        opacity: "0.8",
+      }),
+    );
+    groupIcon.appendChild(
+      svgEl("path", {
+        d: "M2.5 19c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6z",
+        fill: "currentColor",
+      }),
+    );
+    groupIcon.appendChild(
+      svgEl("path", {
+        d: "M15 13.4c3.3-.4 6.5 1.5 6.5 5.6H17",
+        fill: "currentColor",
+        opacity: "0.8",
+      }),
+    );
+    group.appendChild(groupIcon);
+    group.appendChild(el("span", null, "Join our WhatsApp group"));
+    const groupRow = el("p", "wa-group-row");
+    groupRow.appendChild(group);
+    if (links) {
+      footer.insertBefore(groupRow, links);
+    } else {
+      footer.appendChild(groupRow);
+    }
+  }
+
   /* ---------- The A1 Kitchen app: works offline and installs on phones ---------- */
   if ("serviceWorker" in navigator && window.isSecureContext) {
     window.addEventListener("load", () => {
@@ -591,6 +808,7 @@
       showBanner('Tap the Share button, then "Add to Home Screen".', false);
     }, 6000);
   }
+
   /* ---------- Back to top ---------- */
   const top = el("button", "to-top", "↑");
   top.type = "button";
